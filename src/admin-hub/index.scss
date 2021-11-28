@@ -1,0 +1,3 @@
+@import 'azure-devops-ui/Core/_platformCommon.scss';
+@import '../styles/mixins.scss';
+@include extension-container('admin-hub-container');

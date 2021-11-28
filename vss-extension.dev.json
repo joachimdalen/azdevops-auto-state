@@ -1,0 +1,59 @@
+{
+  "manifestVersion": 1,
+  "baseUri": "https://localhost:3000",
+  "id": "auto-state",
+  "public": false,
+  "name": "Auto State - DEV",
+  "publisher": "JoachimDalen",
+  "version": "0.0.1",
+  "description": "An extension to automatically update states between parents and children",
+  "categories": ["Azure Boards"],
+  "demands": ["api-version/5.1"],
+  "tags": [],
+  "scopes": ["vso.work_write"],
+  "icons": {
+    "default": "extension-icon.png"
+  },
+  "content": {
+    "details": { "path": "docs/README.md" },
+    "changelog": { "path": "docs/CHANGELOG.md" }
+  },
+  "branding": {
+    "color": "#215564",
+    "theme": "dark"
+  },
+  "targets": [
+    {
+      "id": "Microsoft.VisualStudio.Services.Cloud"
+    }
+  ],
+  "files": [],
+  "contributions": [
+    {
+      "id": "work-item-observer",
+      "type": "ms.vss-work-web.work-item-notifications",
+      "targets": ["ms.vss-work-web.work-item-form"],
+      "properties": {
+        "uri": "observer.html"
+      }
+    },
+    {
+      "id": "rule-modal",
+      "type": "ms.vss-web.external-content",
+      "properties": {
+        "uri": "rule-modal.html"
+      }
+    },
+    {
+      "id": "admin-hub",
+      "type": "ms.vss-web.hub",
+      "description": "Configuration hub for Auto State",
+      "targets": ["ms.vss-web.project-admin-hub-group"],
+      "properties": {
+        "name": "Auto State",
+        "order": 1,
+        "uri": "admin.html"
+      }
+    }
+  ]
+}
