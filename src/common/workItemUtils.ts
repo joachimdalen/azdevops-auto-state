@@ -1,4 +1,4 @@
-import { WorkItem } from 'azure-devops-extension-api/WorkItemTracking';
+import { WorkItem, WorkItemType } from 'azure-devops-extension-api/WorkItemTracking';
 const stateField = 'System.State';
 const parentField = 'System.LinkTypes.Hierarchy-Reverse';
 const workItemType = 'System.WorkItemType';
@@ -12,8 +12,12 @@ export const isInState = (workItem: WorkItem, states: string[]): boolean => {
   return states.includes(state);
 };
 
-export const getWorkItemType = (workItem: WorkItem): string => {
-  return workItem.fields[workItemType];
+export const getWorkItemType = (
+  workItem: WorkItem,
+  workItemTypes: WorkItemType[]
+): string | undefined => {
+  const type = workItem.fields[workItemType];
+  return workItemTypes.find(x => x.name === type)?.referenceName;
 };
 
 export const getParentId = (workItem: WorkItem): number | undefined => {

@@ -29,7 +29,7 @@ class WorkItemService {
     const wi = await this.getWorkItem(id);
     const parentId = getParentId(wi);
     if (parentId === undefined) return undefined;
-    const parentWi = await this.getWorkItem(id);
+    const parentWi = await this.getWorkItem(parentId);
     return parentWi;
   }
 

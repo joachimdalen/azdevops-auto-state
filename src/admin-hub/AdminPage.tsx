@@ -1,15 +1,11 @@
 import {
   CheckboxVisibility,
-  CommandBar,
   DetailsList,
   DetailsListLayoutMode,
   GroupHeader,
   IColumn,
-  ICommandBarItemProps,
   IDetailsGroupDividerProps,
-  IGroup,
-  IRenderFunction
-} from '@fluentui/react';
+  IGroup} from '@fluentui/react';
 import {
   IDialogOptions,
   IHostNavigationService,
@@ -19,13 +15,10 @@ import { WorkItemType } from 'azure-devops-extension-api/WorkItemTracking';
 import * as DevOps from 'azure-devops-extension-sdk';
 import { Header } from 'azure-devops-ui/Header';
 import { IHeaderCommandBarItem } from 'azure-devops-ui/HeaderCommandBar';
-import { IListItemDetails, List, ListItem, SimpleList } from 'azure-devops-ui/List';
 import { Page } from 'azure-devops-ui/Page';
 import { Surface, SurfaceBackground } from 'azure-devops-ui/Surface';
-import { ArrayItemProvider } from 'azure-devops-ui/Utilities/Provider';
 import React, { useEffect, useMemo, useState } from 'react';
 import { v4 as uuidV4 } from 'uuid';
-import { commandBarStyles } from '../common/azure-devops-theme';
 
 import StateTag from '../common/component/StateTag';
 import WorkItemTypeTag from '../common/component/WorkItemTypeTag';

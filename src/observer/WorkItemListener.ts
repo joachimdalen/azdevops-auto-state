@@ -1,48 +1,32 @@
 import {
   IWorkItemChangedArgs,
   IWorkItemFieldChangedArgs,
-  IWorkItemFormService,
   IWorkItemLoadedArgs,
-  IWorkItemNotificationListener,
-  WorkItemTrackingServiceIds
+  IWorkItemNotificationListener
 } from 'azure-devops-extension-api/WorkItemTracking';
-import * as DevOps from 'azure-devops-extension-sdk';
 
+import RuleProcessor from '../common/services/RuleProcessor';
 import WorkItemService from '../common/services/WorkItemService';
 
 class WorkItemListener implements IWorkItemNotificationListener {
-  private readonly _workItemService: WorkItemService;
+  private readonly _ruleProcessor: RuleProcessor;
+  private readonly _witService: WorkItemService;
 
   constructor() {
-    this._workItemService = new WorkItemService();
+    this._ruleProcessor = new RuleProcessor();
+    this._witService = new WorkItemService();
   }
 
   async onLoaded(args: IWorkItemLoadedArgs): Promise<void> {
     console.log(`onLoaded`, args);
+    await this._ruleProcessor.Init();
   }
   onFieldChanged(args: IWorkItemFieldChangedArgs): void {
     console.log(`onFieldChanged`, args);
   }
   async onSaved(args: IWorkItemChangedArgs): Promise<void> {
     try {
-      if (args.id === 235) {
-        const wi = await this._workItemService.getWorkItem(args.id);
-        const parentWorkItem = await this._workItemService.getParentForWorkItem(args.id);
-
-        if (
-          wi.fields['System.State'] !== 'New' &&
-          parentWorkItem?.fields['System.State'] !== 'Active'
-        ) {
-          if (parentWorkItem?.id) {
-          //  await this._workItemService.setWorkItemState(parentWorkItem.id, 'Active');
-          }
-        }
-
-        console.log(parentWorkItem, wi);
-      } else {
-        console.log('Triggered, but did not match condition');
-      }
-
+      await this._ruleProcessor.ProcessWorkItem(args.id);
       console.log(`onSaved`, args);
     } catch (error) {
       console.log(error);
