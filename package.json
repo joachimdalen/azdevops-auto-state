@@ -3,6 +3,9 @@
   "private": true,
   "version": "0.0.1",
   "devDependencies": {
+    "@testing-library/jest-dom": "^5.15.1",
+    "@testing-library/react": "^12.1.2",
+    "@types/jest": "^27.0.3",
     "@types/node": "^16.11.8",
     "@types/react": "^16.14.14",
     "@types/react-dom": "^16.9.14",
@@ -21,11 +24,14 @@
     "eslit": "^6.0.0",
     "file-loader": "^6.2.0",
     "html-webpack-plugin": "^5.5.0",
+    "jest": "^27.4.0",
+    "jest-junit-reporter": "^1.1.0",
     "node-sass": "^6.0.1",
     "rimraf": "^3.0.2",
     "sass-loader": "^12.3.0",
     "style-loader": "^3.3.1",
     "tfx-cli": "^0.9.3",
+    "ts-jest": "^27.0.7",
     "ts-loader": "^9.2.6",
     "typescript": "^4.5.2",
     "webpack": "^5.64.1",
@@ -52,6 +58,28 @@
     "clean-build": "rimraf dist",
     "lint": "eslint src --ignore-path .eslintignore --ext ts --ext tsx --ext js --ext jsx",
     "lint:fix": "eslint --fix src --ignore-path .eslintignore --ext ts --ext tsx --ext js --ext jsx",
-    "de": "webpack --watch & webpack-dev-server --inline --progress --colors"
+    "de": "webpack --watch & webpack-dev-server --inline --progress --colors",
+    "test": "env TEST_REPORT_FILENAME=test-results.xml jest --verbose"
+  },
+  "jest": {
+    "testEnvironment": "jsdom",
+    "transform": {
+      "^.+\\.(js|ts|tsx|jsx)$": "ts-jest"
+    },
+    "transformIgnorePatterns": [
+      "node_modules/(?!(react-native|azure-devops-ui|azure-devops-extension-sdk)/)"
+    ],
+    "moduleNameMapper": {
+      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/src/__mocks__/fileMock.js",
+      "\\.(css|less|scss)$": "<rootDir>/src/__mocks__/styleMock.js"
+    },
+    "preset": "ts-jest/presets/js-with-babel",
+    "testResultsProcessor": "./node_modules/jest-junit-reporter",
+    "collectCoverage": true,
+    "coverageReporters": [
+      "json",
+      "html",
+      "cobertura"
+    ]
   }
 }
