@@ -1,6 +1,7 @@
 import { WorkItem, WorkItemType } from 'azure-devops-extension-api/WorkItemTracking';
 
 import { Rule, RuleDocument } from '../models/RulesDocument';
+import webLogger from '../webLogger';
 import { getState, getWorkItemType, isInState } from '../workItemUtils';
 import { StorageService } from './StorageService';
 import WorkItemService from './WorkItemService';
@@ -11,7 +12,7 @@ class RuleProcessor {
   private _workItemTypes: WorkItemType[];
 
   constructor() {
-    console.log('Setting up rule processor');
+    webLogger.trace('Setting up rule processor');
     this._workItemService = new WorkItemService();
     this._storageService = new StorageService();
     this._workItemTypes = [];
@@ -19,7 +20,7 @@ class RuleProcessor {
 
   public async Init(): Promise<void> {
     if (this._workItemTypes.length === 0) {
-      console.log('Loading work item types');
+      webLogger.trace('Loading work item types');
       this._workItemTypes = await this._workItemService.getWorkItemTypes();
     }
   }
@@ -27,7 +28,7 @@ class RuleProcessor {
   public async ProcessWorkItem(workItemId: number): Promise<void> {
     const asyncFilter = async (arr: Rule[], predicate: (x: Rule) => Promise<boolean>) => {
       const results = await Promise.all(arr.map(predicate));
-      console.log(results);
+      webLogger.trace(results);
       return arr.filter((_v, index) => results[index]);
     };
     const currentWi: WorkItem = await this._workItemService.getWorkItem(workItemId);
@@ -51,7 +52,7 @@ class RuleProcessor {
       return this.isRuleMatch(x, currentWi, parentWi);
     });
 
-    console.log('Found matching rules', matchingRules);
+    webLogger.trace('Found matching rules', matchingRules);
 
     if (matchingRules.length === 0) return;
 
@@ -60,25 +61,33 @@ class RuleProcessor {
         parentWi.id,
         rule.parentTargetState
       );
-      console.log('Updated ' + parentWi.id + ' to ' + updated.fields['System.State']);
+      webLogger.trace('Updated ' + parentWi.id + ' to ' + updated.fields['System.State']);
     }
   }
 
   public async isRuleMatch(rule: Rule, workItem: WorkItem, parent: WorkItem): Promise<boolean> {
     const childType = getWorkItemType(workItem, this._workItemTypes);
-    console.log('Before 1');
+    webLogger.trace('Before 1');
     if (rule.workItemType !== childType) return false;
 
     const parentType = getWorkItemType(parent, this._workItemTypes);
-    console.log('Before 2', rule.parentType, parentType);
+    webLogger.trace('Before 2', rule.parentType, parentType);
     if (rule.parentType !== parentType) return false;
     const childState = getState(workItem);
-    console.log('Before 3');
+    webLogger.trace('Before 3');
     if (rule.childState !== childState) return false;
-    console.log('Before 4');
+    webLogger.trace('Before 4');
     if (isInState(parent, rule.parentNotState)) return false;
-    console.log('Before 5');
+    webLogger.trace('Before 5');
     if (isInState(parent, [rule.parentTargetState])) return false;
+
+    if (rule.allChildren) {
+      const children = await this._workItemService.getChildrenForWorkItem(parent.id);
+      if (children === undefined) return false;
+      const match = children?.every(wi => isInState(wi, [rule.childState]));
+      return match;
+    }
+
     return true;
   }
 }

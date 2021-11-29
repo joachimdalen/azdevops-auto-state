@@ -1,5 +1,6 @@
 import { IExtensionDataService } from 'azure-devops-extension-api';
 import * as DevOps from 'azure-devops-extension-sdk';
+
 import { RuleDocument } from '../models/RulesDocument';
 
 enum ScopeType {

@@ -1,22 +1,16 @@
 import { getClient, IProjectInfo, IProjectPageService } from 'azure-devops-extension-api';
 import {
-  IWorkItemFormService,
   WorkItem,
   WorkItemExpand,
   WorkItemField,
-  WorkItemRelation,
   WorkItemTrackingRestClient,
-  WorkItemTrackingServiceIds,
   WorkItemType
 } from 'azure-devops-extension-api/WorkItemTracking';
 import * as DevOps from 'azure-devops-extension-sdk';
-import { getParentId } from '../workItemUtils';
+
+import { getChildIds, getParentId } from '../workItemUtils';
 
 class WorkItemService {
-  private readonly _parentRelation: string = 'System.LinkTypes.Hierarchy-Reverse';
-  private readonly _stateIdentifier: string = 'System.State';
-  private readonly _workItemTypeIdentifier: string = 'System.WorkItemType';
-
   private async getProject(): Promise<IProjectInfo | undefined> {
     const projectService = await DevOps.getService<IProjectPageService>(
       'ms.vss-tfs-web.tfs-page-data-service'
@@ -33,6 +27,15 @@ class WorkItemService {
     return parentWi;
   }
 
+  public async getChildrenForWorkItem(workItemId: number): Promise<WorkItem[] | undefined> {
+    const wi = await this.getWorkItem(workItemId);
+    const childIds = getChildIds(wi);
+
+    if (childIds === undefined) return undefined;
+    const wis = await this.getWorkItems(childIds);
+    return wis;
+  }
+
   public async getWorkItemTypes(): Promise<WorkItemType[]> {
     const project = await this.getProject();
     if (project) {
@@ -47,6 +50,18 @@ class WorkItemService {
     const client = getClient(WorkItemTrackingRestClient);
     const wit = await client.getWorkItem(
       id,
+      undefined,
+      undefined,
+      undefined,
+      WorkItemExpand.Relations
+    );
+    return wit;
+  }
+
+  public async getWorkItems(ids: number[]): Promise<WorkItem[]> {
+    const client = getClient(WorkItemTrackingRestClient);
+    const wit = await client.getWorkItems(
+      ids,
       undefined,
       undefined,
       undefined,

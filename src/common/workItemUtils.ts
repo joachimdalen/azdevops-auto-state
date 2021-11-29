@@ -1,6 +1,7 @@
 import { WorkItem, WorkItemType } from 'azure-devops-extension-api/WorkItemTracking';
 const stateField = 'System.State';
 const parentField = 'System.LinkTypes.Hierarchy-Reverse';
+const childField = 'System.LinkTypes.Hierarchy-Forward';
 const workItemType = 'System.WorkItemType';
 
 export const getState = (workItem: WorkItem): string => {
@@ -20,15 +21,30 @@ export const getWorkItemType = (
   return workItemTypes.find(x => x.name === type)?.referenceName;
 };
 
+const getIdFormWorkItemUrl = (url: string) => {
+  const idString = url.split('/').pop();
+  if (idString === undefined) return undefined;
+
+  const id = parseInt(idString);
+  if (isNaN(id)) return undefined;
+
+  return id;
+};
+
+const isSetNumber = (item: number | undefined): item is number => {
+  return !!item;
+};
+
 export const getParentId = (workItem: WorkItem): number | undefined => {
   const parent = workItem.relations.find(x => x.rel === parentField);
   if (parent === undefined) return undefined;
+  return getIdFormWorkItemUrl(parent.url);
+};
 
-  const idString = parent.url.split('/').pop();
-  if (idString === undefined) return undefined;
+export const getChildIds = (workItem: WorkItem): number[] | undefined => {
+  const children = workItem.relations.filter(x => x.rel === childField);
+  if (children === undefined) return undefined;
+  if (children.length === 0) return undefined;
 
-  const parentId = parseInt(idString);
-  if (isNaN(parentId)) return undefined;
-
-  return parentId;
+  return children.map(c => getIdFormWorkItemUrl(c.url)).filter(isSetNumber);
 };
