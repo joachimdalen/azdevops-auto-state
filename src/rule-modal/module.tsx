@@ -18,7 +18,8 @@ import StateTag from '../common/component/StateTag';
 import { showRootComponent } from '../common/helpers';
 import useDropdownMultiSelection from '../common/hooks/useDropdownMultiSelection';
 import useDropdownSelection from '../common/hooks/useDropdownSelection';
-import { AddRuleResult, Rule } from '../common/models/RulesDocument';
+import AddRuleResult from '../common/models/AddRuleResult';
+import Rule from '../common/models/Rule';
 import WorkItemService from '../common/services/WorkItemService';
 
 const ModalContent = (): React.ReactElement => {

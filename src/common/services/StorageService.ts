@@ -1,7 +1,7 @@
 import { IExtensionDataService } from 'azure-devops-extension-api';
 import * as DevOps from 'azure-devops-extension-sdk';
 
-import { RuleDocument } from '../models/RulesDocument';
+import RuleDocument from '../models/RuleDocument';
 
 export interface IStorageService {
   getRulesForWorkItemType(id: string): Promise<RuleDocument | undefined>;

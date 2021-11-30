@@ -5,7 +5,8 @@ import {
   GroupHeader,
   IColumn,
   IDetailsGroupDividerProps,
-  IGroup} from '@fluentui/react';
+  IGroup
+} from '@fluentui/react';
 import {
   IDialogOptions,
   IHostNavigationService,
@@ -13,6 +14,7 @@ import {
 } from 'azure-devops-extension-api';
 import { WorkItemType } from 'azure-devops-extension-api/WorkItemTracking';
 import * as DevOps from 'azure-devops-extension-sdk';
+import { ConditionalChildren } from 'azure-devops-ui/ConditionalChildren';
 import { Header } from 'azure-devops-ui/Header';
 import { IHeaderCommandBarItem } from 'azure-devops-ui/HeaderCommandBar';
 import { Page } from 'azure-devops-ui/Page';
@@ -20,9 +22,12 @@ import { Surface, SurfaceBackground } from 'azure-devops-ui/Surface';
 import React, { useEffect, useMemo, useState } from 'react';
 import { v4 as uuidV4 } from 'uuid';
 
+import LoadingSection from '../common/component/LoadingSection';
 import StateTag from '../common/component/StateTag';
 import WorkItemTypeTag from '../common/component/WorkItemTypeTag';
-import { AddRuleResult, Rule, RuleDocument } from '../common/models/RulesDocument';
+import AddRuleResult from '../common/models/AddRuleResult';
+import Rule from '../common/models/Rule';
+import RuleDocument from '../common/models/RuleDocument';
 import { StorageService } from '../common/services/StorageService';
 import WorkItemService from '../common/services/WorkItemService';
 import { getState, getWorkItemType, groupBy, isGroup } from './helpers';
@@ -31,6 +36,7 @@ const AdminPage = (): React.ReactElement => {
   const [types, setTypes] = useState<WorkItemType[]>([]);
   const [documents, setDocuments] = useState<RuleDocument[]>([]);
   const storageService = useMemo(() => new StorageService(), []);
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     async function fetchData() {
       const service = new WorkItemService();
@@ -43,6 +49,8 @@ const AdminPage = (): React.ReactElement => {
         console.log(documents);
       } catch (error) {
         console.log('Failed to get documents', error);
+      } finally {
+        setLoading(false);
       }
     }
 
@@ -231,24 +239,6 @@ const AdminPage = (): React.ReactElement => {
         return group;
       })
       .filter(isGroup);
-
-    // const groups = types
-    //   .map((x, i) => {
-    //     const itemCount = rules.filter(y => y.workItemType === x.referenceName).length;
-    //     if (itemCount === 0) return undefined;
-    //     const group: IGroup = {
-    //       key: x.referenceName,
-    //       name: x.name,
-    //       data: {
-    //         icon: x.icon
-    //       },
-    //       startIndex: 0,
-    //       count: itemCount,
-    //       level: 0
-    //     };
-    //     return group;
-    //   })
-    //   .filter(isGroup);
     return [rules, groups];
   }, [documents, types]);
 
@@ -260,43 +250,45 @@ const AdminPage = (): React.ReactElement => {
     <Surface background={SurfaceBackground.neutral}>
       <Page className="flex-grow">
         <Header commandBarItems={commandBarItems} title="Auto State" />
-
         <div className="page-content padding-16">
-          <DetailsList
-            items={ruleItems}
-            columns={columns}
-            groups={groups}
-            setKey="set"
-            layoutMode={DetailsListLayoutMode.justified}
-            selectionPreservedOnEmptyClick={true}
-            ariaLabelForSelectionColumn="Toggle selection"
-            ariaLabelForSelectAllCheckbox="Toggle selection for all items"
-            checkboxVisibility={CheckboxVisibility.hidden}
-            onItemInvoked={item => console.log(item)}
-            groupProps={{
-              showEmptyGroups: false,
-              onRenderHeader: (
-                props?: IDetailsGroupDividerProps,
-                defaultRender?: (props?: IDetailsGroupDividerProps) => JSX.Element | null
-              ): JSX.Element | null => {
-                return (
-                  <GroupHeader
-                    onRenderTitle={props => (
-                      <div className="flex-row flex-grow padding-right-16">
-                        <WorkItemTypeTag
-                          classNames="flex-grow"
-                          iconUrl={props?.group?.data?.icon?.url}
-                          text={props?.group?.name}
-                        />
-                        <div>{props?.group?.count} Rules</div>
-                      </div>
-                    )}
-                    {...props}
-                  />
-                );
-              }
-            }}
-          />
+          <LoadingSection isLoading={loading} text="Loading rules.." />
+          <ConditionalChildren renderChildren={!loading}>
+            <DetailsList
+              items={ruleItems}
+              columns={columns}
+              groups={groups}
+              setKey="set"
+              layoutMode={DetailsListLayoutMode.justified}
+              selectionPreservedOnEmptyClick={true}
+              ariaLabelForSelectionColumn="Toggle selection"
+              ariaLabelForSelectAllCheckbox="Toggle selection for all items"
+              checkboxVisibility={CheckboxVisibility.hidden}
+              onItemInvoked={item => console.log(item)}
+              groupProps={{
+                showEmptyGroups: false,
+                onRenderHeader: (
+                  props?: IDetailsGroupDividerProps,
+                  defaultRender?: (props?: IDetailsGroupDividerProps) => JSX.Element | null
+                ): JSX.Element | null => {
+                  return (
+                    <GroupHeader
+                      onRenderTitle={props => (
+                        <div className="flex-row flex-grow padding-right-16">
+                          <WorkItemTypeTag
+                            classNames="flex-grow"
+                            iconUrl={props?.group?.data?.icon?.url}
+                            text={props?.group?.name}
+                          />
+                          <div>{props?.group?.count} Rules</div>
+                        </div>
+                      )}
+                      {...props}
+                    />
+                  );
+                }
+              }}
+            />
+          </ConditionalChildren>
         </div>
       </Page>
     </Surface>
