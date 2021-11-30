@@ -21,7 +21,7 @@ export const getWorkItemType = (
   return workItemTypes.find(x => x.name === type)?.referenceName;
 };
 
-const getIdFormWorkItemUrl = (url: string) => {
+export const getIdFormWorkItemUrl = (url: string): number | undefined => {
   const idString = url.split('/').pop();
   if (idString === undefined) return undefined;
 

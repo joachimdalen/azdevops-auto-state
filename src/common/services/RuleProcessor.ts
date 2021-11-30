@@ -3,18 +3,24 @@ import { WorkItem, WorkItemType } from 'azure-devops-extension-api/WorkItemTrack
 import { Rule, RuleDocument } from '../models/RulesDocument';
 import webLogger from '../webLogger';
 import { getState, getWorkItemType, isInState } from '../workItemUtils';
-import { StorageService } from './StorageService';
-import WorkItemService from './WorkItemService';
+import { IStorageService } from './StorageService';
+import { IWorkItemService } from './WorkItemService';
 
-class RuleProcessor {
-  private readonly _workItemService: WorkItemService;
-  private readonly _storageService: StorageService;
+export interface IRuleProcessor {
+  Init(): Promise<void>;
+  ProcessWorkItem(workItemId: number): Promise<void>;
+  IsRuleMatch(rule: Rule, workItem: WorkItem, parent: WorkItem): Promise<boolean>;
+}
+
+class RuleProcessor implements IRuleProcessor {
   private _workItemTypes: WorkItemType[];
 
-  constructor() {
+  constructor(
+    private readonly _workItemService: IWorkItemService,
+    private readonly _storageService: IStorageService
+  ) {
     webLogger.trace('Setting up rule processor');
-    this._workItemService = new WorkItemService();
-    this._storageService = new StorageService();
+
     this._workItemTypes = [];
   }
 
@@ -49,7 +55,7 @@ class RuleProcessor {
     if (ruleDoc === undefined) return;
 
     const matchingRules = await asyncFilter(ruleDoc.rules, async x => {
-      return this.isRuleMatch(x, currentWi, parentWi);
+      return this.IsRuleMatch(x, currentWi, parentWi);
     });
 
     webLogger.trace('Found matching rules', matchingRules);
@@ -65,7 +71,7 @@ class RuleProcessor {
     }
   }
 
-  public async isRuleMatch(rule: Rule, workItem: WorkItem, parent: WorkItem): Promise<boolean> {
+  public async IsRuleMatch(rule: Rule, workItem: WorkItem, parent: WorkItem): Promise<boolean> {
     const childType = getWorkItemType(workItem, this._workItemTypes);
     webLogger.trace('Before 1');
     if (rule.workItemType !== childType) return false;

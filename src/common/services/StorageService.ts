@@ -3,6 +3,13 @@ import * as DevOps from 'azure-devops-extension-sdk';
 
 import { RuleDocument } from '../models/RulesDocument';
 
+export interface IStorageService {
+  getRulesForWorkItemType(id: string): Promise<RuleDocument | undefined>;
+  deleteById(id: string): Promise<void>;
+  getData(): Promise<RuleDocument[]>;
+  setData(data: RuleDocument): Promise<RuleDocument>;
+}
+
 enum ScopeType {
   Default = 'Default',
   User = 'User'
@@ -12,7 +19,7 @@ enum CollectionNames {
   WorkItemRules = 'WorkItemRules'
 }
 
-class StorageService {
+class StorageService implements IStorageService {
   private scopeType: ScopeType;
   private dataService?: IExtensionDataService;
 

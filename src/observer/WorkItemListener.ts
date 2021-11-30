@@ -6,13 +6,15 @@ import {
 } from 'azure-devops-extension-api/WorkItemTracking';
 
 import RuleProcessor from '../common/services/RuleProcessor';
+import { StorageService } from '../common/services/StorageService';
+import WorkItemService from '../common/services/WorkItemService';
 import webLogger from '../common/webLogger';
 
 class WorkItemListener implements IWorkItemNotificationListener {
   private readonly _ruleProcessor: RuleProcessor;
 
   constructor() {
-    this._ruleProcessor = new RuleProcessor();
+    this._ruleProcessor = new RuleProcessor(new WorkItemService(), new StorageService());
   }
 
   async onLoaded(args: IWorkItemLoadedArgs): Promise<void> {

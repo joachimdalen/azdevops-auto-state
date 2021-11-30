@@ -10,7 +10,17 @@ import * as DevOps from 'azure-devops-extension-sdk';
 
 import { getChildIds, getParentId } from '../workItemUtils';
 
-class WorkItemService {
+export interface IWorkItemService {
+  getParentForWorkItem(id: number): Promise<WorkItem | undefined>;
+  getChildrenForWorkItem(workItemId: number): Promise<WorkItem[] | undefined>;
+  getWorkItemTypes(): Promise<WorkItemType[]>;
+  getWorkItem(id: number): Promise<WorkItem>;
+  getWorkItems(ids: number[]): Promise<WorkItem[]>;
+  getFields(): Promise<WorkItemField[]>;
+  setWorkItemState(id: number, state: string): Promise<WorkItem>;
+}
+
+class WorkItemService implements IWorkItemService {
   private async getProject(): Promise<IProjectInfo | undefined> {
     const projectService = await DevOps.getService<IProjectPageService>(
       'ms.vss-tfs-web.tfs-page-data-service'
