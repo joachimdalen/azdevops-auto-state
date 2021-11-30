@@ -63,8 +63,6 @@ coverage
 .nyc*
 
 !ci/buildDocs.js
-
-src/tasks/npm*
-src/common/audit*
-src/docs/README.md
-src/docs/CHANGELOG.md
+docs/README.md
+docs/CHANGELOG.md
+test-results.xml
