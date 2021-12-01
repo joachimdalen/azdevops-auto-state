@@ -1,6 +1,11 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const webpack = require('webpack');
+const vssConfig = require('./vss-extension.dev.json');
+const id = [vssConfig.publisher.toLowerCase(), vssConfig.id.toLowerCase()];
+
+const getOutputName = moduleName => {
+  return [...id, moduleName].join('.');
+};
 
 const modules = [
   {
@@ -66,7 +71,7 @@ module.exports = {
         { from: 'dist/control.html', to: 'control.html' },
         { from: 'dist/panel.html', to: 'panel.html' },
         { from: 'admin.html', to: 'admin-hub.html' },
-        { from: 'modal.html', to: 'rule-modal.html' },
+        { from: 'modal.html', to: 'rule-modal.html' }
       ]
     }
   },
@@ -75,7 +80,10 @@ module.exports = {
     //  publicPath: '.',
     publicPath: '/',
     //filename: 'static/[name].[chunkhash:8].js',
-    filename: 'static/[name].js',
+    filename: pathData => {
+      //return outputFileName !== undefined ? `static/${outputFileName}.js` : 'static/[name].js';
+      return `static/${getOutputName(pathData.chunk.id)}.js`;
+    },
     library: '[name]',
     libraryTarget: 'umd',
     clean: true
@@ -136,14 +144,7 @@ module.exports = {
       }
     ]
   },
-  plugins: [
-    // new CopyPlugin({
-    //   patterns: [
-    //     { from: 'modules/control/index.html', to: 'control/index.html' },
-    //     { from: 'modules/panel/index.html', to: 'panel/index.html' }
-    //   ]
-    // })
-  ].concat(
+  plugins: [].concat(
     modules
       .filter(x => x.generate)
       .map(entry => {
