@@ -29,8 +29,11 @@ class WorkItemService implements IWorkItemService {
     return project;
   }
 
-  public async getParentForWorkItem(id: number): Promise<WorkItem | undefined> {
-    const wi = await this.getWorkItem(id);
+  public async getParentForWorkItem(
+    id: number,
+    workItem?: WorkItem
+  ): Promise<WorkItem | undefined> {
+    const wi = workItem || (await this.getWorkItem(id));
     const parentId = getParentId(wi);
     if (parentId === undefined) return undefined;
     const parentWi = await this.getWorkItem(parentId);

@@ -5,8 +5,8 @@ import Rule from '../models/Rule';
 import RuleDocument from '../models/RuleDocument';
 import webLogger from '../webLogger';
 import { getState, getWorkItemType, isInState } from '../workItemUtils';
-import { IStorageService } from './StorageService';
-import { IWorkItemService } from './WorkItemService';
+import { IStorageService, StorageService } from './StorageService';
+import WorkItemService, { IWorkItemService } from './WorkItemService';
 
 export interface IRuleProcessor {
   Init(): Promise<void>;
@@ -22,7 +22,6 @@ class RuleProcessor implements IRuleProcessor {
     private readonly _storageService: IStorageService
   ) {
     webLogger.trace('Setting up rule processor');
-
     this._workItemTypes = [];
   }
 
@@ -70,7 +69,7 @@ class RuleProcessor implements IRuleProcessor {
 
   public async IsRuleMatch(rule: Rule, workItem: WorkItem, parent: WorkItem): Promise<boolean> {
     const childType = getWorkItemType(workItem, this._workItemTypes);
-    webLogger.trace('Before 1');
+    webLogger.trace('Before 1', rule.workItemType, childType);
     if (rule.workItemType !== childType) return false;
 
     const parentType = getWorkItemType(parent, this._workItemTypes);

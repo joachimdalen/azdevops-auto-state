@@ -7,13 +7,7 @@ import {
   IDetailsGroupDividerProps,
   IGroup
 } from '@fluentui/react';
-import {
-  IDialogOptions,
-  IHostNavigationService,
-  IHostPageLayoutService
-} from 'azure-devops-extension-api';
 import { WorkItemType } from 'azure-devops-extension-api/WorkItemTracking';
-import * as DevOps from 'azure-devops-extension-sdk';
 import { ConditionalChildren } from 'azure-devops-ui/ConditionalChildren';
 import { Header } from 'azure-devops-ui/Header';
 import { IHeaderCommandBarItem } from 'azure-devops-ui/HeaderCommandBar';
@@ -23,14 +17,19 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { v4 as uuidV4 } from 'uuid';
 
 import LoadingSection from '../common/component/LoadingSection';
-import StateTag from '../common/component/StateTag';
 import WorkItemTypeTag from '../common/component/WorkItemTypeTag';
 import AddRuleResult from '../common/models/AddRuleResult';
 import Rule from '../common/models/Rule';
 import RuleDocument from '../common/models/RuleDocument';
 import { StorageService } from '../common/services/StorageService';
 import WorkItemService from '../common/services/WorkItemService';
-import { getState, getWorkItemType, groupBy, isGroup } from './helpers';
+import webLogger from '../common/webLogger';
+import {
+  getCommandBarItems,
+  getListColumns,
+  groupBy,
+  isGroup
+} from './helpers';
 
 const AdminPage = (): React.ReactElement => {
   const [types, setTypes] = useState<WorkItemType[]>([]);
@@ -46,9 +45,9 @@ const AdminPage = (): React.ReactElement => {
       try {
         const documents = await storageService.getData();
         setDocuments(documents);
-        console.log(documents);
+        webLogger.information(documents);
       } catch (error) {
-        console.log('Failed to get documents', error);
+        webLogger.information('Failed to get documents', error);
       } finally {
         setLoading(false);
       }
@@ -57,163 +56,40 @@ const AdminPage = (): React.ReactElement => {
     fetchData();
   }, []);
 
-  const commandBarItems: IHeaderCommandBarItem[] = [
-    {
-      id: 'open-docs',
-      text: 'Open docs',
-      iconProps: { iconName: 'Help' },
-      onActivate: () => {
-        DevOps.getService<IHostNavigationService>('ms.vss-features.host-navigation-service').then(
-          value => {
-            value.openNewWindow('https://github.com/joachimdalen/azdevops-auto-state', '');
-          }
-        );
-      }
-    },
-    {
-      id: 'clear-storage',
-      text: 'Clear',
-      iconProps: { iconName: 'Help' },
-      onActivate: () => {
-        new StorageService().deleteById('06d8f15d-6931-47b9-837a-d986caa2fa60');
-      }
-    },
-    {
-      id: 'new-rule',
-      text: 'Add Rule',
-      isPrimary: true,
-      iconProps: { iconName: 'Add' },
-      onActivate: () => {
-        DevOps.getService<IHostPageLayoutService>('ms.vss-features.host-page-layout-service').then(
-          dialogService => {
-            const options: IDialogOptions<AddRuleResult> = {
-              title: 'Create new rule',
-              onClose: async (result: AddRuleResult | undefined) => {
-                if (result?.result === 'CANCEL') return;
-                if (!result?.rule) return;
-                const documentsForType = documents.find(x => x.id === result.id);
+  const handleDialogResult = async (result: AddRuleResult | undefined) => {
+    if (result?.result === 'CANCEL') return;
+    if (!result?.rule) return;
+    const documentsForType = documents.find(x => x.id === result.id);
 
-                if (documentsForType) {
-                  const ruleIndex = documentsForType.rules.findIndex(x => x.id === result.rule?.id);
-                  if (ruleIndex >= 0) {
-                    documentsForType.rules[ruleIndex] = result.rule;
-                  } else {
-                    documentsForType.rules = [...documentsForType.rules, result.rule];
-                  }
-                  await storageService.setData(documentsForType);
-                  const docIndex = documents.findIndex(x => x.id === result.id);
-                  if (docIndex >= 0) {
-                    const newDocs = [...documents];
-                    newDocs[docIndex] = documentsForType;
-                    setDocuments(newDocs);
-                  }
-                } else {
-                  console.log('Creating new document');
-                  const newDocument: RuleDocument = {
-                    id: result.rule.workItemType,
-                    rules: [{ ...result.rule, id: uuidV4() }]
-                  };
-                  const created = await storageService.setData(newDocument);
-                  setDocuments(prev => [...prev, created]);
-                }
-              }
-            };
-
-            dialogService.openCustomDialog(
-              DevOps.getExtensionContext().id + '.rule-modal',
-              options
-            );
-          }
-        );
+    if (documentsForType) {
+      const ruleIndex = documentsForType.rules.findIndex(x => x.id === result.rule?.id);
+      if (ruleIndex >= 0) {
+        documentsForType.rules[ruleIndex] = result.rule;
+      } else {
+        documentsForType.rules = [...documentsForType.rules, result.rule];
       }
+      await storageService.setData(documentsForType);
+      const docIndex = documents.findIndex(x => x.id === result.id);
+      if (docIndex >= 0) {
+        const newDocs = [...documents];
+        newDocs[docIndex] = documentsForType;
+        setDocuments(newDocs);
+      }
+    } else {
+      webLogger.information('Creating new document');
+      const newDocument: RuleDocument = {
+        id: result.rule.workItemType,
+        rules: [{ ...result.rule, id: uuidV4() }]
+      };
+      const created = await storageService.setData(newDocument);
+      setDocuments(prev => [...prev, created]);
     }
-  ];
-  const columns: IColumn[] = [
-    {
-      key: 'childState',
-      name: 'When Child State',
-      fieldName: 'childState',
-      className: 'flex-self-center',
-      minWidth: 50,
-      maxWidth: 150,
-      isResizable: true,
-      onRender: (item?: any, index?: number, column?: IColumn) => {
-        const state = getState(types, item.workItemType, item.childState);
-        return state === undefined ? state : <StateTag color={state.color} text={state.name} />;
-      }
-    },
-    {
-      key: 'parentType',
-      name: 'And parent type',
-      fieldName: 'parentType',
-      className: 'flex-self-center',
-      minWidth: 100,
-      maxWidth: 200,
-      isResizable: true,
-      onRender: (item?: any, index?: number, column?: IColumn) => {
-        const type = getWorkItemType(types, item.parentType);
-        return type === undefined ? (
-          item.parentType
-        ) : (
-          <WorkItemTypeTag iconSize={14} iconUrl={type.icon.url} text={type.name} />
-        );
-      }
-    },
-    {
-      key: 'parentNotState',
-      name: 'Parent state is not',
-      fieldName: 'parentNotState',
-      className: 'flex-self-center',
-      minWidth: 100,
-      maxWidth: 200,
-      isResizable: true,
-      onRender: (item?: any, index?: number, column?: IColumn) => {
-        const states = getWorkItemType(types, item.parentType);
-        return (
-          <div className="flex-column">
-            {item.parentNotState.map((s: string) => {
-              const state = states?.states?.find(x => x.name === s);
-              return state !== undefined ? (
-                <StateTag key={state.name} text={state.name} color={state.color} />
-              ) : (
-                s
-              );
-            })}
-          </div>
-        );
-      }
-    },
-    {
-      key: 'parentTargetState',
-      name: 'Set parent state to',
-      fieldName: 'parentTargetState',
-      className: 'flex-self-center',
-      minWidth: 100,
-      maxWidth: 200,
-      isResizable: true,
-      onRender: (item?: any, index?: number, column?: IColumn) => {
-        const state = getState(types, item.parentType, item.parentTargetState);
-        return state === undefined ? state : <StateTag color={state.color} text={state.name} />;
-      }
-    },
-    {
-      key: 'allChildren',
-      name: 'When all children',
-      fieldName: 'allChildren',
-      className: 'flex-self-center',
-      minWidth: 100,
-      maxWidth: 200,
-      isResizable: true
-    },
-    {
-      key: 'actions',
-      name: 'Actions',
-      fieldName: 'actions',
-      className: 'flex-self-center',
-      minWidth: 100,
-      maxWidth: 200
-    }
-  ];
+  };
+  const commandBarItems: IHeaderCommandBarItem[] = useMemo(
+    () => getCommandBarItems(handleDialogResult),
+    [handleDialogResult]
+  );
+  const columns: IColumn[] = useMemo(() => getListColumns(types), [types]);
 
   const [ruleItems, groups]: [Rule[], IGroup[]] = useMemo(() => {
     const rules = documents.flatMap(x => x.rules);
@@ -243,7 +119,7 @@ const AdminPage = (): React.ReactElement => {
   }, [documents, types]);
 
   useEffect(() => {
-    console.log([ruleItems, groups]);
+    webLogger.information([ruleItems, groups]);
   }, [ruleItems, groups]);
 
   return (
@@ -263,7 +139,7 @@ const AdminPage = (): React.ReactElement => {
               ariaLabelForSelectionColumn="Toggle selection"
               ariaLabelForSelectAllCheckbox="Toggle selection for all items"
               checkboxVisibility={CheckboxVisibility.hidden}
-              onItemInvoked={item => console.log(item)}
+              onItemInvoked={item => webLogger.information(item)}
               groupProps={{
                 showEmptyGroups: false,
                 onRenderHeader: (

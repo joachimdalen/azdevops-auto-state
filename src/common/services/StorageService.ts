@@ -5,7 +5,6 @@ import RuleDocument from '../models/RuleDocument';
 
 export interface IStorageService {
   getRulesForWorkItemType(id: string): Promise<RuleDocument | undefined>;
-  deleteById(id: string): Promise<void>;
   getData(): Promise<RuleDocument[]>;
   setData(data: RuleDocument): Promise<RuleDocument>;
 }
@@ -46,14 +45,6 @@ class StorageService implements IStorageService {
       scopeType: this.scopeType,
       defaultValue: undefined
     });
-  }
-  public async deleteById(id: string): Promise<void> {
-    const dataService = await this.getDataService();
-    const dataManager = await dataService.getExtensionDataManager(
-      DevOps.getExtensionContext().id,
-      await DevOps.getAccessToken()
-    );
-    return dataManager.deleteDocument(CollectionNames.WorkItemRules, id);
   }
   public async getData(): Promise<RuleDocument[]> {
     const dataService = await this.getDataService();

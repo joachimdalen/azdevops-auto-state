@@ -6,7 +6,7 @@ import {
 
 const getWorkItem = (
   id: number,
-  type: string,
+  type: WorkItemNames,
   state: string,
   related?: WorkItem[],
   relatedType?: 'parent' | 'children'
@@ -41,14 +41,17 @@ const getWorkItem = (
 
 const getWorkItemTypes = (): WorkItemType[] => {
   return [
-    getWorkItemType('Epic', 'Microsoft.VSTS.WorkItemTypes.Epic'),
-    getWorkItemType('Feature', 'Microsoft.VSTS.WorkItemTypes.Feature'),
-    getWorkItemType('User Story', 'Microsoft.VSTS.WorkItemTypes.UserStory'),
-    getWorkItemType('Task', 'Microsoft.VSTS.WorkItemTypes.Task')
+    getWorkItemType(WorkItemNames.Epic, WorkItemReferenceNames.Epic),
+    getWorkItemType(WorkItemNames.Feature, WorkItemReferenceNames.Feature),
+    getWorkItemType(WorkItemNames.UserStory, WorkItemReferenceNames.UserStory),
+    getWorkItemType(WorkItemNames.Task, WorkItemReferenceNames.Task)
   ];
 };
 
-const getWorkItemType = (name: string, referenceName: string): WorkItemType => {
+const getWorkItemType = (
+  name: WorkItemNames,
+  referenceName: WorkItemReferenceNames
+): WorkItemType => {
   const p: Partial<WorkItemType> = {
     name: name,
     referenceName: referenceName
@@ -56,4 +59,17 @@ const getWorkItemType = (name: string, referenceName: string): WorkItemType => {
   return p as WorkItemType;
 };
 
-export { getWorkItem, getWorkItemTypes };
+enum WorkItemReferenceNames {
+  Epic = 'Microsoft.VSTS.WorkItemTypes.Epic',
+  Feature = 'Microsoft.VSTS.WorkItemTypes.Feature',
+  UserStory = 'Microsoft.VSTS.WorkItemTypes.UserStory',
+  Task = 'Microsoft.VSTS.WorkItemTypes.Task'
+}
+enum WorkItemNames {
+  Epic = 'Epic',
+  Feature = 'Feature',
+  UserStory = 'User Story',
+  Task = 'Task'
+}
+
+export { getWorkItem, getWorkItemTypes, WorkItemReferenceNames, WorkItemNames };
