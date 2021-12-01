@@ -26,7 +26,10 @@ const isGroup = (item: IGroup | undefined): item is IGroup => {
   return !!item;
 };
 
-export const getListColumns = (types: WorkItemType[]): IColumn[] => {
+export const getListColumns = (
+  types: WorkItemType[],
+  handleDeleteRule: (workItemType: string, ruleId: string) => Promise<void>
+): IColumn[] => {
   const columns: IColumn[] = [
     {
       key: 'childState',
@@ -112,7 +115,15 @@ export const getListColumns = (types: WorkItemType[]): IColumn[] => {
       minWidth: 100,
       maxWidth: 200,
       onRender: (item?: any, index?: number, column?: IColumn) => {
-        return <ActionButton text="Delete" iconProps={{iconName:'Delete'}} />;
+        return (
+          <ActionButton
+            text="Delete"
+            iconProps={{ iconName: 'Delete' }}
+            onClick={async () => {
+              await handleDeleteRule(item.workItemType, item.id);
+            }}
+          />
+        );
       }
     }
   ];

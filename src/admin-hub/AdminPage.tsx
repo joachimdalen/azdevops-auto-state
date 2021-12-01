@@ -24,12 +24,7 @@ import RuleDocument from '../common/models/RuleDocument';
 import { StorageService } from '../common/services/StorageService';
 import WorkItemService from '../common/services/WorkItemService';
 import webLogger from '../common/webLogger';
-import {
-  getCommandBarItems,
-  getListColumns,
-  groupBy,
-  isGroup
-} from './helpers';
+import { getCommandBarItems, getListColumns, groupBy, isGroup } from './helpers';
 
 const AdminPage = (): React.ReactElement => {
   const [types, setTypes] = useState<WorkItemType[]>([]);
@@ -85,11 +80,26 @@ const AdminPage = (): React.ReactElement => {
       setDocuments(prev => [...prev, created]);
     }
   };
+
+  const handleDeleteRule = async (workItemType: string, ruleId: string) => {
+    const documentIndex = documents.findIndex(x => x.id === workItemType);
+    console.log(documentIndex, workItemType, ruleId, documents);
+    if (documentIndex >= 0) {
+      const document = documents[documentIndex];
+      const newRules = document.rules.filter(z => z.id !== ruleId);
+      document.rules = newRules;
+      await storageService.setData(document);
+
+      const newDocuments = [...documents];
+      newDocuments[documentIndex] = document;
+      setDocuments(newDocuments);
+    }
+  };
   const commandBarItems: IHeaderCommandBarItem[] = useMemo(
     () => getCommandBarItems(handleDialogResult),
     [handleDialogResult]
   );
-  const columns: IColumn[] = useMemo(() => getListColumns(types), [types]);
+  const columns: IColumn[] = useMemo(() => getListColumns(types, handleDeleteRule), [types, documents]);
 
   const [ruleItems, groups]: [Rule[], IGroup[]] = useMemo(() => {
     const rules = documents.flatMap(x => x.rules);
