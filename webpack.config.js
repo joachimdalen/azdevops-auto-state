@@ -9,11 +9,6 @@ const getOutputName = moduleName => {
 
 const modules = [
   {
-    name: 'common',
-    entry: './src/common/common',
-    generate: false
-  },
-  {
     name: 'observer',
     entry: './src/observer/module',
     root: 'observer-container',
@@ -96,7 +91,9 @@ module.exports = {
   },
   // stats: 'errors-only',
   optimization: {
-    runtimeChunk: 'single',
+    runtimeChunk: {
+      name: (entrypoint) => `${entrypoint.name}-runtime`,
+    },
     splitChunks: {
       cacheGroups: {
         vendor: {
@@ -129,11 +126,7 @@ module.exports = {
       },
       {
         test: /\.woff$/,
-        use: [
-          {
-            loader: 'base64-inline-loader'
-          }
-        ]
+        type: 'asset/resource',
       },
       {
         test: /\.html$/,

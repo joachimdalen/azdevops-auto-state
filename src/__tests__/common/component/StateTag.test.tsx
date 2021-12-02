@@ -2,7 +2,7 @@ import '@testing-library/jest-dom/extend-expect';
 
 import { render, screen } from '@testing-library/react';
 
-import StateTag from '../../../common/component/StateTag';
+import StateTag from '../../../shared-ui/component/StateTag';
 
 describe('StateTag', () => {
   test('StateTag - rendering', () => {

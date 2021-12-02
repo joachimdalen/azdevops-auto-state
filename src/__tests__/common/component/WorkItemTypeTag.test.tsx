@@ -2,7 +2,7 @@ import '@testing-library/jest-dom/extend-expect';
 
 import { render, screen } from '@testing-library/react';
 
-import WorkItemTypeTag from '../../../common/component/WorkItemTypeTag';
+import WorkItemTypeTag from '../../../shared-ui/component/WorkItemTypeTag';
 
 describe('WorkItemTypeTag', () => {
   test('WorkItemTypeTag - rendering', () => {

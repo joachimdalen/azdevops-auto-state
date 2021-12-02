@@ -6,12 +6,11 @@ import {
 } from 'azure-devops-extension-api';
 import { WorkItemStateColor, WorkItemType } from 'azure-devops-extension-api/WorkItemTracking';
 import * as DevOps from 'azure-devops-extension-sdk';
-import { Button } from 'azure-devops-ui/Button';
 import { IHeaderCommandBarItem } from 'azure-devops-ui/HeaderCommandBar';
 
-import StateTag from '../common/component/StateTag';
-import WorkItemTypeTag from '../common/component/WorkItemTypeTag';
 import AddRuleResult from '../common/models/AddRuleResult';
+import StateTag from '../shared-ui/component/StateTag';
+import WorkItemTypeTag from '../shared-ui/component/WorkItemTypeTag';
 
 const getWorkItemType = (types: WorkItemType[], type: string): WorkItemType | undefined =>
   types.find(x => x.referenceName === type);
@@ -37,7 +36,7 @@ export const getListColumns = (
       fieldName: 'childState',
       className: 'flex-self-center',
       minWidth: 50,
-      maxWidth: 150,
+      maxWidth: 300,
       isResizable: true,
       onRender: (item?: any, index?: number, column?: IColumn) => {
         const state = getState(types, item.workItemType, item.childState);
@@ -50,7 +49,7 @@ export const getListColumns = (
       fieldName: 'parentType',
       className: 'flex-self-center',
       minWidth: 100,
-      maxWidth: 200,
+      maxWidth: 300,
       isResizable: true,
       onRender: (item?: any, index?: number, column?: IColumn) => {
         const type = getWorkItemType(types, item.parentType);
@@ -67,7 +66,7 @@ export const getListColumns = (
       fieldName: 'parentNotState',
       className: 'flex-self-center',
       minWidth: 100,
-      maxWidth: 200,
+      maxWidth: 300,
       isResizable: true,
       onRender: (item?: any, index?: number, column?: IColumn) => {
         const states = getWorkItemType(types, item.parentType);
@@ -91,7 +90,7 @@ export const getListColumns = (
       fieldName: 'parentTargetState',
       className: 'flex-self-center',
       minWidth: 100,
-      maxWidth: 200,
+      maxWidth: 300,
       isResizable: true,
       onRender: (item?: any, index?: number, column?: IColumn) => {
         const state = getState(types, item.parentType, item.parentTargetState);
@@ -104,8 +103,11 @@ export const getListColumns = (
       fieldName: 'allChildren',
       className: 'flex-self-center',
       minWidth: 100,
-      maxWidth: 200,
-      isResizable: true
+      maxWidth: 300,
+      isResizable: true,
+      onRender: (item?: any, index?: number, column?: IColumn) => {
+        return item.allChildren ? 'YES' : 'NO';
+      }
     },
     {
       key: 'actions',
@@ -113,7 +115,6 @@ export const getListColumns = (
       fieldName: 'actions',
       className: 'flex-self-center',
       minWidth: 100,
-      maxWidth: 200,
       onRender: (item?: any, index?: number, column?: IColumn) => {
         return (
           <ActionButton

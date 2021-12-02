@@ -13,14 +13,14 @@ import { IListBoxItem } from 'azure-devops-ui/ListBox';
 import { ITableColumn, SimpleTableCell } from 'azure-devops-ui/Table';
 import { useEffect, useMemo, useState } from 'react';
 
-import { appTheme } from '../common/azure-devops-theme';
-import StateTag from '../common/component/StateTag';
-import { showRootComponent } from '../common/helpers';
-import useDropdownMultiSelection from '../common/hooks/useDropdownMultiSelection';
-import useDropdownSelection from '../common/hooks/useDropdownSelection';
 import AddRuleResult from '../common/models/AddRuleResult';
 import Rule from '../common/models/Rule';
 import WorkItemService from '../common/services/WorkItemService';
+import { appTheme } from '../shared-ui/azure-devops-theme';
+import StateTag from '../shared-ui/component/StateTag';
+import useDropdownMultiSelection from '../shared-ui/hooks/useDropdownMultiSelection';
+import useDropdownSelection from '../shared-ui/hooks/useDropdownSelection';
+import showRootComponent from '../shared-ui/showRootComponent';
 
 const ModalContent = (): React.ReactElement => {
   const [types, setTypes] = useState<WorkItemType[]>([]);
