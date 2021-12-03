@@ -34,14 +34,14 @@
       "type": "ms.vss-work-web.work-item-notifications",
       "targets": ["ms.vss-work-web.work-item-form"],
       "properties": {
-        "uri": "observer.html"
+        "uri": "joachimdalen.auto-state.observer.html"
       }
     },
     {
       "id": "rule-modal",
       "type": "ms.vss-web.external-content",
       "properties": {
-        "uri": "rule-modal.html"
+        "uri": "joachimdalen.auto-state.rule-modal.html"
       }
     },
     {
@@ -52,7 +52,7 @@
       "properties": {
         "name": "Auto State",
         "order": 1,
-        "uri": "admin.html"
+        "uri": "joachimdalen.auto-state.admin-hub.html"
       }
     }
   ]
