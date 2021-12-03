@@ -161,9 +161,18 @@ const getListRowContextMenuItem = (
         itemProps: { lang: 'en-us' }
       },
       {
+        key: 'edit',
+        text: 'Edit',
+        iconProps: { iconName: 'Edit'}
+      },
+      {
         key: 'duplicate',
         text: 'Duplicate Rule',
         iconProps: { iconName: 'Copy', style: { color: 'green' } }
+      },
+      {
+        key: 'div1',
+        itemType: ContextualMenuItemType.Divider
       },
       {
         key: 'delete',
