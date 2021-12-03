@@ -1,4 +1,12 @@
-import { ActionButton, IColumn, IGroup } from '@fluentui/react';
+import {
+  ActionButton,
+  ContextualMenuItemType,
+  IColumn,
+  IconButton,
+  IContextualMenuItem,
+  IContextualMenuProps,
+  IGroup
+} from '@fluentui/react';
 import {
   IDialogOptions,
   IHostNavigationService,
@@ -9,6 +17,7 @@ import * as DevOps from 'azure-devops-extension-sdk';
 import { IHeaderCommandBarItem } from 'azure-devops-ui/HeaderCommandBar';
 
 import AddRuleResult from '../common/models/AddRuleResult';
+import Rule from '../common/models/Rule';
 import StateTag from '../shared-ui/component/StateTag';
 import WorkItemTypeTag from '../shared-ui/component/WorkItemTypeTag';
 
@@ -27,7 +36,7 @@ const isGroup = (item: IGroup | undefined): item is IGroup => {
 
 export const getListColumns = (
   types: WorkItemType[],
-  handleDeleteRule: (workItemType: string, ruleId: string) => Promise<void>
+  handleDeleteRule: (workItemType: string, ruleId: string) => Promise<boolean>
 ): IColumn[] => {
   const columns: IColumn[] = [
     {
@@ -116,13 +125,19 @@ export const getListColumns = (
       className: 'flex-self-center',
       minWidth: 100,
       onRender: (item?: any, index?: number, column?: IColumn) => {
-        return (
+        /* return (
           <ActionButton
             text="Delete"
             iconProps={{ iconName: 'Delete' }}
             onClick={async () => {
               await handleDeleteRule(item.workItemType, item.id);
             }}
+          />
+        ); */
+        return (
+          <IconButton
+            menuProps={getListRowContextMenuItem(item, handleDeleteRule)}
+            iconProps={{ iconName: 'MoreVertical' }}
           />
         );
       }
@@ -131,6 +146,42 @@ export const getListColumns = (
   return columns;
 };
 
+const getListRowContextMenuItem = (
+  rule: Rule,
+  handleDeleteRule: (workItemType: string, ruleId: string) => Promise<boolean>
+): IContextualMenuProps => {
+  return {
+    shouldFocusOnMount: true,
+
+    items: [
+      {
+        key: 'Actions',
+        itemType: ContextualMenuItemType.Header,
+        text: 'Actions',
+        itemProps: { lang: 'en-us' }
+      },
+      {
+        key: 'duplicate',
+        text: 'Duplicate Rule',
+        iconProps: { iconName: 'Copy', style: { color: 'green' } }
+      },
+      {
+        key: 'delete',
+        iconProps: { iconName: 'Delete', style: { color: 'salmon' } },
+        text: 'Delete',
+        title: 'Delete rule',
+        onClick: (
+          ev?: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>,
+          item?: IContextualMenuItem
+        ) => {
+          handleDeleteRule(rule.workItemType, rule.id!).then(r => {
+            return r;
+          });
+        }
+      }
+    ]
+  };
+};
 export const getCommandBarItems = (
   handleResult: (result: AddRuleResult | undefined) => Promise<void>
 ): IHeaderCommandBarItem[] => [

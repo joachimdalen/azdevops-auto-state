@@ -63,11 +63,11 @@ const AdminPage = (): React.ReactElement => {
       } else {
         documentsForType.rules = [...documentsForType.rules, result.rule];
       }
-      await storageService.setData(documentsForType);
+      const updatedDocument = await storageService.setData(documentsForType);
       const docIndex = documents.findIndex(x => x.id === result.id);
       if (docIndex >= 0) {
         const newDocs = [...documents];
-        newDocs[docIndex] = documentsForType;
+        newDocs[docIndex] = updatedDocument;
         setDocuments(newDocs);
       }
     } else {
@@ -81,25 +81,29 @@ const AdminPage = (): React.ReactElement => {
     }
   };
 
-  const handleDeleteRule = async (workItemType: string, ruleId: string) => {
+  const handleDeleteRule = async (workItemType: string, ruleId: string): Promise<boolean> => {
     const documentIndex = documents.findIndex(x => x.id === workItemType);
     console.log(documentIndex, workItemType, ruleId, documents);
     if (documentIndex >= 0) {
       const document = documents[documentIndex];
       const newRules = document.rules.filter(z => z.id !== ruleId);
       document.rules = newRules;
-      await storageService.setData(document);
+      const updatedDocument = await storageService.setData(document);
 
       const newDocuments = [...documents];
-      newDocuments[documentIndex] = document;
+      newDocuments[documentIndex] = updatedDocument;
       setDocuments(newDocuments);
     }
+    return true;
   };
   const commandBarItems: IHeaderCommandBarItem[] = useMemo(
     () => getCommandBarItems(handleDialogResult),
     [handleDialogResult]
   );
-  const columns: IColumn[] = useMemo(() => getListColumns(types, handleDeleteRule), [types, documents]);
+  const columns: IColumn[] = useMemo(() => getListColumns(types, handleDeleteRule), [
+    types,
+    documents
+  ]);
 
   const [ruleItems, groups]: [Rule[], IGroup[]] = useMemo(() => {
     const rules = documents.flatMap(x => x.rules);
