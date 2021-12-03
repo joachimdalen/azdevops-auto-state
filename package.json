@@ -49,7 +49,7 @@
     "uuid": "^8.3.2"
   },
   "scripts": {
-    "package-release": "tfx extension create --root ./ --output-path ./joachimdalen-npm-audit-report.vsix --manifest-globs ./vss-extension.json --overrides-file ./vss-extension.release.json",
+    "package-release": "tfx extension create --root ./ --manifest-globs ./vss-extension.json --overrides-file ./vss-extension.release.json",
     "package-dev": "tfx extension create --root ./ --manifest-globs ./vss-extension.dev.json",
     "copy-dev-docs": "cp docs/CHANGELOG-DEV.md docs/CHANGELOG.md",
     "copy-prod-docs": "cp docs/CHANGELOG-PROD.md docs/CHANGELOG.md",
