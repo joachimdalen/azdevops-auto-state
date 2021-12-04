@@ -147,6 +147,8 @@ If you want to contribute code, I ask that you follow some guidelines.
   - `feature/` for new features
   - `bugfix/` for bug fixes
   - `docs/` for documentation changes
+- If your change is related to an issue, use the id as the first part of the branch e.g `bugfix/12-fix-crash-when-updating-rule`
+- Pull requests should target the `develop` branch
 
 1. Fork the Project
 2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
@@ -160,7 +162,7 @@ If you want to contribute code, I ask that you follow some guidelines.
 
 ## License
 
-Distributed under the MIT License. See `LICENSE.txt` for more information.
+Distributed under the MIT License. See `LICENSE` for more information.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
