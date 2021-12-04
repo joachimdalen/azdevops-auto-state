@@ -1,12 +1,17 @@
 import { IExtensionDataService } from 'azure-devops-extension-api';
 import * as DevOps from 'azure-devops-extension-sdk';
 
-import RuleDocument from '../models/RuleDocument';
+import ProjectConfigurationDocument from '../models/ProjectConfigurationDocument';
+import WorkItemRules from '../models/WorkItemRules';
 
 export interface IStorageService {
-  getRulesForWorkItemType(id: string): Promise<RuleDocument | undefined>;
-  getData(): Promise<RuleDocument[]>;
-  setData(data: RuleDocument): Promise<RuleDocument>;
+  getRulesForWorkItemType(
+    workItemType: string,
+    projectId: string
+  ): Promise<WorkItemRules | undefined>;
+  getData(): Promise<ProjectConfigurationDocument[]>;
+  getDataForProject(projectId: string): Promise<ProjectConfigurationDocument | undefined>;
+  setData(data: ProjectConfigurationDocument): Promise<ProjectConfigurationDocument>;
 }
 
 enum ScopeType {
@@ -35,18 +40,48 @@ class StorageService implements IStorageService {
     return this.dataService;
   }
 
-  public async getRulesForWorkItemType(id: string): Promise<RuleDocument | undefined> {
+  public async getRulesForWorkItemType(
+    workItemType: string,
+    projectId: string
+  ): Promise<WorkItemRules | undefined> {
     const dataService = await this.getDataService();
     const dataManager = await dataService.getExtensionDataManager(
       DevOps.getExtensionContext().id,
       await DevOps.getAccessToken()
     );
-    return dataManager.getDocument(CollectionNames.WorkItemRules, id, {
-      scopeType: this.scopeType,
-      defaultValue: undefined
-    });
+    const document: ProjectConfigurationDocument | undefined = await dataManager.getDocument(
+      CollectionNames.WorkItemRules,
+      projectId,
+      {
+        scopeType: this.scopeType,
+        defaultValue: undefined
+      }
+    );
+
+    if (!document) return undefined;
+
+    const types = document.workItemRules?.find(x => x.workItemType === workItemType);
+    return types;
   }
-  public async getData(): Promise<RuleDocument[]> {
+  public async getDataForProject(
+    projectId: string
+  ): Promise<ProjectConfigurationDocument | undefined> {
+    try {
+      const dataService = await this.getDataService();
+      const dataManager = await dataService.getExtensionDataManager(
+        DevOps.getExtensionContext().id,
+        await DevOps.getAccessToken()
+      );
+      const data = await dataManager.getDocument(CollectionNames.WorkItemRules, projectId, {
+        scopeType: this.scopeType
+      });
+      return data;
+    } catch (error) {
+      return undefined;
+    }
+  }
+
+  public async getData(): Promise<ProjectConfigurationDocument[]> {
     const dataService = await this.getDataService();
     const dataManager = await dataService.getExtensionDataManager(
       DevOps.getExtensionContext().id,
@@ -57,7 +92,7 @@ class StorageService implements IStorageService {
     });
   }
 
-  public async setData(data: RuleDocument): Promise<RuleDocument> {
+  public async setData(data: ProjectConfigurationDocument): Promise<ProjectConfigurationDocument> {
     const dataService = await this.getDataService();
     const dataManager = await dataService.getExtensionDataManager(
       DevOps.getExtensionContext().id,

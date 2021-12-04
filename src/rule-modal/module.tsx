@@ -133,7 +133,7 @@ const ModalContent = (): React.ReactElement => {
       };
 
       const res: AddRuleResult = {
-        id: workItemType,
+        workItemType: workItemType,
         result: 'SAVE',
         rule: ac
       };

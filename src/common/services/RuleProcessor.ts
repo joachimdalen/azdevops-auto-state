@@ -2,7 +2,7 @@ import { WorkItem, WorkItemType } from 'azure-devops-extension-api/WorkItemTrack
 
 import { asyncFilter } from '../helpers';
 import Rule from '../models/Rule';
-import RuleDocument from '../models/RuleDocument';
+import WorkItemRules from '../models/WorkItemRules';
 import webLogger from '../webLogger';
 import { getState, getWorkItemType, isInState } from '../workItemUtils';
 import { IStorageService, StorageService } from './StorageService';
@@ -33,19 +33,21 @@ class RuleProcessor implements IRuleProcessor {
   }
 
   public async ProcessWorkItem(workItemId: number): Promise<void> {
+    const project = await this._workItemService.getProject();
     const currentWi: WorkItem = await this._workItemService.getWorkItem(workItemId);
     const parentWi: WorkItem | undefined = await this._workItemService.getParentForWorkItem(
       workItemId
     );
 
-    if (parentWi === undefined) return;
+    if (parentWi === undefined || project === undefined) return;
 
     const workItemType = getWorkItemType(currentWi, this._workItemTypes);
 
     if (workItemType === undefined) return;
 
-    const ruleDoc: RuleDocument | undefined = await this._storageService.getRulesForWorkItemType(
-      workItemType
+    const ruleDoc: WorkItemRules | undefined = await this._storageService.getRulesForWorkItemType(
+      workItemType,
+      project.id
     );
 
     if (ruleDoc === undefined) return;

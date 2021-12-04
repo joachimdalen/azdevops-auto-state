@@ -17,8 +17,8 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { v4 as uuidV4 } from 'uuid';
 
 import AddRuleResult from '../common/models/AddRuleResult';
+import ProjectConfigurationDocument from '../common/models/ProjectConfigurationDocument';
 import Rule from '../common/models/Rule';
-import RuleDocument from '../common/models/RuleDocument';
 import { StorageService } from '../common/services/StorageService';
 import WorkItemService from '../common/services/WorkItemService';
 import webLogger from '../common/webLogger';
@@ -28,21 +28,27 @@ import { getCommandBarItems, getListColumns, groupBy, isGroup } from './helpers'
 
 const AdminPage = (): React.ReactElement => {
   const [types, setTypes] = useState<WorkItemType[]>([]);
-  const [documents, setDocuments] = useState<RuleDocument[]>([]);
+  const [configuration, setConfiguration] = useState<ProjectConfigurationDocument | undefined>(
+    undefined
+  );
   const storageService = useMemo(() => new StorageService(), []);
+  const workItemService = useMemo(() => new WorkItemService(), []);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     async function fetchData() {
       const service = new WorkItemService();
       const loadedTypes = await service.getWorkItemTypes();
+      const project = await service.getProject();
       setTypes(loadedTypes);
 
       try {
-        const documents = await storageService.getData();
-        setDocuments(documents);
-        webLogger.information(documents);
+        if (project) {
+          const config = await storageService.getDataForProject(project.id);
+          setConfiguration(config);
+          webLogger.information(config);
+        }
       } catch (error) {
-        webLogger.information('Failed to get documents', error);
+        webLogger.information('Failed to get project configuration', error);
       } finally {
         setLoading(false);
       }
@@ -54,45 +60,59 @@ const AdminPage = (): React.ReactElement => {
   const handleDialogResult = async (result: AddRuleResult | undefined) => {
     if (result?.result === 'CANCEL') return;
     if (!result?.rule) return;
-    const documentsForType = documents.find(x => x.id === result.id);
-
-    if (documentsForType) {
-      const ruleIndex = documentsForType.rules.findIndex(x => x.id === result.rule?.id);
-      if (ruleIndex >= 0) {
-        documentsForType.rules[ruleIndex] = result.rule;
-      } else {
-        documentsForType.rules = [...documentsForType.rules, result.rule];
-      }
-      const updatedDocument = await storageService.setData(documentsForType);
-      const docIndex = documents.findIndex(x => x.id === result.id);
-      if (docIndex >= 0) {
-        const newDocs = [...documents];
-        newDocs[docIndex] = updatedDocument;
-        setDocuments(newDocs);
-      }
-    } else {
-      webLogger.information('Creating new document');
-      const newDocument: RuleDocument = {
-        id: result.rule.workItemType,
-        rules: [{ ...result.rule, id: uuidV4() }]
+    const project = await workItemService.getProject();
+    if (!project) return;
+    if (configuration === undefined) {
+      const newDocument: ProjectConfigurationDocument = {
+        id: project.id,
+        workItemRules: [
+          { workItemType: result.rule.workItemType, rules: [{ ...result.rule, id: uuidV4() }] }
+        ]
       };
       const created = await storageService.setData(newDocument);
-      setDocuments(prev => [...prev, created]);
+      setConfiguration(created);
+    } else {
+      const wiIndex = configuration?.workItemRules.findIndex(
+        x => x.workItemType === result.workItemType
+      );
+      if (wiIndex !== undefined && wiIndex > 0) {
+        const ruleDocument = configuration.workItemRules[wiIndex];
+        const ruleIndex = ruleDocument.rules.findIndex(x => x.id === result.rule?.id);
+        if (ruleIndex >= 0) {
+          ruleDocument.rules[ruleIndex] = result.rule;
+        } else {
+          ruleDocument.rules = [...ruleDocument.rules, result.rule];
+        }
+        const nd = { ...configuration };
+        nd.workItemRules[wiIndex] = ruleDocument;
+        const updatedDocument = await storageService.setData(nd);
+        setConfiguration(updatedDocument);
+      } else {
+        const newDoc: ProjectConfigurationDocument = {
+          ...configuration,
+          workItemRules: [
+            ...configuration.workItemRules,
+            { workItemType: result.rule.workItemType, rules: [{ ...result.rule, id: uuidV4() }] }
+          ]
+        };
+        const created = await storageService.setData(newDoc);
+        setConfiguration(created);
+      }
     }
   };
 
   const handleDeleteRule = async (workItemType: string, ruleId: string): Promise<boolean> => {
-    const documentIndex = documents.findIndex(x => x.id === workItemType);
-    console.log(documentIndex, workItemType, ruleId, documents);
-    if (documentIndex >= 0) {
-      const document = documents[documentIndex];
-      const newRules = document.rules.filter(z => z.id !== ruleId);
-      document.rules = newRules;
+    if (!configuration) return false;
+    const documentIndex = configuration.workItemRules.findIndex(
+      x => x.workItemType === workItemType
+    );
+    console.log(documentIndex, workItemType, ruleId, configuration);
+    if (documentIndex && documentIndex >= 0) {
+      const document = { ...configuration };
+      const newRules = document.workItemRules[documentIndex].rules.filter(z => z.id !== ruleId);
+      document.workItemRules[documentIndex].rules = newRules;
       const updatedDocument = await storageService.setData(document);
-
-      const newDocuments = [...documents];
-      newDocuments[documentIndex] = updatedDocument;
-      setDocuments(newDocuments);
+      setConfiguration(updatedDocument);
     }
     return true;
   };
@@ -102,11 +122,12 @@ const AdminPage = (): React.ReactElement => {
   );
   const columns: IColumn[] = useMemo(() => getListColumns(types, handleDeleteRule), [
     types,
-    documents
+    configuration
   ]);
 
   const [ruleItems, groups]: [Rule[], IGroup[]] = useMemo(() => {
-    const rules = documents.flatMap(x => x.rules);
+    if (!configuration) return [[], []];
+    const rules = configuration?.workItemRules.flatMap(x => x.rules);
     const grouped = groupBy(rules, x => x.workItemType);
     const keys = Array.from(grouped.keys());
     let stIndex = 0;
@@ -130,7 +151,7 @@ const AdminPage = (): React.ReactElement => {
       })
       .filter(isGroup);
     return [rules, groups];
-  }, [documents, types]);
+  }, [configuration, types]);
 
   useEffect(() => {
     webLogger.information([ruleItems, groups]);
