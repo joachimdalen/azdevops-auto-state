@@ -19,6 +19,7 @@ import { v4 as uuidV4 } from 'uuid';
 import AddRuleResult from '../common/models/AddRuleResult';
 import ProjectConfigurationDocument from '../common/models/ProjectConfigurationDocument';
 import Rule from '../common/models/Rule';
+import RuleService from '../common/services/RuleService';
 import { StorageService } from '../common/services/StorageService';
 import WorkItemService from '../common/services/WorkItemService';
 import webLogger from '../common/webLogger';
@@ -33,6 +34,7 @@ const AdminPage = (): React.ReactElement => {
   );
   const storageService = useMemo(() => new StorageService(), []);
   const workItemService = useMemo(() => new WorkItemService(), []);
+  const ruleService = useMemo(() => new RuleService(), []);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     async function fetchData() {
@@ -43,7 +45,7 @@ const AdminPage = (): React.ReactElement => {
 
       try {
         if (project) {
-          const config = await storageService.getDataForProject(project.id);
+          const config = await ruleService.load();
           setConfiguration(config);
           webLogger.information(config);
         }
@@ -59,46 +61,9 @@ const AdminPage = (): React.ReactElement => {
 
   const handleDialogResult = async (result: AddRuleResult | undefined) => {
     if (result?.result === 'CANCEL') return;
-    if (!result?.rule) return;
-    const project = await workItemService.getProject();
-    if (!project) return;
-    if (configuration === undefined) {
-      const newDocument: ProjectConfigurationDocument = {
-        id: project.id,
-        workItemRules: [
-          { workItemType: result.rule.workItemType, rules: [{ ...result.rule, id: uuidV4() }] }
-        ]
-      };
-      const created = await storageService.setData(newDocument);
-      setConfiguration(created);
-    } else {
-      const wiIndex = configuration?.workItemRules.findIndex(
-        x => x.workItemType === result.workItemType
-      );
-      if (wiIndex !== undefined && wiIndex > 0) {
-        const ruleDocument = configuration.workItemRules[wiIndex];
-        const ruleIndex = ruleDocument.rules.findIndex(x => x.id === result.rule?.id);
-        if (ruleIndex >= 0) {
-          ruleDocument.rules[ruleIndex] = result.rule;
-        } else {
-          ruleDocument.rules = [...ruleDocument.rules, result.rule];
-        }
-        const nd = { ...configuration };
-        nd.workItemRules[wiIndex] = ruleDocument;
-        const updatedDocument = await storageService.setData(nd);
-        setConfiguration(updatedDocument);
-      } else {
-        const newDoc: ProjectConfigurationDocument = {
-          ...configuration,
-          workItemRules: [
-            ...configuration.workItemRules,
-            { workItemType: result.rule.workItemType, rules: [{ ...result.rule, id: uuidV4() }] }
-          ]
-        };
-        const created = await storageService.setData(newDoc);
-        setConfiguration(created);
-      }
-    }
+    if (!result?.rule || !result.workItemType) return;
+    const updatedData = await ruleService.updateRule(result.workItemType, result.rule);
+    setConfiguration(updatedData);
   };
 
   const handleDeleteRule = async (workItemType: string, ruleId: string): Promise<boolean> => {

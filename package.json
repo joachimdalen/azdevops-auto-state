@@ -58,7 +58,7 @@
     "docs:dev": "cp docs/CHANGELOG-DEV.md docs/CHANGELOG.md",
     "package:dev": "tfx extension create --root ./ --manifest-globs ./vss-extension.dev.json --rev-version",
     "compile:dev": "webpack --mode development --config ./webpack.config.dev.js",
-    "serve:dev": "npx webpack serve",
+    "serve:dev": "npx webpack serve --config ./webpack.config.dev.js",
     "clean-build": "rimraf dist",
     "lint": "eslint src --ignore-path .eslintignore --ext ts --ext tsx --ext js --ext jsx",
     "lint:fix": "eslint --fix src --ignore-path .eslintignore --ext ts --ext tsx --ext js --ext jsx",
