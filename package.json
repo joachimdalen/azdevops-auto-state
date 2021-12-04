@@ -53,13 +53,12 @@
     "package-dev": "tfx extension create --root ./ --manifest-globs ./vss-extension.dev.json",
     "copy-dev-docs": "cp docs/CHANGELOG-DEV.md docs/CHANGELOG.md",
     "copy-prod-docs": "cp docs/CHANGELOG-PROD.md docs/CHANGELOG.md",
-    "compile:dev": "webpack --mode development --config ./webpack.config.js",
+    "compile:dev": "webpack --mode development --config ./webpack.config.dev.js",
     "compile:prod": "webpack --config ./webpack.config.prod.js",
     "serve:dev": "npx webpack serve",
     "clean-build": "rimraf dist",
     "lint": "eslint src --ignore-path .eslintignore --ext ts --ext tsx --ext js --ext jsx",
     "lint:fix": "eslint --fix src --ignore-path .eslintignore --ext ts --ext tsx --ext js --ext jsx",
-    "de": "webpack --watch & webpack-dev-server --inline --progress --colors",
     "test": "env TEST_REPORT_FILENAME=test-results.xml jest --verbose"
   },
   "jest": {

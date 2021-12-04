@@ -1,7 +1,7 @@
 {
   "manifestVersion": 1,
   "baseUri": "https://localhost:3000",
-  "id": "auto-state",
+  "id": "auto-state-dev",
   "public": false,
   "name": "Auto State - DEV",
   "publisher": "JoachimDalen",
