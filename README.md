@@ -23,6 +23,8 @@
     <br />
     <a href="https://marketplace.visualstudio.com/items?itemName=joachimdalen.auto-state">View Extension</a>
     ·
+    <a href="https://marketplace.visualstudio.com/items?itemName=joachimdalen.auto-state">Changelog</a>
+    ·
     <a href="https://github.com/joachimdalen/azdevops-auto-state/issues">Report Bug</a>
     ·
     <a href="https://github.com/joachimdalen/azdevops-auto-state/issues">Request Feature</a>
@@ -33,7 +35,12 @@
 <details>
   <summary>Table of Contents</summary>
   <ol>
-    <li><a href="#about-the-project">About The Project</a></li>
+    <li>
+      <a href="#about-the-project">About The Project</a>
+      <ul>
+        <li><a href="#limitations">Limitations</a></li>
+      </ul>
+    </li>
     <li>
       <a href="#getting-started">Getting Started</a>
       <ul>
@@ -56,7 +63,13 @@
 
 [![Product Name Screen Shot][product-screenshot]](https://example.com)
 
-Here's a blank template to get started: To avoid retyping too much info. Do a search and replace with your text editor for the following: `joachimdalen`, `azdevops-auto-state`, `twitter_handle`, `linkedin_username`, `email`, `email_client`, `project_title`, `project_description`
+An issue I often face is forgetting to update the state of a parent workitem when starting a new Task. This extension aims to auto update parent workitems based on a set of rules when the child workitem is started.
+
+### Limitations
+
+- This extension does not work when doing mass updates
+- The state **must** be updated from the work item form for the update to trigger
+- The extension only updates state one level up (recursive updating is on the road map)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -69,27 +82,33 @@ To get a local copy up and running follow these simple example steps.
 
 ### Prerequisites
 
-This is an example of how to list things you need to use the software and how to install them.
+- A MarketPlace publisher [Create a publisher](https://docs.microsoft.com/en-us/azure/devops/extend/publish/overview?view=azure-devops#create-a-publisher)
+- `tfx-cli` installed. Due to issues with outdated dependencies this is not included in `package.json`
 
-- npm
   ```sh
-  npm install npm@latest -g
+  npm install -g tfx-cli
   ```
 
 ### Installation
 
-1. Get a free API Key at [https://example.com](https://example.com)
-2. Clone the repo
+1. Clone the repo
    ```sh
    git clone https://github.com/joachimdalen/azdevops-auto-state.git
    ```
-3. Install NPM packages
+2. Install dependencies
    ```sh
-   npm install
+   > npm install
    ```
-4. Enter your API in `config.js`
-   ```js
-   const API_KEY = 'ENTER YOUR API';
+3. Update publisher in `vss-extension-dev.json`
+4. Compile development version
+   ```sh
+   npm run prepare:dev
+   ```
+5. [Publish extension](https://docs.microsoft.com/en-us/azure/devops/extend/publish/overview?view=azure-devops#publish-an-extension)
+6. [Share](https://docs.microsoft.com/en-us/azure/devops/extend/publish/overview?view=azure-devops#share-an-extension) and [install](https://docs.microsoft.com/en-us/azure/devops/extend/publish/overview?view=azure-devops#install-an-extension) extension
+7. Run extension
+   ```sh
+   npm run serve:dev
    ```
 
 <p align="right">(<a href="#top">back to top</a>)</p>
@@ -149,9 +168,9 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 ## Contact
 
-If you have generic questions about the project or usage
+If you have generic questions about the project or usage you can make contact in the following ways:
 
-Project Link: [https://github.com/joachimdalen/azdevops-auto-state](https://github.com/joachimdalen/azdevops-auto-state)
+- Submit an issue with the `@type/question` label - [New Issue](https://github.com/joachimdalen/azdevops-auto-state/issues/new)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
