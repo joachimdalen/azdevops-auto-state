@@ -16,14 +16,14 @@ import { Surface, SurfaceBackground } from 'azure-devops-ui/Surface';
 import React, { useEffect, useMemo, useState } from 'react';
 import { v4 as uuidV4 } from 'uuid';
 
-import LoadingSection from '../shared-ui/component/LoadingSection';
-import WorkItemTypeTag from '../shared-ui/component/WorkItemTypeTag';
 import AddRuleResult from '../common/models/AddRuleResult';
 import Rule from '../common/models/Rule';
 import RuleDocument from '../common/models/RuleDocument';
 import { StorageService } from '../common/services/StorageService';
 import WorkItemService from '../common/services/WorkItemService';
 import webLogger from '../common/webLogger';
+import LoadingSection from '../shared-ui/component/LoadingSection';
+import WorkItemTypeTag from '../shared-ui/component/WorkItemTypeTag';
 import { getCommandBarItems, getListColumns, groupBy, isGroup } from './helpers';
 
 const AdminPage = (): React.ReactElement => {
