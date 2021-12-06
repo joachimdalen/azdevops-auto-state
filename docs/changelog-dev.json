@@ -1,0 +1,18 @@
+[
+  {
+    "version": "0.0.1",
+    "publishDate": "2021-11-28",
+    "modules": [
+      {
+        "version": "0.0.1",
+        "name": "Core",
+        "changes": [
+          {
+            "type": "feat",
+            "description": "Added extension"
+          }
+        ]
+      }
+    ]
+  }
+]
