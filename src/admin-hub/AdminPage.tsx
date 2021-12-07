@@ -7,18 +7,21 @@ import {
   IDetailsGroupDividerProps,
   IGroup
 } from '@fluentui/react';
+import { IDialogOptions, IHostPageLayoutService } from 'azure-devops-extension-api';
 import { WorkItemType } from 'azure-devops-extension-api/WorkItemTracking';
+import * as DevOps from 'azure-devops-extension-sdk';
 import { ConditionalChildren } from 'azure-devops-ui/ConditionalChildren';
 import { Header } from 'azure-devops-ui/Header';
 import { IHeaderCommandBarItem } from 'azure-devops-ui/HeaderCommandBar';
 import { Page } from 'azure-devops-ui/Page';
 import { Surface, SurfaceBackground } from 'azure-devops-ui/Surface';
+import { ZeroData, ZeroDataActionType } from 'azure-devops-ui/ZeroData';
 import React, { useEffect, useMemo, useState } from 'react';
-import { v4 as uuidV4 } from 'uuid';
 
 import AddRuleResult from '../common/models/AddRuleResult';
 import ProjectConfigurationDocument from '../common/models/ProjectConfigurationDocument';
 import Rule from '../common/models/Rule';
+import MetaService from '../common/services/MetaService';
 import RuleService from '../common/services/RuleService';
 import { StorageService } from '../common/services/StorageService';
 import WorkItemService from '../common/services/WorkItemService';
@@ -32,15 +35,16 @@ const AdminPage = (): React.ReactElement => {
   const [configuration, setConfiguration] = useState<ProjectConfigurationDocument | undefined>(
     undefined
   );
-  const storageService = useMemo(() => new StorageService(), []);
-  const workItemService = useMemo(() => new WorkItemService(), []);
-  const ruleService = useMemo(() => new RuleService(), []);
+  const [storageService, workItemService, metaService, ruleService] = useMemo(
+    () => [new StorageService(), new WorkItemService(), new MetaService(), new RuleService()],
+    []
+  );
+
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     async function fetchData() {
-      const service = new WorkItemService();
-      const loadedTypes = await service.getWorkItemTypes();
-      const project = await service.getProject();
+      const loadedTypes = await workItemService.getWorkItemTypes();
+      const project = await metaService.getProject();
       setTypes(loadedTypes);
 
       try {
@@ -128,7 +132,31 @@ const AdminPage = (): React.ReactElement => {
         <Header commandBarItems={commandBarItems} title="Auto State" />
         <div className="page-content padding-16">
           <LoadingSection isLoading={loading} text="Loading rules.." />
-          <ConditionalChildren renderChildren={!loading}>
+          <ConditionalChildren renderChildren={!loading && ruleItems.length === 0}>
+            <ZeroData
+              imageAltText=""
+              primaryText="No rules added"
+              actionText="Add rule"
+              onActionClick={() => {
+                DevOps.getService<IHostPageLayoutService>(
+                  'ms.vss-features.host-page-layout-service'
+                ).then(dialogService => {
+                  const options: IDialogOptions<AddRuleResult> = {
+                    title: 'Create new rule',
+                    onClose: handleDialogResult
+                  };
+
+                  dialogService.openCustomDialog(
+                    DevOps.getExtensionContext().id + '.rule-modal',
+                    options
+                  );
+                });
+              }}
+              actionType={ZeroDataActionType.ctaButton}
+              iconProps={{ iconName: 'Work' }}
+            />
+          </ConditionalChildren>
+          <ConditionalChildren renderChildren={!loading && ruleItems.length > 0}>
             <DetailsList
               items={ruleItems}
               columns={columns}

@@ -5,8 +5,9 @@ import Rule from '../models/Rule';
 import WorkItemRules from '../models/WorkItemRules';
 import webLogger from '../webLogger';
 import { getState, getWorkItemType, isInState } from '../workItemUtils';
-import { IStorageService, StorageService } from './StorageService';
-import WorkItemService, { IWorkItemService } from './WorkItemService';
+import { IMetaService } from './MetaService';
+import { IStorageService } from './StorageService';
+import { IWorkItemService } from './WorkItemService';
 
 export interface IRuleProcessor {
   Init(): Promise<void>;
@@ -19,7 +20,8 @@ class RuleProcessor implements IRuleProcessor {
 
   constructor(
     private readonly _workItemService: IWorkItemService,
-    private readonly _storageService: IStorageService
+    private readonly _storageService: IStorageService,
+    private readonly _metaService: IMetaService
   ) {
     webLogger.trace('Setting up rule processor');
     this._workItemTypes = [];
@@ -33,7 +35,7 @@ class RuleProcessor implements IRuleProcessor {
   }
 
   public async ProcessWorkItem(workItemId: number): Promise<void> {
-    const project = await this._workItemService.getProject();
+    const project = await this._metaService.getProject();
     const currentWi: WorkItem = await this._workItemService.getWorkItem(workItemId);
     const parentWi: WorkItem | undefined = await this._workItemService.getParentForWorkItem(
       workItemId

@@ -1,4 +1,4 @@
-import { getClient, IProjectInfo, IProjectPageService } from 'azure-devops-extension-api';
+import { getClient } from 'azure-devops-extension-api';
 import {
   WorkItem,
   WorkItemExpand,
@@ -6,12 +6,11 @@ import {
   WorkItemTrackingRestClient,
   WorkItemType
 } from 'azure-devops-extension-api/WorkItemTracking';
-import * as DevOps from 'azure-devops-extension-sdk';
 
 import { getChildIds, getParentId } from '../workItemUtils';
+import MetaService, { IMetaService } from './MetaService';
 
 export interface IWorkItemService {
-  getProject(): Promise<IProjectInfo | undefined>;
   getParentForWorkItem(id: number): Promise<WorkItem | undefined>;
   getChildrenForWorkItem(workItemId: number): Promise<WorkItem[] | undefined>;
   getWorkItemTypes(): Promise<WorkItemType[]>;
@@ -22,12 +21,9 @@ export interface IWorkItemService {
 }
 
 class WorkItemService implements IWorkItemService {
-  public async getProject(): Promise<IProjectInfo | undefined> {
-    const projectService = await DevOps.getService<IProjectPageService>(
-      'ms.vss-tfs-web.tfs-page-data-service'
-    );
-    const project = await projectService.getProject();
-    return project;
+  private _metaService: IMetaService;
+  constructor(metaService?: IMetaService) {
+    this._metaService = metaService ?? new MetaService();
   }
 
   public async getParentForWorkItem(
@@ -51,7 +47,7 @@ class WorkItemService implements IWorkItemService {
   }
 
   public async getWorkItemTypes(): Promise<WorkItemType[]> {
-    const project = await this.getProject();
+    const project = await this._metaService.getProject();
     if (project) {
       const client = getClient(WorkItemTrackingRestClient);
       const types = client.getWorkItemTypes(project.name);
