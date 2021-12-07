@@ -34,7 +34,7 @@
       "type": "ms.vss-work-web.work-item-notifications",
       "targets": ["ms.vss-work-web.work-item-form"],
       "properties": {
-        "uri": "joachimdalen.auto-state.observer.html"
+        "uri": "observer.html"
       },
       "constraints": [
         {
@@ -49,7 +49,7 @@
       "id": "rule-modal",
       "type": "ms.vss-web.external-content",
       "properties": {
-        "uri": "joachimdalen.auto-state.rule-modal.html"
+        "uri": "rule-modal.html"
       },
       "constraints": [
         {
@@ -68,7 +68,7 @@
       "properties": {
         "name": "Auto State",
         "order": 1,
-        "uri": "joachimdalen.auto-state.admin-hub.html"
+        "uri": "admin-hub.html"
       },
       "constraints": [
         {
