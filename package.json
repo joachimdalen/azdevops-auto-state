@@ -54,7 +54,7 @@
     "docs:prod": "cp docs/CHANGELOG-PROD.md docs/CHANGELOG.md",
     "package:prod": "tfx extension create --root ./ --manifest-globs ./vss-extension.json --overrides-file ./vss-extension.release.json",
     "compile:prod": "webpack --config ./webpack.config.prod.js",
-    "prepare:dev": "npm run compile:dev && npm run docs:dev && npm run package:dev",
+    "prepare:dev": "npm run compile:dev && npm run changelog:dev && cp ./docs/README-BASE.md ./docs/README.md && npm run docs:dev && npm run package:dev",
     "docs:dev": "cp docs/CHANGELOG-DEV.md docs/CHANGELOG.md",
     "package:dev": "tfx extension create --root ./ --manifest-globs ./vss-extension.dev.json --rev-version",
     "changelog:dev": "node ../azdevops-ext-changelog-builder/dist/main.js --config ./docs/changelog-config.json --log ./docs/changelog-dev.json --output ./docs/CHANGELOG-DEV.md",
