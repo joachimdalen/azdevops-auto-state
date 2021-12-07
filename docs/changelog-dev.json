@@ -1,5 +1,21 @@
 [
   {
+    "version": "0.0.2",
+    "publishDate": "2021-11-28",
+    "modules": [
+      {
+        "version": "0.0.2",
+        "name": "Core",
+        "changes": [
+          {
+            "type": "feature",
+            "description": "Add feature flag to control extension activation"
+          }
+        ]
+      }
+    ]
+  },
+  {
     "version": "0.0.1",
     "publishDate": "2021-11-28",
     "modules": [
@@ -8,7 +24,7 @@
         "name": "Core",
         "changes": [
           {
-            "type": "feat",
+            "type": "feature",
             "description": "Added extension"
           }
         ]
