@@ -1,11 +1,17 @@
 # Auto State
 
-Auto state is an extension to automatically update the state of parent work items based on set rules.
+This extension aims to auto update parent workitems based on a set of rules when the child workitem is started.
 
 ![](./images/rule-editor.png)
 
-| Field        | Description                                                         |
-| ------------ | ------------------------------------------------------------------- |
-| workItemType | The type of work item the rule is valid for                         |
-| parentType   | The type of work item the parent has to be for the rule to be valid |
-| childState   | This is the value the child state is updated to                     |
+## Activating the extension
+For this extension to work properly there are a few steps that needs to be taken after installing:
+
+- Activation is done through the Preview Feature "Auto State". This needs to be enabled for each Project this extension should be used in.
+- Rules needs to be configured. The rule editor is found under `Project Settings > Extensions > Auto State`
+
+### Limitations
+
+- This extension does not work when doing mass updates
+- The state **must** be updated from the work item form for the update to trigger
+- The extension only updates state one level up (recursive updating is on the road map)
