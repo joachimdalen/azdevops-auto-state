@@ -1,27 +1,20 @@
-import { IProjectInfo, IProjectPageService } from 'azure-devops-extension-api';
-import * as DevOps from 'azure-devops-extension-sdk';
 import { v4 as uuidV4 } from 'uuid';
 
 import ProjectConfigurationDocument from '../models/ProjectConfigurationDocument';
 import Rule from '../models/Rule';
+import MetaService, { IMetaService } from './MetaService';
 import { StorageService } from './StorageService';
 
 class RuleService {
   private readonly _dataStore: StorageService;
+  private readonly _metaService: IMetaService;
   private _data: ProjectConfigurationDocument | undefined;
   constructor() {
     this._dataStore = new StorageService();
-  }
-
-  public async getProject(): Promise<IProjectInfo | undefined> {
-    const projectService = await DevOps.getService<IProjectPageService>(
-      'ms.vss-tfs-web.tfs-page-data-service'
-    );
-    const project = await projectService.getProject();
-    return project;
+    this._metaService = new MetaService();
   }
   public async load(): Promise<ProjectConfigurationDocument | undefined> {
-    const project = await this.getProject();
+    const project = await this._metaService.getProject();
     if (!project) return;
 
     const data = await this._dataStore.getDataForProject(project.id);
@@ -33,7 +26,7 @@ class RuleService {
     workItemType: string,
     rule: Rule
   ): Promise<ProjectConfigurationDocument | undefined> {
-    const project = await this.getProject();
+    const project = await this._metaService.getProject();
     if (!project) return;
     if (this._data === undefined) {
       const newDocument: ProjectConfigurationDocument = {
