@@ -25,18 +25,29 @@ class WorkItemListener implements IWorkItemNotificationListener {
     );
   }
 
+  private resetState() {
+    this._stateWasUpdated = false;
+    this._isReadOnly = false;
+    this._isNewWorkItem = false;
+  }
+
   async onLoaded(args: IWorkItemLoadedArgs): Promise<void> {
-    webLogger.trace(`onLoaded`, args);
+    webLogger.trace(`onLoaded`, args, [
+      this._isReadOnly,
+      this._isNewWorkItem,
+      this._stateWasUpdated
+    ]);
     this._isNewWorkItem = args.isNew;
     this._isReadOnly = args.isReadOnly;
-    await this._ruleProcessor.Init();
+    if (!this._isReadOnly && !this._isNewWorkItem) {
+      await this._ruleProcessor.Init();
+    }
   }
   onFieldChanged(args: IWorkItemFieldChangedArgs): void {
-    webLogger.trace(`onFieldChanged`, args);
-
-    if (args.changedFields && args.changedFields['System.State']) {
-      this._stateWasUpdated = true;
-      webLogger.information("State was updated");
+    if (!this._isReadOnly && !this._isNewWorkItem) {
+      if (args.changedFields && args.changedFields['System.State']) {
+        this._stateWasUpdated = true;
+      }
     }
   }
   async onSaved(args: IWorkItemChangedArgs): Promise<void> {
@@ -47,18 +58,16 @@ class WorkItemListener implements IWorkItemNotificationListener {
       } catch (error) {
         webLogger.error(error);
       }
-    } else {
-      webLogger.information('State was not updated');
     }
   }
   onRefreshed(args: IWorkItemChangedArgs): void {
-    webLogger.trace(`onRefreshed`, args);
+    this.resetState();
   }
   onReset(args: IWorkItemChangedArgs): void {
-    this._stateWasUpdated = false;
+    this.resetState();
   }
   onUnloaded(args: IWorkItemChangedArgs): void {
-    webLogger.trace(`onUnloaded`, args);
+    this.resetState();
   }
 }
 
