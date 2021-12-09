@@ -17,6 +17,7 @@ import AddRuleResult from '../common/models/AddRuleResult';
 import Rule from '../common/models/Rule';
 import WorkItemService from '../common/services/WorkItemService';
 import { appTheme } from '../shared-ui/azure-devops-theme';
+import LoadingSection from '../shared-ui/component/LoadingSection';
 import StateTag from '../shared-ui/component/StateTag';
 import useDropdownMultiSelection from '../shared-ui/hooks/useDropdownMultiSelection';
 import useDropdownSelection from '../shared-ui/hooks/useDropdownSelection';
@@ -30,37 +31,30 @@ const ModalContent = (): React.ReactElement => {
   const [parentTargetState, setParentTargetState] = useState('');
   const [childState, setChildState] = useState('');
   const [allChildren, setAllChildren] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     loadTheme(createTheme(appTheme));
     DevOps.init().then(async () => {
       console.log('Loaded...');
     });
-    DevOps.ready().then(() => {
-      const config = DevOps.getConfiguration();
-      console.log(config);
-      if (config.dialog) {
-        DevOps.notifyLoadSucceeded().then(() => {
-          DevOps.resize();
-          const service = new WorkItemService();
-          service.getWorkItemTypes().then(x => {
-            console.log(x);
-            setTypes(x);
-          });
-        });
-      }
-    });
-  }, []);
-  // useEffect(() => {
-  //   async function fetchData() {
-  //     const service = new WorkItemService();
-  //     const loadedTypes = await service.getWorkItemTypes();
-  //     console.log(types);
-  //     setTypes(loadedTypes);
-  //   }
+    DevOps.ready()
+      .then(() => {
+        const config = DevOps.getConfiguration();
 
-  //   fetchData();
-  // }, []);
+        if (config.dialog) {
+          DevOps.notifyLoadSucceeded().then(() => {
+            DevOps.resize();
+            const service = new WorkItemService();
+            service.getWorkItemTypes().then(x => {
+              setTypes(x);
+            });
+          });
+        }
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, []);
 
   const workItemTypes: IListBoxItem[] = useMemo(() => {
     return types.map(x => {
@@ -182,6 +176,7 @@ const ModalContent = (): React.ReactElement => {
 
   return (
     <div className="flex-grow">
+      <LoadingSection isLoading={loading} text="Loading..." />
       <ConditionalChildren renderChildren={!loading}>
         <div className="rhythm-vertical-16 flex-grow">
           <FormItem label="When work item type is">

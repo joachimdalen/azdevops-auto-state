@@ -29,7 +29,6 @@ class RuleProcessor implements IRuleProcessor {
 
   public async Init(): Promise<void> {
     if (this._workItemTypes.length === 0) {
-      webLogger.trace('Loading work item types');
       this._workItemTypes = await this._workItemService.getWorkItemTypes();
     }
   }
@@ -58,8 +57,6 @@ class RuleProcessor implements IRuleProcessor {
       return this.IsRuleMatch(x, currentWi, parentWi);
     });
 
-    webLogger.trace('Found matching rules', matchingRules);
-
     if (matchingRules.length === 0) return;
 
     for (const rule of matchingRules) {
@@ -67,24 +64,19 @@ class RuleProcessor implements IRuleProcessor {
         parentWi.id,
         rule.parentTargetState
       );
-      webLogger.trace('Updated ' + parentWi.id + ' to ' + updated.fields['System.State']);
+      webLogger.information('Updated ' + parentWi.id + ' to ' + updated.fields['System.State']);
     }
   }
 
   public async IsRuleMatch(rule: Rule, workItem: WorkItem, parent: WorkItem): Promise<boolean> {
     const childType = getWorkItemType(workItem, this._workItemTypes);
-    webLogger.trace('Before 1', rule.workItemType, childType);
     if (rule.workItemType !== childType) return false;
 
     const parentType = getWorkItemType(parent, this._workItemTypes);
-    webLogger.trace('Before 2', rule.parentType, parentType);
     if (rule.parentType !== parentType) return false;
     const childState = getState(workItem);
-    webLogger.trace('Before 3');
     if (rule.childState !== childState) return false;
-    webLogger.trace('Before 4');
     if (isInState(parent, rule.parentNotState)) return false;
-    webLogger.trace('Before 5');
     if (isInState(parent, [rule.parentTargetState])) return false;
 
     if (rule.allChildren) {

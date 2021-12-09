@@ -125,17 +125,10 @@ export const getListColumns = (
       className: 'flex-self-center',
       minWidth: 100,
       onRender: (item?: any, index?: number, column?: IColumn) => {
-        /* return (
-          <ActionButton
-            text="Delete"
-            iconProps={{ iconName: 'Delete' }}
-            onClick={async () => {
-              await handleDeleteRule(item.workItemType, item.id);
-            }}
-          />
-        ); */
+       
         return (
           <IconButton
+          splitButtonMenuProps={{}}
             menuProps={getListRowContextMenuItem(item, handleDeleteRule)}
             iconProps={{ iconName: 'MoreVertical' }}
           />
