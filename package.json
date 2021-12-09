@@ -57,7 +57,7 @@
     "prepare:dev": "npm run compile:dev && npm run changelog:dev && cp ./docs/README-BASE.md ./docs/README.md && npm run docs:dev && npm run package:dev",
     "docs:dev": "cp docs/CHANGELOG-DEV.md docs/CHANGELOG.md",
     "package:dev": "tfx extension create --root ./ --manifest-globs ./vss-extension.dev.json --rev-version",
-    "changelog:dev": "node ../azdevops-ext-changelog-builder/dist/main.js --config ./docs/changelog-config.json --log ./docs/changelog-dev.json --output ./docs/CHANGELOG-DEV.md",
+    "changelog:dev": "node ../azdevops-ext-changelog-builder/dist/main.js --config ./docs/changelog-config.json --log ./docs/changelog-dev.json --output ./docs/CHANGELOG-DEV.md --cache-file ./docs/changelog-cache.json --cache-output ./docs/changelog-cache.json",
     "compile:dev": "webpack --mode development --config ./webpack.config.dev.js",
     "serve:dev": "npx webpack serve --config ./webpack.config.dev.js",
     "clean-build": "rimraf dist",

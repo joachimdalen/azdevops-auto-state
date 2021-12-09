@@ -1,19 +1,19 @@
 {
-    "repository": "joachimdalen/azdevops-auto-state",
-    "releaseTitleFormat": "## {{version}} ({{publishDate}})",
-    "moduleTitleFormat": "#### `{{name}}@{{version}}`",
-    "taskMapping": {},
-    "sectionSplitter": "---",
-    "tagMapping": {
-      "feature": "### 🚀 Features",
-      "fix": "### 🐛 Fixes",
-      "tests": "### 🧪 Tests",
-      "other": "### 💬 Other",
-      "docs": "### 📝 Documentation",
-      "maint": "### 🛠️ Maintenance"
-    },
-    "attributionTitleFormat": "## Contributors",
-    "attributionSubTitle": "Thank you to the following for contributing to the latest release",
-    "knownAuthors": ["joachimdalen"]
-  }
-  
+  "repository": "joachimdalen/azdevops-auto-state",
+  "releaseTitleFormat": "## {{version}} ({{publishDate}})",
+  "moduleTitleFormat": "#### `{{name}}@{{version}}`",
+  "taskMapping": {},
+  "sectionSplitter": "---",
+  "tagMapping": {
+    "feature": "### 🚀 Features",
+    "fix": "### 🐛 Fixes",
+    "tests": "### 🧪 Tests",
+    "other": "### 💬 Other",
+    "docs": "### 📝 Documentation",
+    "maint": "### 🛠️ Maintenance"
+  },
+  "attributionTitleFormat": "## Contributors",
+  "attributionSubTitle": "Thank you to the following for contributing to the latest release",
+  "knownAuthors": ["joachimdalen"],
+  "extensionManifest": "../vss-extension.dev.json"
+}
