@@ -1,0 +1,18 @@
+[
+  {
+    "version": "0.0.3",
+    "publishDate": "2021-12-09",
+    "modules": [
+      {
+        "version": "0.0.3",
+        "name": "Core",
+        "changes": [
+          {
+            "type": "docs",
+            "description": "Update documentation"
+          }
+        ]
+      }
+    ]
+  }
+]

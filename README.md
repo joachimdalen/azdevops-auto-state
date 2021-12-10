@@ -61,7 +61,7 @@
 
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
+![Product Name Screen Shot][product-screenshot]
 
 An issue I often face is forgetting to update the state of a parent workitem when starting a new Task. This extension aims to auto update parent workitems based on a set of rules when the child workitem is started.
 
@@ -72,6 +72,12 @@ An issue I often face is forgetting to update the state of a parent workitem whe
 - The extension only updates state one level up (recursive updating is on the road map)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
+
+## Post Install Activation
+
+Auto State is hidden behind a feature flag for several reasons. After installing the extension a Project or Organization administrator will need to toggle the feature flag to `On`.
+
+![Feature Toggle][feature-toggle-screenshot]
 
 <!-- GETTING STARTED -->
 
@@ -173,21 +179,9 @@ Distributed under the MIT License. See `LICENSE` for more information.
 If you have generic questions about the project or usage you can make contact in the following ways:
 
 - Submit an issue with the `@type/question` label - [New Issue](https://github.com/joachimdalen/azdevops-auto-state/issues/new)
+- Submit a new question unser the Marketplace Q&A section.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
-
-<!-- ACKNOWLEDGMENTS -->
-
-## Acknowledgments
-
-- []()
-- []()
-- []()
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-<!-- MARKDOWN LINKS & IMAGES -->
-<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 
 [contributors-shield]: https://img.shields.io/github/contributors/joachimdalen/azdevops-auto-state.svg?style=for-the-badge
 [contributors-url]: https://github.com/joachimdalen/azdevops-auto-state/graphs/contributors
@@ -200,3 +194,4 @@ If you have generic questions about the project or usage you can make contact in
 [license-shield]: https://img.shields.io/github/license/joachimdalen/azdevops-auto-state.svg?style=for-the-badge
 [license-url]: https://github.com/joachimdalen/azdevops-auto-state/blob/master/LICENSE.txt
 [product-screenshot]: docs/images/rule-editor.png
+[feature-toggle-screenshot]: docs/images/feature-toggle.png

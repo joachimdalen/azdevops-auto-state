@@ -1,12 +1,11 @@
 {
-  "$schema": "http://json.schemastore.org/vss-extension",
   "manifestVersion": 1,
   "baseUri": "https://localhost:3000",
   "id": "auto-state-dev",
   "public": false,
   "name": "Auto State - DEV",
   "publisher": "JoachimDalen",
-  "version": "0.0.3",
+  "version": "0.0.1",
   "description": "An extension to automatically update states between parents and children",
   "categories": ["Azure Boards"],
   "demands": ["api-version/5.1"],
@@ -17,21 +16,7 @@
   },
   "content": {
     "details": { "path": "docs/README.md" },
-    "changelog": { "path": "docs/CHANGELOG.md" },
-    "license": { "path": "LICENSE" }
-  },
-  "links": {
-    "repository": {
-      "uri": "https://github.com/joachimdalen/azdevops-auto-state"
-    },
-    "issues": {
-      "uri": "https://github.com/joachimdalen/azdevops-auto-state/issues"
-    },
-    "privacypolicy": {}
-  },
-  "repository": {
-    "type": "git",
-    "uri": "https://github.com/joachimdalen/azdevops-auto-state"
+    "changelog": { "path": "docs/CHANGELOG.md" }
   },
   "branding": {
     "color": "#215564",
@@ -42,27 +27,14 @@
       "id": "Microsoft.VisualStudio.Services.Cloud"
     }
   ],
-  "files": [
-    {
-      "path": "docs/images",
-      "addressable": true
-    }
-  ],
-  "screenshots": [
-    {
-      "path": "docs/images/rule-editor.png"
-    },
-    {
-      "path": "docs/images/rule-modal.png"
-    }
-  ],
+  "files": [],
   "contributions": [
     {
       "id": "work-item-observer",
       "type": "ms.vss-work-web.work-item-notifications",
       "targets": ["ms.vss-work-web.work-item-form"],
       "properties": {
-        "uri": "observer.html"
+        "uri": "joachimdalen.auto-state.observer.html"
       },
       "constraints": [
         {
@@ -77,7 +49,7 @@
       "id": "rule-modal",
       "type": "ms.vss-web.external-content",
       "properties": {
-        "uri": "rule-modal.html"
+        "uri": "joachimdalen.auto-state.rule-modal.html"
       },
       "constraints": [
         {
@@ -96,7 +68,7 @@
       "properties": {
         "name": "Auto State",
         "order": 1,
-        "uri": "admin-hub.html"
+        "uri": "joachimdalen.auto-state.admin-hub.html"
       },
       "constraints": [
         {
@@ -110,7 +82,7 @@
     {
       "id": "auto-state-enabled",
       "type": "ms.vss-web.feature",
-      "description": "Enables auto state listener and admin interface",
+      "description": "Enables auto state listerner and admin interface",
       "targets": ["ms.vss-web.managed-features"],
       "properties": {
         "name": "Auto State",

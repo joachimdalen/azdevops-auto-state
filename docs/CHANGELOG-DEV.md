@@ -1,6 +1,16 @@
 # Changelog
 
-## 0.0.2 (2021-11-28)
+## 0.0.3 (2021-12-09)
+
+### 📝 Documentation
+
+#### `Core@0.0.3`
+
+- Update documentation
+
+---
+
+## 0.0.2 (2021-12-09)
 
 ### 🚀 Features
 
