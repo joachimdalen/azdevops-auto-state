@@ -16,6 +16,7 @@ import { useEffect, useMemo, useState } from 'react';
 import AddRuleResult from '../common/models/AddRuleResult';
 import Rule from '../common/models/Rule';
 import WorkItemService from '../common/services/WorkItemService';
+import webLogger from '../common/webLogger';
 import { appTheme } from '../shared-ui/azure-devops-theme';
 import LoadingSection from '../shared-ui/component/LoadingSection';
 import StateTag from '../shared-ui/component/StateTag';
@@ -35,7 +36,7 @@ const ModalContent = (): React.ReactElement => {
   useEffect(() => {
     loadTheme(createTheme(appTheme));
     DevOps.init().then(async () => {
-      console.log('Loaded...');
+      webLogger.information('Loading rule modal...');
     });
     DevOps.ready()
       .then(() => {
@@ -87,7 +88,6 @@ const ModalContent = (): React.ReactElement => {
     return types
       .filter(x => x.referenceName === parentType)
       .flatMap(x => {
-        console.log('mapping', x);
         return x.states.map(state => {
           const item: IListBoxItem = {
             id: state.name,
@@ -110,7 +110,6 @@ const ModalContent = (): React.ReactElement => {
       const res: AddRuleResult = {
         result: 'CANCEL'
       };
-      console.log('Calling close');
       config.dialog.close(res);
     }
   };
@@ -131,7 +130,6 @@ const ModalContent = (): React.ReactElement => {
         result: 'SAVE',
         rule: ac
       };
-      console.log('Calling save');
       config.dialog.close(res);
     }
   };

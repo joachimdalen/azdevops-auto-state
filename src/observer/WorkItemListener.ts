@@ -32,11 +32,6 @@ class WorkItemListener implements IWorkItemNotificationListener {
   }
 
   async onLoaded(args: IWorkItemLoadedArgs): Promise<void> {
-    webLogger.trace(`onLoaded`, args, [
-      this._isReadOnly,
-      this._isNewWorkItem,
-      this._stateWasUpdated
-    ]);
     this._isNewWorkItem = args.isNew;
     this._isReadOnly = args.isReadOnly;
     if (!this._isReadOnly && !this._isNewWorkItem) {
@@ -54,7 +49,6 @@ class WorkItemListener implements IWorkItemNotificationListener {
     if (this._stateWasUpdated && !this._isNewWorkItem && !this._isReadOnly) {
       try {
         await this._ruleProcessor.ProcessWorkItem(args.id);
-        webLogger.trace(`onSaved`, args);
       } catch (error) {
         webLogger.error(error);
       }

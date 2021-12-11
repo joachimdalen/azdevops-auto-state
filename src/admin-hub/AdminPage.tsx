@@ -51,10 +51,9 @@ const AdminPage = (): React.ReactElement => {
         if (project) {
           const config = await ruleService.load();
           setConfiguration(config);
-          webLogger.information(config);
         }
       } catch (error) {
-        webLogger.information('Failed to get project configuration', error);
+        webLogger.error('Failed to get project configuration', error);
       } finally {
         setLoading(false);
       }
@@ -75,7 +74,7 @@ const AdminPage = (): React.ReactElement => {
     const documentIndex = configuration.workItemRules.findIndex(
       x => x.workItemType === workItemType
     );
-    console.log(documentIndex, workItemType, ruleId, configuration);
+
     if (documentIndex && documentIndex >= 0) {
       const document = { ...configuration };
       const newRules = document.workItemRules[documentIndex].rules.filter(z => z.id !== ruleId);
@@ -89,10 +88,10 @@ const AdminPage = (): React.ReactElement => {
     () => getCommandBarItems(handleDialogResult),
     [handleDialogResult]
   );
-  const columns: IColumn[] = useMemo(() => getListColumns(types, handleDeleteRule), [
-    types,
-    configuration
-  ]);
+  const columns: IColumn[] = useMemo(
+    () => getListColumns(types, handleDeleteRule),
+    [types, configuration]
+  );
 
   const [ruleItems, groups]: [Rule[], IGroup[]] = useMemo(() => {
     if (!configuration) return [[], []];
@@ -121,10 +120,6 @@ const AdminPage = (): React.ReactElement => {
       .filter(isGroup);
     return [rules, groups];
   }, [configuration, types]);
-
-  useEffect(() => {
-    webLogger.information([ruleItems, groups]);
-  }, [ruleItems, groups]);
 
   return (
     <Surface background={SurfaceBackground.neutral}>

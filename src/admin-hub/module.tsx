@@ -4,6 +4,7 @@ import { createTheme, initializeIcons, loadTheme } from '@fluentui/react';
 import * as DevOps from 'azure-devops-extension-sdk';
 import { useEffect } from 'react';
 
+import webLogger from '../common/webLogger';
 import { appTheme } from '../shared-ui/azure-devops-theme';
 import showRootComponent from '../shared-ui/showRootComponent';
 import AdminPage from './AdminPage';
@@ -14,7 +15,7 @@ const AdminHub = () => {
   useEffect(() => {
     loadTheme(createTheme(appTheme));
     DevOps.init().then(async () => {
-      console.log('Loaded admin hub...');
+      webLogger.information('Loading admin hub...');
     });
   }, []);
 
