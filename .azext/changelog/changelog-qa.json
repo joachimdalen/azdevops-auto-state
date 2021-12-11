@@ -1,7 +1,55 @@
 [
   {
+    "version": "0.0.6",
+    "publishDate": "2021-12-11",
+    "modules": [
+      {
+        "version": "0.0.6",
+        "name": "Core",
+        "changes": [
+          {
+            "type": "fix",
+            "description": "Fix static files path v3"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "version": "0.0.5",
+    "publishDate": "2021-12-11",
+    "modules": [
+      {
+        "version": "0.0.5",
+        "name": "Core",
+        "changes": [
+          {
+            "type": "fix",
+            "description": "Fix static files path v2"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "version": "0.0.4",
+    "publishDate": "2021-12-11",
+    "modules": [
+      {
+        "version": "0.0.4",
+        "name": "Core",
+        "changes": [
+          {
+            "type": "fix",
+            "description": "Fix static files path"
+          }
+        ]
+      }
+    ]
+  },
+  {
     "version": "0.0.3",
-    "publishDate": "2021-12-09",
+    "publishDate": "2021-12-11",
     "modules": [
       {
         "version": "0.0.3",
@@ -9,7 +57,7 @@
         "changes": [
           {
             "type": "docs",
-            "description": "Update documentation"
+            "description": "Added extension"
           }
         ]
       }

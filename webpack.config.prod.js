@@ -5,7 +5,7 @@ const { getOutputName } = require('./webpack.utils');
 module.exports = merge(common, {
   mode: 'production',
   output: {
-    publicPath: '/',
+    publicPath: '',
     filename: pathData => {
       return `static/${getOutputName(pathData.chunk.name)}.[chunkhash:8].js`;
     },
