@@ -1,16 +1,20 @@
 {
   "$schema": "http://json.schemastore.org/vss-extension",
   "manifestVersion": 1,
-  "baseUri": "https://localhost:3000",
   "id": "auto-state-qa",
   "public": false,
   "name": "Auto State - QA",
   "publisher": "JoachimDalen",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "An extension to automatically update states between parents and children",
   "categories": ["Azure Boards"],
   "demands": ["api-version/5.1"],
-  "tags": [],
+  "tags": [
+    "work items",
+    "state",
+    "auto update"
+  ],
+  "galleryFlags": ["Preview"],
   "scopes": ["vso.work_write"],
   "icons": {
     "default": "extension-icon.png"
@@ -46,6 +50,10 @@
     {
       "path": "docs/images",
       "addressable": true
+    },
+    {
+      "path": "dist",
+      "addressable": true
     }
   ],
   "screenshots": [
@@ -62,7 +70,7 @@
       "type": "ms.vss-work-web.work-item-notifications",
       "targets": ["ms.vss-work-web.work-item-form"],
       "properties": {
-        "uri": "observer.html"
+        "uri": "dist/observer.html"
       },
       "constraints": [
         {
@@ -78,7 +86,7 @@
       "type": "ms.vss-web.external-content",
       "targets": [],
       "properties": {
-        "uri": "rule-modal.html"
+        "uri": "dist/rule-modal.html"
       },
       "constraints": [
         {
@@ -97,7 +105,7 @@
       "properties": {
         "name": "Auto State (QA)",
         "order": 1,
-        "uri": "admin-hub.html"
+        "uri": "dist/admin-hub.html"
       },
       "constraints": [
         {

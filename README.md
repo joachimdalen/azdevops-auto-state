@@ -179,7 +179,7 @@ Distributed under the MIT License. See `LICENSE` for more information.
 If you have generic questions about the project or usage you can make contact in the following ways:
 
 - Submit an issue with the `@type/question` label - [New Issue](https://github.com/joachimdalen/azdevops-auto-state/issues/new)
-- Submit a new question unser the Marketplace Q&A section.
+- Submit a new question under the Marketplace Q&A section.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 

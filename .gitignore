@@ -64,6 +64,6 @@ coverage
 
 !ci/buildDocs.js
 docs/README.md
-docs/CHANGELOG.md
+docs/CHANGELOG*.md
 test-results.xml
 !*webpack*.js

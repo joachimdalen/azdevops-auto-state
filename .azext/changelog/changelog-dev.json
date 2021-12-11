@@ -1,5 +1,52 @@
 [
   {
+    "version": "0.0.6",
+    "publishDate": "2021-12-XX",
+    "modules": [
+      {
+        "version": "0.0.6",
+        "name": "Core",
+        "changes": []
+      }
+    ]
+  },
+  {
+    "version": "0.0.5",
+    "publishDate": "2021-12-11",
+    "modules": [
+      {
+        "version": "0.0.5",
+        "name": "Core",
+        "changes": [
+          {
+            "type": "fix",
+            "description": "Fixed extension logo not showing in documentation"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "version": "0.0.4",
+    "publishDate": "2021-12-11",
+    "modules": [
+      {
+        "version": "0.0.4",
+        "name": "Core",
+        "changes": [
+          {
+            "type": "docs",
+            "description": "Update readme"
+          },
+          {
+            "type": "fix",
+            "description": "Fixed images not showing in documentation"
+          }
+        ]
+      }
+    ]
+  },
+  {
     "version": "0.0.3",
     "publishDate": "2021-12-09",
     "modules": [

@@ -6,11 +6,15 @@
   "public": false,
   "name": "Auto State - DEV",
   "publisher": "JoachimDalen",
-  "version": "0.0.3",
+  "version": "0.0.5",
   "description": "An extension to automatically update states between parents and children",
   "categories": ["Azure Boards"],
   "demands": ["api-version/5.1"],
-  "tags": [],
+  "tags": [
+    "work items",
+    "state",
+    "auto update"
+  ],
   "scopes": ["vso.work_write"],
   "icons": {
     "default": "extension-icon.png"

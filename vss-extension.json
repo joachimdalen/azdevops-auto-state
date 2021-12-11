@@ -1,14 +1,19 @@
 {
   "manifestVersion": 1,
   "id": "auto-state",
-  "public": false,
+  "public": true,
   "name": "Auto State",
   "publisher": "JoachimDalen",
   "version": "0.0.1",
   "description": "An extension to automatically update states between parents and children",
   "categories": ["Azure Boards"],
   "demands": ["api-version/5.1"],
-  "tags": [],
+  "tags": [
+    "work items",
+    "state",
+    "auto update"
+  ],
+  "galleryFlags": ["Public", "Preview"],
   "scopes": ["vso.work_write"],
   "icons": {
     "default": "extension-icon.png"
@@ -26,7 +31,24 @@
       "id": "Microsoft.VisualStudio.Services.Cloud"
     }
   ],
-  "files": [],
+  "files": [
+    {
+      "path": "docs/images",
+      "addressable": true
+    },
+    {
+      "path": "dist",
+      "addressable": true
+    }
+  ],
+  "screenshots": [
+    {
+      "path": "docs/images/rule-editor.png"
+    },
+    {
+      "path": "docs/images/rule-modal.png"
+    }
+  ],
   "contributions": [
     {
       "id": "work-item-observer",
@@ -68,7 +90,7 @@
       "properties": {
         "name": "Auto State",
         "order": 1,
-        "uri": "joachimdalen.auto-state.admin-hub.html"
+        "uri": "dist/admin-hub.html"
       },
       "constraints": [
         {

@@ -7,7 +7,7 @@ module.exports = merge(common, {
   output: {
     publicPath: '/',
     filename: pathData => {
-      return `static/${getOutputName(pathData.chunk.name, true)}.[chunkhash:8].js`;
+      return `static/${getOutputName(pathData.chunk.name)}.[chunkhash:8].js`;
     },
     library: '[name]',
     libraryTarget: 'umd',
