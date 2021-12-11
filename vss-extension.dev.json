@@ -76,6 +76,7 @@
     {
       "id": "rule-modal",
       "type": "ms.vss-web.external-content",
+      "targets": [],
       "properties": {
         "uri": "rule-modal.html"
       },
@@ -94,7 +95,7 @@
       "description": "Configuration hub for Auto State",
       "targets": ["ms.vss-web.project-admin-hub-group"],
       "properties": {
-        "name": "Auto State",
+        "name": "Auto State (DEV)",
         "order": 1,
         "uri": "admin-hub.html"
       },
@@ -113,13 +114,13 @@
       "description": "Enables auto state listener and admin interface",
       "targets": ["ms.vss-web.managed-features"],
       "properties": {
-        "name": "Auto State",
+        "name": "Auto State (DEV)",
         "userConfigurable": false,
         "hostConfigurable": true,
         "hostScopes": ["project"],
         "links": {
           "learn": {
-            "uri": "https://www.microsoft.com"
+            "uri": "https://github.com/joachimdalen/azdevops-auto-state#post-install-activation"
           }
         }
       }
