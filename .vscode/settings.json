@@ -1,0 +1,20 @@
+{
+  "json.schemas": [
+    {
+      "fileMatch": [
+        "/.azext/changelog.json"
+      ],
+      "url": "schemas/v1/changelog-schema.json"
+    }
+  ],
+  "[azure-pipelines]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[markdown]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "files.associations": {
+    "azure-pipelines.yml": "azure-pipelines",
+    "**/ci/*.yml": "azure-pipelines"
+  },
+}
