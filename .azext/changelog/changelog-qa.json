@@ -1,7 +1,23 @@
 [
   {
+    "version": "0.0.7",
+    "publishDate": "2021-12-XX",
+    "modules": [
+      {
+        "version": "0.0.7",
+        "name": "Core",
+        "changes": [
+          {
+            "type": "docs",
+            "description": "Update README"
+          }
+        ]
+      }
+    ]
+  },
+  {
     "version": "0.0.6",
-    "publishDate": "2021-12-11",
+    "publishDate": "2021-12-13",
     "modules": [
       {
         "version": "0.0.6",
@@ -17,7 +33,7 @@
   },
   {
     "version": "0.0.5",
-    "publishDate": "2021-12-11",
+    "publishDate": "2021-12-13",
     "modules": [
       {
         "version": "0.0.5",
@@ -33,7 +49,7 @@
   },
   {
     "version": "0.0.4",
-    "publishDate": "2021-12-11",
+    "publishDate": "2021-12-13",
     "modules": [
       {
         "version": "0.0.4",
@@ -49,7 +65,7 @@
   },
   {
     "version": "0.0.3",
-    "publishDate": "2021-12-11",
+    "publishDate": "2021-12-13",
     "modules": [
       {
         "version": "0.0.3",
