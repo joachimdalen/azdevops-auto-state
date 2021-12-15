@@ -8,17 +8,20 @@ import { StorageService } from './StorageService';
 class RuleService {
   private readonly _dataStore: StorageService;
   private readonly _metaService: IMetaService;
+  private _isInitialized = false;
   private _data: ProjectConfigurationDocument | undefined;
   constructor() {
     this._dataStore = new StorageService();
     this._metaService = new MetaService();
   }
   public async load(): Promise<ProjectConfigurationDocument | undefined> {
+    if (this._isInitialized) return;
     const project = await this._metaService.getProject();
     if (!project) return;
 
     const data = await this._dataStore.getDataForProject(project.id);
     this._data = data;
+    this._isInitialized = true;
     return this._data;
   }
 
@@ -26,6 +29,10 @@ class RuleService {
     workItemType: string,
     rule: Rule
   ): Promise<ProjectConfigurationDocument | undefined> {
+    if (this._isInitialized === false) {
+      throw new Error('RuleService is not initialized. Call Init() first.');
+    }
+
     const project = await this._metaService.getProject();
     if (!project) return;
     if (this._data === undefined) {
