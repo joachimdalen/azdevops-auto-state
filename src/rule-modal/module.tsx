@@ -25,6 +25,7 @@ import useDropdownSelection from '../shared-ui/hooks/useDropdownSelection';
 import showRootComponent from '../shared-ui/showRootComponent';
 
 const ModalContent = (): React.ReactElement => {
+  const [rule, setRule] = useState<Rule>();
   const [types, setTypes] = useState<WorkItemType[]>([]);
   const [workItemType, setWorkItemType] = useState('');
   const [parentType, setParentType] = useState('');
@@ -35,22 +36,32 @@ const ModalContent = (): React.ReactElement => {
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     loadTheme(createTheme(appTheme));
-    DevOps.init().then(async () => {
+    DevOps.init({
+      loaded: false,
+      applyTheme: true
+    }).then(async () => {
       webLogger.information('Loading rule modal...');
     });
     DevOps.ready()
       .then(() => {
         const config = DevOps.getConfiguration();
-
-        if (config.dialog) {
-          DevOps.notifyLoadSucceeded().then(() => {
-            DevOps.resize();
-            const service = new WorkItemService();
-            service.getWorkItemTypes().then(x => {
-              setTypes(x);
-            });
-          });
-        }
+        const service = new WorkItemService();
+        service.getWorkItemTypes().then(x => {
+          setTypes(x);
+          if (config.rule) {
+            const rle: Rule = config.rule;
+            setRule(rle);
+            setWorkItemType(rle.workItemType);
+            setParentType(rle.parentType);
+            setChildState(rle.childState);
+            setParentNotState(rle.parentNotState);
+            setParentTargetState(rle.parentTargetState);
+            setAllChildren(rle.allChildren);
+          }
+        });
+        DevOps.notifyLoadSucceeded().then(() => {
+          DevOps.resize();
+        });
       })
       .finally(() => {
         setLoading(false);
@@ -97,12 +108,12 @@ const ModalContent = (): React.ReactElement => {
           return item;
         });
       });
-  }, [parentType]);
-  const workItemTypeSelection = useDropdownSelection(workItemTypes);
-  const parentTypeSelection = useDropdownSelection(workItemTypes);
-  const workItemStateSelection = useDropdownSelection(workItemStates);
-  const parentStateSelection = useDropdownMultiSelection(parentStates);
-  const parentTargetStateSelection = useDropdownSelection(parentStates);
+  }, [types, parentType]);
+  const workItemTypeSelection = useDropdownSelection(workItemTypes, rule?.workItemType);
+  const parentTypeSelection = useDropdownSelection(workItemTypes, rule?.parentType);
+  const workItemStateSelection = useDropdownSelection(workItemStates, rule?.childState);
+  const parentStateSelection = useDropdownMultiSelection(parentStates, rule?.parentNotState);
+  const parentTargetStateSelection = useDropdownSelection(parentStates, rule?.parentTargetState);
 
   const dismiss = () => {
     const config = DevOps.getConfiguration();
@@ -117,6 +128,7 @@ const ModalContent = (): React.ReactElement => {
     const config = DevOps.getConfiguration();
     if (config.dialog) {
       const ac: Rule = {
+        id: rule?.id,
         workItemType: workItemType,
         parentType: parentType,
         childState: childState,

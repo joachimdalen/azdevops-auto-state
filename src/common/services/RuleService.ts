@@ -34,12 +34,12 @@ class RuleService {
         workItemRules: [{ workItemType: rule.workItemType, rules: [{ ...rule, id: uuidV4() }] }]
       };
       const created = await this._dataStore.setData(newDocument);
+      this._data = created;
       return created;
     }
 
-    const wiIndex = this._data.workItemRules.findIndex(x => x.workItemType === workItemType);
-
-    if (wiIndex !== undefined && wiIndex > 0) {
+    const wiIndex = this._data.workItemRules?.findIndex(x => x.workItemType === workItemType);
+    if (wiIndex !== undefined && wiIndex >= 0) {
       const ruleDocument = this._data.workItemRules[wiIndex];
       const ruleIndex = ruleDocument.rules.findIndex(x => x.id === rule?.id);
       if (ruleIndex >= 0) {
@@ -50,6 +50,8 @@ class RuleService {
       const nd = { ...this._data };
       nd.workItemRules[wiIndex] = ruleDocument;
       const updatedDocument = await this._dataStore.setData(nd);
+
+      this._data = updatedDocument;
       return updatedDocument;
     }
     const newDoc: ProjectConfigurationDocument = {
