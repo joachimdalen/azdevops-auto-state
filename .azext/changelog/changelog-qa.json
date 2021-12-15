@@ -5,11 +5,31 @@
     "modules": [
       {
         "version": "0.0.7",
-        "name": "Core",
+        "name": "core",
         "changes": [
           {
             "type": "docs",
             "description": "Update README"
+          }
+        ]
+      },
+      {
+        "version": "0.0.7",
+        "name": "rule-modal",
+        "changes": [
+          {
+            "type": "feat",
+            "description": "Added support for updating rule"
+          }
+        ]
+      },
+      {
+        "version": "0.0.7",
+        "name": "admin-hub",
+        "changes": [
+          {
+            "type": "feat",
+            "description": "Added support for updating rule"
           }
         ]
       }
