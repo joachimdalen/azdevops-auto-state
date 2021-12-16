@@ -38,7 +38,7 @@ const getTemplate = (level: string) => {
 const webLogger = {
   trace: (...params: any[]): void => {
     // eslint-disable-next-line no-console
-    console.trace(getTemplate('TRACE'), 'color: green', 'color: orange', ...params);
+    console.log(getTemplate('TRACE'), 'color: green', 'color: orange', ...params);
   },
   information: (...params: any[]): void => {
     // eslint-disable-next-line no-console

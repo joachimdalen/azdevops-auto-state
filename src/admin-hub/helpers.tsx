@@ -1,5 +1,4 @@
 import {
-  ActionButton,
   ContextualMenuItemType,
   IColumn,
   IconButton,
@@ -36,7 +35,8 @@ const isGroup = (item: IGroup | undefined): item is IGroup => {
 
 export const getListColumns = (
   types: WorkItemType[],
-  handleDeleteRule: (workItemType: string, ruleId: string) => Promise<boolean>
+  handleDeleteRule: (workItemType: string, ruleId: string) => Promise<boolean>,
+  showEditRule: (rule: Rule) => Promise<void>
 ): IColumn[] => {
   const columns: IColumn[] = [
     {
@@ -125,11 +125,10 @@ export const getListColumns = (
       className: 'flex-self-center',
       minWidth: 100,
       onRender: (item?: any, index?: number, column?: IColumn) => {
-       
         return (
           <IconButton
-          splitButtonMenuProps={{}}
-            menuProps={getListRowContextMenuItem(item, handleDeleteRule)}
+            splitButtonMenuProps={{}}
+            menuProps={getListRowContextMenuItem(item, handleDeleteRule, showEditRule)}
             iconProps={{ iconName: 'MoreVertical' }}
           />
         );
@@ -141,7 +140,8 @@ export const getListColumns = (
 
 const getListRowContextMenuItem = (
   rule: Rule,
-  handleDeleteRule: (workItemType: string, ruleId: string) => Promise<boolean>
+  handleDeleteRule: (workItemType: string, ruleId: string) => Promise<boolean>,
+  showEditRule: (rule: Rule) => Promise<void>
 ): IContextualMenuProps => {
   return {
     shouldFocusOnMount: true,
@@ -156,13 +156,21 @@ const getListRowContextMenuItem = (
       {
         key: 'edit',
         text: 'Edit',
-        iconProps: { iconName: 'Edit'}
+        iconProps: { iconName: 'Edit' },
+        onClick: (
+          ev?: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>,
+          item?: IContextualMenuItem
+        ) => {
+          showEditRule(rule).then(r => {
+            return r;
+          });
+        }
       },
-      {
-        key: 'duplicate',
-        text: 'Duplicate Rule',
-        iconProps: { iconName: 'Copy', style: { color: 'green' } }
-      },
+      // {
+      //   key: 'duplicate',
+      //   text: 'Duplicate Rule',
+      //   iconProps: { iconName: 'Copy', style: { color: 'green' } }
+      // },
       {
         key: 'div1',
         itemType: ContextualMenuItemType.Divider

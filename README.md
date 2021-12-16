@@ -38,9 +38,10 @@
     <li>
       <a href="#about-the-project">About The Project</a>
       <ul>
-        <li><a href="#limitations">Limitations</a></li>
+        <li><a href="#limitations">Limitations</a><li>   
       </ul>
     </li>
+    <li><a href="#post-install-activation">Post Install Activation</a></li>
     <li>
       <a href="#getting-started">Getting Started</a>
       <ul>
@@ -53,7 +54,6 @@
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
-    <li><a href="#acknowledgments">Acknowledgments</a></li>
   </ol>
 </details>
 
@@ -82,9 +82,6 @@ Auto State is hidden behind a feature flag for several reasons. After installing
 <!-- GETTING STARTED -->
 
 ## Getting Started
-
-This is an example of how you may give instructions on setting up your project locally.
-To get a local copy up and running follow these simple example steps.
 
 ### Prerequisites
 
@@ -123,9 +120,7 @@ To get a local copy up and running follow these simple example steps.
 
 ## Usage
 
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
-
-_For more examples, please refer to the [Documentation](https://example.com)_
+Usage documentation comming soon..
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -143,6 +138,8 @@ See the [open issues](https://github.com/joachimdalen/azdevops-auto-state/issues
 <!-- CONTRIBUTING -->
 
 ## Contributing
+
+https://github.com/angular/angular/blob/master/CONTRIBUTING.md#cla
 
 Contributions are welcome, both in the form of suggestions and code. Create
 
@@ -179,7 +176,7 @@ Distributed under the MIT License. See `LICENSE` for more information.
 If you have generic questions about the project or usage you can make contact in the following ways:
 
 - Submit an issue with the `@type/question` label - [New Issue](https://github.com/joachimdalen/azdevops-auto-state/issues/new)
-- Submit a new question under the Marketplace Q&A section.
+- Submit a new question under the [Marketplace Q&A section](https://marketplace.visualstudio.com/items?itemName=joachimdalen.auto-state&ssr=false#qna).
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 

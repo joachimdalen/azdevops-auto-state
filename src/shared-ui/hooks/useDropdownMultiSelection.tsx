@@ -1,20 +1,21 @@
 import { IListBoxItem } from 'azure-devops-ui/ListBox';
 import { DropdownMultiSelection } from 'azure-devops-ui/Utilities/DropdownSelection';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 
 function useDropdownMultiSelection(
   items: IListBoxItem<any>[],
-  selectedId?: string
+  selectedIds?: string[]
 ): DropdownMultiSelection {
-  return useMemo(() => {
-    const selection = new DropdownMultiSelection();
-
-    if (selectedId === undefined) return selection;
-
-    const index = items.findIndex(x => x.id === selectedId);
-    if (index >= 0) selection.select(index);
-    return selection;
-  }, [selectedId]);
+  const selection = useMemo(() => new DropdownMultiSelection(), []);
+  useEffect(() => {
+    if (selectedIds !== undefined && selectedIds.length > 0) {
+      selectedIds.forEach(z => {
+        const idx = items.findIndex(x => x.id === z);
+        if (idx >= 0) selection.select(idx);
+      });
+    }
+  }, [items, selectedIds]);
+  return selection;
 }
 
 export default useDropdownMultiSelection;

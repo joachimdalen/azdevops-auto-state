@@ -1,12 +1,17 @@
 [
   {
-    "version": "0.0.6",
+    "version": "0.0.7",
     "publishDate": "2021-12-XX",
     "modules": [
       {
-        "version": "0.0.6",
+        "version": "0.0.7",
         "name": "Core",
-        "changes": []
+        "changes": [
+          {
+            "type": "docs",
+            "description": "Update README"
+          }
+        ]
       }
     ]
   },

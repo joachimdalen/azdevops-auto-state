@@ -75,7 +75,7 @@ const AdminPage = (): React.ReactElement => {
       x => x.workItemType === workItemType
     );
 
-    if (documentIndex && documentIndex >= 0) {
+    if (documentIndex >= 0) {
       const document = { ...configuration };
       const newRules = document.workItemRules[documentIndex].rules.filter(z => z.id !== ruleId);
       document.workItemRules[documentIndex].rules = newRules;
@@ -84,12 +84,30 @@ const AdminPage = (): React.ReactElement => {
     }
     return true;
   };
+
+  const showEditRule = async (rule: Rule) => {
+    DevOps.getService<IHostPageLayoutService>('ms.vss-features.host-page-layout-service').then(
+      dialogService => {
+        const options: IDialogOptions<AddRuleResult> = {
+          title: 'Edit rule',
+          onClose: handleDialogResult,
+          configuration: {
+            rule: rule,
+            editMode: true
+          }
+        };
+
+        dialogService.openCustomDialog(DevOps.getExtensionContext().id + '.rule-modal', options);
+      }
+    );
+  };
+
   const commandBarItems: IHeaderCommandBarItem[] = useMemo(
     () => getCommandBarItems(handleDialogResult),
     [handleDialogResult]
   );
   const columns: IColumn[] = useMemo(
-    () => getListColumns(types, handleDeleteRule),
+    () => getListColumns(types, handleDeleteRule, showEditRule),
     [types, configuration]
   );
 
