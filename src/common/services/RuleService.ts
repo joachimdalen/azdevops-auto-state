@@ -5,6 +5,12 @@ import Rule from '../models/Rule';
 import MetaService, { IMetaService } from './MetaService';
 import { StorageService } from './StorageService';
 
+interface ActionResult<T> {
+  success: boolean;
+  message?: string;
+  data?: T;
+}
+
 class RuleService {
   private readonly _dataStore: StorageService;
   private readonly _metaService: IMetaService;
@@ -14,27 +20,32 @@ class RuleService {
     this._dataStore = new StorageService();
     this._metaService = new MetaService();
   }
-  public async load(): Promise<ProjectConfigurationDocument | undefined> {
-    if (this._isInitialized) return;
+  public async load(): Promise<ActionResult<ProjectConfigurationDocument>> {
+    if (this._isInitialized) return { success: true };
     const project = await this._metaService.getProject();
-    if (!project) return;
+    if (!project) return { success: false, message: 'Failed to find project' };
 
     const data = await this._dataStore.getDataForProject(project.id);
     this._data = data;
     this._isInitialized = true;
-    return this._data;
+    return { success: true, data: this._data };
   }
 
   public async updateRule(
     workItemType: string,
     rule: Rule
-  ): Promise<ProjectConfigurationDocument | undefined> {
+  ): Promise<ActionResult<ProjectConfigurationDocument>> {
     if (this._isInitialized === false) {
       throw new Error('RuleService is not initialized. Call Init() first.');
     }
 
     const project = await this._metaService.getProject();
-    if (!project) return;
+    if (!project) {
+      return {
+        success: false,
+        message: 'Failed to find project'
+      };
+    }
     if (this._data === undefined) {
       const newDocument: ProjectConfigurationDocument = {
         id: project.id,
@@ -42,7 +53,10 @@ class RuleService {
       };
       const created = await this._dataStore.setData(newDocument);
       this._data = created;
-      return created;
+      return {
+        success: true,
+        data: created
+      };
     }
 
     const wiIndex = this._data.workItemRules?.findIndex(x => x.workItemType === workItemType);
@@ -59,7 +73,10 @@ class RuleService {
       const updatedDocument = await this._dataStore.setData(nd);
 
       this._data = updatedDocument;
-      return updatedDocument;
+      return {
+        success: true,
+        data: updatedDocument
+      };
     }
     const newDoc: ProjectConfigurationDocument = {
       ...this._data,
@@ -69,7 +86,10 @@ class RuleService {
       ]
     };
     const created = await this._dataStore.setData(newDoc);
-    return created;
+    return {
+      success: true,
+      data: created
+    };
   }
 }
 

@@ -21,7 +21,6 @@ import React, { useEffect, useMemo, useState } from 'react';
 import AddRuleResult from '../common/models/AddRuleResult';
 import ProjectConfigurationDocument from '../common/models/ProjectConfigurationDocument';
 import Rule from '../common/models/Rule';
-import MetaService from '../common/services/MetaService';
 import RuleService from '../common/services/RuleService';
 import { StorageService } from '../common/services/StorageService';
 import WorkItemService from '../common/services/WorkItemService';
@@ -35,8 +34,8 @@ const AdminPage = (): React.ReactElement => {
   const [configuration, setConfiguration] = useState<ProjectConfigurationDocument | undefined>(
     undefined
   );
-  const [storageService, workItemService, metaService, ruleService] = useMemo(
-    () => [new StorageService(), new WorkItemService(), new MetaService(), new RuleService()],
+  const [storageService, workItemService, ruleService] = useMemo(
+    () => [new StorageService(), new WorkItemService(), new RuleService()],
     []
   );
 
@@ -44,13 +43,13 @@ const AdminPage = (): React.ReactElement => {
   useEffect(() => {
     async function fetchData() {
       const loadedTypes = await workItemService.getWorkItemTypes();
-      const project = await metaService.getProject();
+
       setTypes(loadedTypes);
 
       try {
-        if (project) {
-          const config = await ruleService.load();
-          setConfiguration(config);
+        const loadResult = await ruleService.load();
+        if (loadResult.success) {
+          setConfiguration(loadResult.data);
         }
       } catch (error) {
         webLogger.error('Failed to get project configuration', error);
@@ -65,8 +64,10 @@ const AdminPage = (): React.ReactElement => {
   const handleDialogResult = async (result: AddRuleResult | undefined) => {
     if (result?.result === 'CANCEL') return;
     if (!result?.rule || !result.workItemType) return;
-    const updatedData = await ruleService.updateRule(result.workItemType, result.rule);
-    setConfiguration(updatedData);
+    const updateResult = await ruleService.updateRule(result.workItemType, result.rule);
+    if (updateResult.success) {
+      setConfiguration(updateResult.data);
+    }
   };
 
   const handleDeleteRule = async (workItemType: string, ruleId: string): Promise<boolean> => {
