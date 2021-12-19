@@ -1,17 +1,16 @@
 import { IExtensionDataService } from 'azure-devops-extension-api';
 import * as DevOps from 'azure-devops-extension-sdk';
 
-import ProjectConfigurationDocument from '../models/ProjectConfigurationDocument';
-import WorkItemRules from '../models/WorkItemRules';
+import RuleDocument from '../models/WorkItemRules';
+import MetaService, { IMetaService } from './MetaService';
 
 export interface IStorageService {
   getRulesForWorkItemType(
     workItemType: string,
     projectId: string
-  ): Promise<WorkItemRules | undefined>;
-  getData(): Promise<ProjectConfigurationDocument[]>;
-  getDataForProject(projectId: string): Promise<ProjectConfigurationDocument | undefined>;
-  setData(data: ProjectConfigurationDocument): Promise<ProjectConfigurationDocument>;
+  ): Promise<RuleDocument | undefined>;
+  getData(): Promise<RuleDocument[]>;
+  setData(data: RuleDocument): Promise<RuleDocument>;
 }
 
 enum ScopeType {
@@ -24,10 +23,13 @@ enum CollectionNames {
 }
 
 class StorageService implements IStorageService {
+  private readonly _metaService: IMetaService;
   private scopeType: ScopeType;
   private dataService?: IExtensionDataService;
+  private _collectionName?: string;
 
   public constructor() {
+    this._metaService = new MetaService();
     this.scopeType = ScopeType.Default;
   }
 
@@ -37,68 +39,67 @@ class StorageService implements IStorageService {
         'ms.vss-features.extension-data-service'
       );
     }
+
+    if (this._collectionName === undefined) {
+      const project = await this._metaService.getProject();
+
+      if (project === undefined) {
+        throw new Error('Failed to find project');
+      }
+
+      this._collectionName = `${project.id}-${CollectionNames.WorkItemRules}`;
+    }
+
     return this.dataService;
   }
 
-  public async getRulesForWorkItemType(
-    workItemType: string,
-    projectId: string
-  ): Promise<WorkItemRules | undefined> {
+  public async getRulesForWorkItemType(workItemType: string): Promise<RuleDocument | undefined> {
     const dataService = await this.getDataService();
+
+    if (this._collectionName === undefined) {
+      throw new Error('Failed to initialize ');
+    }
+
     const dataManager = await dataService.getExtensionDataManager(
       DevOps.getExtensionContext().id,
       await DevOps.getAccessToken()
     );
-    const document: ProjectConfigurationDocument | undefined = await dataManager.getDocument(
-      CollectionNames.WorkItemRules,
-      projectId,
+    const document: RuleDocument | undefined = await dataManager.getDocument(
+      this._collectionName,
+      workItemType,
       {
         scopeType: this.scopeType,
         defaultValue: undefined
       }
     );
 
-    if (!document) return undefined;
-
-    const types = document.workItemRules?.find(x => x.workItemType === workItemType);
-    return types;
-  }
-  public async getDataForProject(
-    projectId: string
-  ): Promise<ProjectConfigurationDocument | undefined> {
-    try {
-      const dataService = await this.getDataService();
-      const dataManager = await dataService.getExtensionDataManager(
-        DevOps.getExtensionContext().id,
-        await DevOps.getAccessToken()
-      );
-      const data = await dataManager.getDocument(CollectionNames.WorkItemRules, projectId, {
-        scopeType: this.scopeType
-      });
-      return data;
-    } catch (error) {
-      return undefined;
-    }
+    return document;
   }
 
-  public async getData(): Promise<ProjectConfigurationDocument[]> {
+  public async getData(): Promise<RuleDocument[]> {
     const dataService = await this.getDataService();
+    if (this._collectionName === undefined) {
+      throw new Error('Failed to initialize ');
+    }
     const dataManager = await dataService.getExtensionDataManager(
       DevOps.getExtensionContext().id,
       await DevOps.getAccessToken()
     );
-    return dataManager.getDocuments(CollectionNames.WorkItemRules, {
+    return dataManager.getDocuments(this._collectionName, {
       scopeType: this.scopeType
     });
   }
 
-  public async setData(data: ProjectConfigurationDocument): Promise<ProjectConfigurationDocument> {
+  public async setData(data: RuleDocument): Promise<RuleDocument> {
     const dataService = await this.getDataService();
+    if (this._collectionName === undefined) {
+      throw new Error('Failed to initialize ');
+    }
     const dataManager = await dataService.getExtensionDataManager(
       DevOps.getExtensionContext().id,
       await DevOps.getAccessToken()
     );
-    return dataManager.setDocument(CollectionNames.WorkItemRules, data, {
+    return dataManager.setDocument(this._collectionName, data, {
       scopeType: ScopeType.Default
     });
   }

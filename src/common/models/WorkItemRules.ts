@@ -1,9 +1,6 @@
 import Rule from './Rule';
-export enum RuleDocumentVersion {
-  V1
-}
-
-export default interface WorkItemRules {
-  workItemType: string;
+export default interface RuleDocument {
+  // Also the reference name to the work item type
+  id: string;
   rules: Rule[];
 }

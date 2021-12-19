@@ -19,8 +19,8 @@ import { ZeroData, ZeroDataActionType } from 'azure-devops-ui/ZeroData';
 import React, { useEffect, useMemo, useState } from 'react';
 
 import AddRuleResult from '../common/models/AddRuleResult';
-import ProjectConfigurationDocument from '../common/models/ProjectConfigurationDocument';
 import Rule from '../common/models/Rule';
+import RuleDocument from '../common/models/WorkItemRules';
 import RuleService from '../common/services/RuleService';
 import { StorageService } from '../common/services/StorageService';
 import WorkItemService from '../common/services/WorkItemService';
@@ -31,9 +31,7 @@ import { getCommandBarItems, getListColumns, groupBy, isGroup } from './helpers'
 
 const AdminPage = (): React.ReactElement => {
   const [types, setTypes] = useState<WorkItemType[]>([]);
-  const [configuration, setConfiguration] = useState<ProjectConfigurationDocument | undefined>(
-    undefined
-  );
+  const [configuration, setConfiguration] = useState<RuleDocument[] | undefined>(undefined);
   const [storageService, workItemService, ruleService] = useMemo(
     () => [new StorageService(), new WorkItemService(), new RuleService()],
     []
@@ -49,7 +47,7 @@ const AdminPage = (): React.ReactElement => {
       try {
         const loadResult = await ruleService.load();
         if (loadResult.success) {
-          setConfiguration(loadResult.data);
+          setConfiguration(loadResult.data || []);
         }
       } catch (error) {
         webLogger.error('Failed to get project configuration', error);
@@ -72,17 +70,12 @@ const AdminPage = (): React.ReactElement => {
 
   const handleDeleteRule = async (workItemType: string, ruleId: string): Promise<boolean> => {
     if (!configuration) return false;
-    const documentIndex = configuration.workItemRules.findIndex(
-      x => x.workItemType === workItemType
-    );
 
-    if (documentIndex >= 0) {
-      const document = { ...configuration };
-      const newRules = document.workItemRules[documentIndex].rules.filter(z => z.id !== ruleId);
-      document.workItemRules[documentIndex].rules = newRules;
-      const updatedDocument = await storageService.setData(document);
-      setConfiguration(updatedDocument);
+    const updateResult = await ruleService.deleteRule(workItemType, ruleId);
+    if (updateResult.success) {
+      setConfiguration(updateResult.data);
     }
+
     return true;
   };
 
@@ -114,7 +107,7 @@ const AdminPage = (): React.ReactElement => {
 
   const [ruleItems, groups]: [Rule[], IGroup[]] = useMemo(() => {
     if (!configuration) return [[], []];
-    const rules = configuration?.workItemRules.flatMap(x => x.rules);
+    const rules = configuration?.flatMap(x => x.rules);
     const grouped = groupBy(rules, x => x.workItemType);
     const keys = Array.from(grouped.keys());
     let stIndex = 0;

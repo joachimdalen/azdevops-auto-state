@@ -1,10 +1,8 @@
-import { IProjectInfo } from 'azure-devops-extension-api';
 import { v4 as uuidV4 } from 'uuid';
 
-import ProjectConfigurationDocument from '../models/ProjectConfigurationDocument';
 import Rule from '../models/Rule';
-import MetaService, { IMetaService } from './MetaService';
-import { StorageService } from './StorageService';
+import RuleDocument from '../models/WorkItemRules';
+import { IStorageService, StorageService } from './StorageService';
 
 interface ActionResult<T> {
   success: boolean;
@@ -13,83 +11,117 @@ interface ActionResult<T> {
 }
 
 class RuleService {
-  private readonly _dataStore: StorageService;
-  private readonly _metaService: IMetaService;
+  private readonly _dataStore: IStorageService;
   private _isInitialized = false;
-  private _data: ProjectConfigurationDocument | undefined;
-  constructor() {
-    this._dataStore = new StorageService();
-    this._metaService = new MetaService();
+  private _data: RuleDocument[];
+  constructor(dataStore?: IStorageService) {
+    this._dataStore = dataStore || new StorageService();
+    this._data = [];
   }
-  public async load(): Promise<ActionResult<ProjectConfigurationDocument>> {
+  public async load(): Promise<ActionResult<RuleDocument[]>> {
     if (this._isInitialized) return { success: true };
-    const project = await this._metaService.getProject();
-    if (!project) return { success: false, message: 'Failed to find project' };
-
-    const data = await this._dataStore.getDataForProject(project.id);
-    this._data = data;
+    try {
+      const data = await this._dataStore.getData();
+      this._data = data;
+    } catch (error: any) {
+      if (error?.status !== 404) {
+        console.log('Error is 404');
+        throw error;
+      }
+    }
     this._isInitialized = true;
     return { success: true, data: this._data };
   }
 
-  public async updateRule(
+  public async deleteRule(
     workItemType: string,
-    rule: Rule
-  ): Promise<ActionResult<ProjectConfigurationDocument>> {
-    if (this._isInitialized === false) {
-      throw new Error('RuleService is not initialized. Call Init() first.');
+    ruleId: string
+  ): Promise<ActionResult<RuleDocument[]>> {
+    if (!this._data) {
+      return { success: true, data: this._data };
     }
 
-    const project = await this._metaService.getProject();
-    if (!project) {
+    const documentIndex = this._data.findIndex(x => x.id === workItemType);
+
+    if (documentIndex >= 0) {
+      const document = { ...this._data[documentIndex] };
+      const newRules = document.rules.filter(z => z.id !== ruleId);
+      document.rules = newRules;
+      const updatedDocument = await this._dataStore.setData(document);
+      const newDocs = [...this._data];
+      newDocs[documentIndex] = updatedDocument;
+      this._data = newDocs;
+
       return {
-        success: false,
-        message: 'Failed to find project'
+        success: true,
+        data: newDocs
       };
     }
-    if (this._data === undefined) {
-      const createResult = await this.createRootDocument(project, rule);
-      return createResult;
-    }
 
-    const wiIndex = this._data.workItemRules?.findIndex(x => x.workItemType === workItemType);
-    if (wiIndex !== undefined && wiIndex >= 0) {
-      const uResult = await this.updateOrAddRule(this._data, wiIndex, rule);
-      return uResult;
-    }
-
-    const wiResult = await this.createWorkItemTypeDocument(this._data, rule);
-    return wiResult;
+    return {
+      success: true
+    };
   }
 
-  private async createRootDocument(
-    project: IProjectInfo,
-    rule: Rule
-  ): Promise<ActionResult<ProjectConfigurationDocument>> {
-    const newDocument: ProjectConfigurationDocument = {
-      id: project.id,
-      workItemRules: [{ workItemType: rule.workItemType, rules: [{ ...rule, id: uuidV4() }] }]
+  public async updateRule(workItemType: string, rule: Rule): Promise<ActionResult<RuleDocument[]>> {
+    if (this._isInitialized === false) {
+      throw new Error('RuleService is not initialized. Call Load() first.');
+    }
+
+    const docIndex = this._data?.findIndex(x => x.id === workItemType);
+    if (docIndex !== undefined && docIndex >= 0) {
+      const doc = this._data[docIndex];
+      const uResult = await this.updateOrAddRule(doc, rule);
+
+      if (!uResult.success) {
+        return {
+          success: false,
+          message: uResult.message
+        };
+      }
+
+      const data = uResult.data;
+
+      if (data) {
+        const newDocs = [...this._data];
+        newDocs[docIndex] = data;
+
+        this._data = newDocs;
+        return {
+          success: true,
+          data: newDocs
+        };
+      }
+    } else {
+      const createResult = await this.createRootDocument(rule);
+
+      if (!createResult.success) {
+        return {
+          success: false,
+          message: createResult.message
+        };
+      }
+      const newData = createResult.data ? [...this._data, createResult.data] : this._data;
+
+      this._data = newData;
+
+      return {
+        success: true,
+        data: newData
+      };
+    }
+    return {
+      success: false
+    };
+  }
+
+  private async createRootDocument(rule: Rule): Promise<ActionResult<RuleDocument>> {
+    const newDocument: RuleDocument = {
+      id: rule.workItemType,
+      rules: [{ ...rule, id: uuidV4() }]
     };
     const created = await this._dataStore.setData(newDocument);
-    this._data = created;
-    return {
-      success: true,
-      data: created
-    };
-  }
 
-  private async createWorkItemTypeDocument(
-    rootDoc: ProjectConfigurationDocument,
-    rule: Rule
-  ): Promise<ActionResult<ProjectConfigurationDocument>> {
-    const newDoc: ProjectConfigurationDocument = {
-      ...rootDoc,
-      workItemRules: [
-        ...rootDoc.workItemRules,
-        { workItemType: rule.workItemType, rules: [{ ...rule, id: uuidV4() }] }
-      ]
-    };
-    const created = await this._dataStore.setData(newDoc);
     return {
       success: true,
       data: created
@@ -97,14 +129,12 @@ class RuleService {
   }
 
   private async updateOrAddRule(
-    rootDoc: ProjectConfigurationDocument,
-    wiIndex: number,
+    rootDoc: RuleDocument,
     rule: Rule
-  ): Promise<ActionResult<ProjectConfigurationDocument>> {
-    const ruleDocument = rootDoc.workItemRules[wiIndex];
-    const ruleIndex = ruleDocument.rules.findIndex(x => x.id === rule?.id);
+  ): Promise<ActionResult<RuleDocument>> {
+    const ruleIndex = rootDoc.rules.findIndex(x => x.id === rule?.id);
     if (ruleIndex >= 0) {
-      const oldRule = ruleDocument.rules[ruleIndex];
+      const oldRule = rootDoc.rules[ruleIndex];
 
       if (this.isRuleSame(oldRule, rule)) {
         return {
@@ -113,15 +143,12 @@ class RuleService {
         };
       }
 
-      ruleDocument.rules[ruleIndex] = rule;
+      rootDoc.rules[ruleIndex] = rule;
     } else {
-      ruleDocument.rules = [...ruleDocument.rules, rule];
+      rootDoc.rules = [...rootDoc.rules, rule];
     }
-    const nd = { ...rootDoc };
-    nd.workItemRules[wiIndex] = ruleDocument;
-    const updatedDocument = await this._dataStore.setData(nd);
+    const updatedDocument = await this._dataStore.setData(rootDoc);
 
-    this._data = updatedDocument;
     return {
       success: true,
       data: updatedDocument
