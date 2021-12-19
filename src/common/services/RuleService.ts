@@ -100,10 +100,19 @@ class RuleService {
     rootDoc: ProjectConfigurationDocument,
     wiIndex: number,
     rule: Rule
-  ) {
+  ): Promise<ActionResult<ProjectConfigurationDocument>> {
     const ruleDocument = rootDoc.workItemRules[wiIndex];
     const ruleIndex = ruleDocument.rules.findIndex(x => x.id === rule?.id);
     if (ruleIndex >= 0) {
+      const oldRule = ruleDocument.rules[ruleIndex];
+
+      if (this.isRuleSame(oldRule, rule)) {
+        return {
+          success: false,
+          message: 'Duplicate rule'
+        };
+      }
+
       ruleDocument.rules[ruleIndex] = rule;
     } else {
       ruleDocument.rules = [...ruleDocument.rules, rule];
@@ -117,6 +126,14 @@ class RuleService {
       success: true,
       data: updatedDocument
     };
+  }
+  private isRuleSame(ruleOne: Rule, ruleTwo: Rule) {
+    if (ruleOne.workItemType !== ruleTwo.workItemType) return false;
+    if (ruleOne.parentType !== ruleTwo.parentType) return false;
+    if (ruleOne.parentTargetState !== ruleTwo.parentTargetState) return false;
+    if (ruleOne.childState !== ruleTwo.childState) return false;
+    if (ruleOne.allChildren !== ruleTwo.allChildren) return false;
+    if (!ruleOne.parentNotState.every(x => ruleTwo.parentNotState.includes(x))) return false;
   }
 }
 
