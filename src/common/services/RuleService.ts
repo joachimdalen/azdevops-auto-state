@@ -1,8 +1,8 @@
 import { IDialogOptions, IHostPageLayoutService } from 'azure-devops-extension-api';
 import * as DevOps from 'azure-devops-extension-sdk';
 import { v4 as uuidV4 } from 'uuid';
-import AddRuleResult from '../models/AddRuleResult';
 
+import AddRuleResult from '../models/AddRuleResult';
 import Rule from '../models/Rule';
 import RuleDocument from '../models/WorkItemRules';
 import { IStorageService, StorageService } from './StorageService';
@@ -29,8 +29,7 @@ class RuleService {
       this._data = data;
     } catch (error: any) {
       if (error?.status !== 404) {
-        console.log('Error is 404');
-        throw error;
+        throw new Error(error);
       }
     }
     this._isInitialized = true;

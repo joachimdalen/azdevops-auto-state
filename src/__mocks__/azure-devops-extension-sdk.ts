@@ -1,11 +1,9 @@
-import { IdentityServiceIds } from 'azure-devops-extension-api/Identities';
 import {
   IWorkItemChangedArgs,
   IWorkItemFieldChangedArgs,
   IWorkItemLoadedArgs,
   WorkItemTrackingServiceIds
 } from 'azure-devops-extension-api/WorkItemTracking';
-import { IHostContext, IUserContext } from 'azure-devops-extension-sdk';
 
 /**
  * This is a minimal mock version to test WorkItemFormGroup
