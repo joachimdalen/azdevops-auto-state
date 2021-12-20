@@ -2,15 +2,11 @@ import { IDialogOptions, IHostPageLayoutService } from 'azure-devops-extension-a
 import * as DevOps from 'azure-devops-extension-sdk';
 import { v4 as uuidV4 } from 'uuid';
 
+import { ActionResult } from '../models/ActionResult';
 import AddRuleResult from '../models/AddRuleResult';
 import Rule from '../models/Rule';
 import RuleDocument from '../models/WorkItemRules';
 import { IStorageService, StorageService } from './StorageService';
-interface ActionResult<T> {
-  success: boolean;
-  message?: string;
-  data?: T;
-}
 
 class RuleService {
   private readonly _dataStore: IStorageService;
@@ -162,6 +158,35 @@ class RuleService {
     };
   }
 
+  public isValid(rule?: Rule): ActionResult<boolean> {
+    if (rule === undefined) {
+      return {
+        success: false
+      };
+    }
+
+    if (this._isInitialized === false) {
+      throw new Error('RuleService is not initialized. Call Load() first.');
+    }
+    const docIndex = this._data?.findIndex(x => x.id === rule.workItemType);
+    if (docIndex === undefined || docIndex < 0)
+      return {
+        success: false
+      };
+
+    const rootDoc = this._data[docIndex];
+
+    if (rootDoc.rules.some(r => this.isRuleSame(r, rule))) {
+      return {
+        success: false,
+        message: 'Duplicate rule'
+      };
+    }
+    return {
+      success: false
+    };
+  }
+
   private isRuleSame(ruleOne: Rule, ruleTwo: Rule) {
     if (ruleOne.workItemType !== ruleTwo.workItemType) return false;
     if (ruleOne.parentType !== ruleTwo.parentType) return false;
@@ -174,6 +199,7 @@ class RuleService {
 
   public async showEdit(
     handleDialogResult: (result: AddRuleResult | undefined) => void,
+    isValid: (result: AddRuleResult | undefined) => ActionResult<boolean>,
     rule?: Rule
   ): Promise<void> {
     const dialogService = await DevOps.getService<IHostPageLayoutService>(
@@ -183,7 +209,8 @@ class RuleService {
     const options: IDialogOptions<AddRuleResult> = {
       title: rule === undefined ? 'Add rule' : 'Edit rule',
       onClose: handleDialogResult,
-      configuration: rule !== undefined ? { rule: rule } : undefined
+      lightDismiss: false,
+      configuration: { rule: rule, validate: isValid }
     };
 
     dialogService.openCustomDialog(DevOps.getExtensionContext().id + '.rule-modal', options);

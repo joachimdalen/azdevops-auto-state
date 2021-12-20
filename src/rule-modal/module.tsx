@@ -10,21 +10,28 @@ import { ConditionalChildren } from 'azure-devops-ui/ConditionalChildren';
 import { Dropdown } from 'azure-devops-ui/Dropdown';
 import { FormItem } from 'azure-devops-ui/FormItem';
 import { IListBoxItem } from 'azure-devops-ui/ListBox';
-import { ITableColumn, SimpleTableCell } from 'azure-devops-ui/Table';
+import { MessageCard, MessageCardSeverity } from 'azure-devops-ui/MessageCard';
 import { useEffect, useMemo, useState } from 'react';
 
+import { ActionResult } from '../common/models/ActionResult';
 import AddRuleResult from '../common/models/AddRuleResult';
 import Rule from '../common/models/Rule';
 import WorkItemService from '../common/services/WorkItemService';
 import webLogger from '../common/webLogger';
 import { appTheme } from '../shared-ui/azure-devops-theme';
 import LoadingSection from '../shared-ui/component/LoadingSection';
-import StateTag from '../shared-ui/component/StateTag';
 import useDropdownMultiSelection from '../shared-ui/hooks/useDropdownMultiSelection';
 import useDropdownSelection from '../shared-ui/hooks/useDropdownSelection';
 import showRootComponent from '../shared-ui/showRootComponent';
+import {
+  getStatesForWorkItemType,
+  getWorkItemTypeItems,
+  renderStateCell,
+  renderWorkItemCell
+} from './helpers';
 
 const ModalContent = (): React.ReactElement => {
+  const [error, setError] = useState<ActionResult<any> | undefined>(undefined);
   const [rule, setRule] = useState<Rule>();
   const [types, setTypes] = useState<WorkItemType[]>([]);
   const [workItemType, setWorkItemType] = useState('');
@@ -68,47 +75,16 @@ const ModalContent = (): React.ReactElement => {
       });
   }, []);
 
-  const workItemTypes: IListBoxItem[] = useMemo(() => {
-    return types.map(x => {
-      const item: IListBoxItem = {
-        id: x.referenceName,
-        text: x.name,
-        data: {
-          icon: x.icon
-        }
-      };
-      return item;
-    });
-  }, [types]);
+  const workItemTypes: IListBoxItem[] = useMemo(() => getWorkItemTypeItems(types), [types]);
 
-  const workItemStates: IListBoxItem[] = useMemo(() => {
-    return types
-      .filter(x => x.referenceName === workItemType)
-      .flatMap(x => {
-        return x.states.map(state => {
-          const item: IListBoxItem = {
-            id: state.name,
-            text: state.name,
-            data: state.color
-          };
-          return item;
-        });
-      });
-  }, [workItemType]);
-  const parentStates: IListBoxItem[] = useMemo(() => {
-    return types
-      .filter(x => x.referenceName === parentType)
-      .flatMap(x => {
-        return x.states.map(state => {
-          const item: IListBoxItem = {
-            id: state.name,
-            text: state.name,
-            data: state.color
-          };
-          return item;
-        });
-      });
-  }, [types, parentType]);
+  const workItemStates: IListBoxItem[] = useMemo(
+    () => getStatesForWorkItemType(types, workItemType),
+    [workItemType]
+  );
+  const parentStates: IListBoxItem[] = useMemo(
+    () => getStatesForWorkItemType(types, parentType),
+    [types, parentType]
+  );
   const workItemTypeSelection = useDropdownSelection(workItemTypes, rule?.workItemType);
   const parentTypeSelection = useDropdownSelection(workItemTypes, rule?.parentType);
   const workItemStateSelection = useDropdownSelection(workItemStates, rule?.childState);
@@ -124,8 +100,9 @@ const ModalContent = (): React.ReactElement => {
       config.dialog.close(res);
     }
   };
-  const save = () => {
+  const save = async () => {
     const config = DevOps.getConfiguration();
+    console.log(config);
     if (config.dialog) {
       const ac: Rule = {
         id: rule?.id,
@@ -142,38 +119,14 @@ const ModalContent = (): React.ReactElement => {
         result: 'SAVE',
         rule: ac
       };
-      config.dialog.close(res);
-    }
-  };
 
-  const renderWorkItemCell = (
-    rowIndex: number,
-    columnIndex: number,
-    tableColumn: ITableColumn<IListBoxItem>,
-    tableItem: IListBoxItem
-  ) => {
-    const date: any = tableItem.data;
-    return (
-      <SimpleTableCell key={tableItem.id} columnIndex={columnIndex}>
-        <div className="flex-row flex-center">
-          <img src={date?.icon?.url} height={16} />
-          <span className="margin-left-16">{tableItem?.text}</span>
-        </div>
-      </SimpleTableCell>
-    );
-  };
-  const renderStateCell = (
-    rowIndex: number,
-    columnIndex: number,
-    tableColumn: ITableColumn<IListBoxItem>,
-    tableItem: IListBoxItem
-  ) => {
-    const color: any = tableItem.data;
-    return (
-      <SimpleTableCell key={tableItem.id} columnIndex={columnIndex}>
-        <StateTag color={color} text={tableItem.text || 'Unknown'} />
-      </SimpleTableCell>
-    );
+      const validationResult: ActionResult<boolean> = await config.validate(res);
+      if (validationResult.success) {
+        setError(undefined);
+      } else {
+        setError(validationResult);
+      }
+    }
   };
 
   const addOrRemove = (id: string) => {
@@ -188,6 +141,11 @@ const ModalContent = (): React.ReactElement => {
     <div className="flex-grow">
       <LoadingSection isLoading={loading} text="Loading..." />
       <ConditionalChildren renderChildren={!loading}>
+        <ConditionalChildren renderChildren={error !== undefined}>
+          <MessageCard className="margin-bottom-8" severity={MessageCardSeverity.Warning}>
+            {error?.message}
+          </MessageCard>
+        </ConditionalChildren>
         <div className="rhythm-vertical-16 flex-grow">
           <FormItem label="When work item type is">
             <Dropdown
@@ -245,7 +203,7 @@ const ModalContent = (): React.ReactElement => {
         </div>
         <ButtonGroup className="justify-space-between margin-top-16">
           <Button text="Close" onClick={() => dismiss()} />
-          <Button text="Save" primary iconProps={{ iconName: 'Save' }} onClick={() => save()} />
+          <Button text="Save" primary iconProps={{ iconName: 'Save' }} onClick={save} />
         </ButtonGroup>
       </ConditionalChildren>
     </div>

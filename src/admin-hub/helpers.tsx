@@ -193,7 +193,7 @@ const getListRowContextMenuItem = (
   };
 };
 export const getCommandBarItems = (
-  handleResult: (result: AddRuleResult | undefined) => Promise<void>
+  showEdit: (rule?: Rule) => Promise<void>
 ): IHeaderCommandBarItem[] => [
   {
     id: 'open-docs',
@@ -213,16 +213,7 @@ export const getCommandBarItems = (
     isPrimary: true,
     iconProps: { iconName: 'Add' },
     onActivate: () => {
-      DevOps.getService<IHostPageLayoutService>('ms.vss-features.host-page-layout-service').then(
-        dialogService => {
-          const options: IDialogOptions<AddRuleResult> = {
-            title: 'Create new rule',
-            onClose: handleResult
-          };
-
-          dialogService.openCustomDialog(DevOps.getExtensionContext().id + '.rule-modal', options);
-        }
-      );
+      showEdit();
     }
   }
 ];

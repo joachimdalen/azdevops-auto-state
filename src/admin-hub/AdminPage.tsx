@@ -7,9 +7,7 @@ import {
   IDetailsGroupDividerProps,
   IGroup
 } from '@fluentui/react';
-import { IDialogOptions, IHostPageLayoutService } from 'azure-devops-extension-api';
 import { WorkItemType } from 'azure-devops-extension-api/WorkItemTracking';
-import * as DevOps from 'azure-devops-extension-sdk';
 import { ConditionalChildren } from 'azure-devops-ui/ConditionalChildren';
 import { Header } from 'azure-devops-ui/Header';
 import { IHeaderCommandBarItem } from 'azure-devops-ui/HeaderCommandBar';
@@ -22,18 +20,18 @@ import AddRuleResult from '../common/models/AddRuleResult';
 import Rule from '../common/models/Rule';
 import RuleDocument from '../common/models/WorkItemRules';
 import RuleService from '../common/services/RuleService';
-import { StorageService } from '../common/services/StorageService';
 import WorkItemService from '../common/services/WorkItemService';
 import webLogger from '../common/webLogger';
 import LoadingSection from '../shared-ui/component/LoadingSection';
 import WorkItemTypeTag from '../shared-ui/component/WorkItemTypeTag';
 import { getCommandBarItems, getListColumns, groupBy, isGroup } from './helpers';
 
+type EditType = (rule?: Rule) => Promise<void>;
 const AdminPage = (): React.ReactElement => {
   const [types, setTypes] = useState<WorkItemType[]>([]);
   const [configuration, setConfiguration] = useState<RuleDocument[] | undefined>(undefined);
-  const [storageService, workItemService, ruleService] = useMemo(
-    () => [new StorageService(), new WorkItemService(), new RuleService()],
+  const [workItemService, ruleService] = useMemo(
+    () => [new WorkItemService(), new RuleService()],
     []
   );
 
@@ -79,11 +77,12 @@ const AdminPage = (): React.ReactElement => {
     return true;
   };
 
-  const showEditRule = async (rule?: Rule) => ruleService.showEdit(handleDialogResult, rule);
+  const showEditRule = async (rule?: Rule) =>
+    ruleService.showEdit(handleDialogResult, result => ruleService.isValid(result?.rule), rule);
 
   const commandBarItems: IHeaderCommandBarItem[] = useMemo(
-    () => getCommandBarItems(handleDialogResult),
-    [handleDialogResult]
+    () => getCommandBarItems(showEditRule),
+    [showEditRule]
   );
   const columns: IColumn[] = useMemo(
     () => getListColumns(types, handleDeleteRule, showEditRule),
