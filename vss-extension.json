@@ -19,8 +19,8 @@
     "default": "extension-icon.png"
   },
   "content": {
-    "details": { "path": "docs/README.md" },
-    "changelog": { "path": "docs/CHANGELOG.md" }
+    "details": { "path": "marketplace/docs/README.md" },
+    "changelog": { "path": "marketplace/docs/CHANGELOG.md" }
   },
   "branding": {
     "color": "#215564",
@@ -33,7 +33,7 @@
   ],
   "files": [
     {
-      "path": "docs/images",
+      "path": "marketplace/docs/images",
       "addressable": true
     },
     {
@@ -43,10 +43,10 @@
   ],
   "screenshots": [
     {
-      "path": "docs/images/rule-editor.png"
+      "path": "marketplace/docs/images/rule-editor.png"
     },
     {
-      "path": "docs/images/rule-modal.png"
+      "path": "marketplace/docs/images/rule-modal.png"
     }
   ],
   "contributions": [

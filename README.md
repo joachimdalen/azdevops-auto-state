@@ -190,5 +190,5 @@ If you have generic questions about the project or usage you can make contact in
 [issues-url]: https://github.com/joachimdalen/azdevops-auto-state/issues
 [license-shield]: https://img.shields.io/github/license/joachimdalen/azdevops-auto-state.svg?style=for-the-badge
 [license-url]: https://github.com/joachimdalen/azdevops-auto-state/blob/master/LICENSE.txt
-[product-screenshot]: docs/images/rule-editor.png
-[feature-toggle-screenshot]: docs/images/feature-toggle.png
+[product-screenshot]: marketplace/docs/images/rule-editor.png
+[feature-toggle-screenshot]: marketplace/docs/images/feature-toggle.png
