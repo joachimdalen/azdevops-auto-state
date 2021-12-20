@@ -79,22 +79,7 @@ const AdminPage = (): React.ReactElement => {
     return true;
   };
 
-  const showEditRule = async (rule: Rule) => {
-    DevOps.getService<IHostPageLayoutService>('ms.vss-features.host-page-layout-service').then(
-      dialogService => {
-        const options: IDialogOptions<AddRuleResult> = {
-          title: 'Edit rule',
-          onClose: handleDialogResult,
-          configuration: {
-            rule: rule,
-            editMode: true
-          }
-        };
-
-        dialogService.openCustomDialog(DevOps.getExtensionContext().id + '.rule-modal', options);
-      }
-    );
-  };
+  const showEditRule = async (rule?: Rule) => ruleService.showEdit(handleDialogResult, rule);
 
   const commandBarItems: IHeaderCommandBarItem[] = useMemo(
     () => getCommandBarItems(handleDialogResult),
@@ -145,19 +130,7 @@ const AdminPage = (): React.ReactElement => {
               primaryText="No rules added"
               actionText="Add rule"
               onActionClick={() => {
-                DevOps.getService<IHostPageLayoutService>(
-                  'ms.vss-features.host-page-layout-service'
-                ).then(dialogService => {
-                  const options: IDialogOptions<AddRuleResult> = {
-                    title: 'Create new rule',
-                    onClose: handleDialogResult
-                  };
-
-                  dialogService.openCustomDialog(
-                    DevOps.getExtensionContext().id + '.rule-modal',
-                    options
-                  );
-                });
+                showEditRule();
               }}
               actionType={ZeroDataActionType.ctaButton}
               iconProps={{ iconName: 'Work' }}

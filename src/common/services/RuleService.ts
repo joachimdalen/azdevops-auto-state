@@ -1,9 +1,11 @@
+import { IDialogOptions, IHostPageLayoutService } from 'azure-devops-extension-api';
+import * as DevOps from 'azure-devops-extension-sdk';
 import { v4 as uuidV4 } from 'uuid';
+import AddRuleResult from '../models/AddRuleResult';
 
 import Rule from '../models/Rule';
 import RuleDocument from '../models/WorkItemRules';
 import { IStorageService, StorageService } from './StorageService';
-
 interface ActionResult<T> {
   success: boolean;
   message?: string;
@@ -14,10 +16,12 @@ class RuleService {
   private readonly _dataStore: IStorageService;
   private _isInitialized = false;
   private _data: RuleDocument[];
+
   constructor(dataStore?: IStorageService) {
     this._dataStore = dataStore || new StorageService();
     this._data = [];
   }
+
   public async load(): Promise<ActionResult<RuleDocument[]>> {
     if (this._isInitialized) return { success: true };
     try {
@@ -135,16 +139,20 @@ class RuleService {
     const ruleIndex = rootDoc.rules.findIndex(x => x.id === rule?.id);
     if (ruleIndex >= 0) {
       const oldRule = rootDoc.rules[ruleIndex];
-
       if (this.isRuleSame(oldRule, rule)) {
         return {
           success: false,
           message: 'Duplicate rule'
         };
       }
-
       rootDoc.rules[ruleIndex] = rule;
     } else {
+      if (rootDoc.rules.some(r => this.isRuleSame(r, rule))) {
+        return {
+          success: false,
+          message: 'Duplicate rule'
+        };
+      }
       rootDoc.rules = [...rootDoc.rules, rule];
     }
     const updatedDocument = await this._dataStore.setData(rootDoc);
@@ -154,6 +162,7 @@ class RuleService {
       data: updatedDocument
     };
   }
+
   private isRuleSame(ruleOne: Rule, ruleTwo: Rule) {
     if (ruleOne.workItemType !== ruleTwo.workItemType) return false;
     if (ruleOne.parentType !== ruleTwo.parentType) return false;
@@ -161,6 +170,24 @@ class RuleService {
     if (ruleOne.childState !== ruleTwo.childState) return false;
     if (ruleOne.allChildren !== ruleTwo.allChildren) return false;
     if (!ruleOne.parentNotState.every(x => ruleTwo.parentNotState.includes(x))) return false;
+    return true;
+  }
+
+  public async showEdit(
+    handleDialogResult: (result: AddRuleResult | undefined) => void,
+    rule?: Rule
+  ): Promise<void> {
+    const dialogService = await DevOps.getService<IHostPageLayoutService>(
+      'ms.vss-features.host-page-layout-service'
+    );
+
+    const options: IDialogOptions<AddRuleResult> = {
+      title: rule === undefined ? 'Add rule' : 'Edit rule',
+      onClose: handleDialogResult,
+      configuration: rule !== undefined ? { rule: rule } : undefined
+    };
+
+    dialogService.openCustomDialog(DevOps.getExtensionContext().id + '.rule-modal', options);
   }
 }
 
