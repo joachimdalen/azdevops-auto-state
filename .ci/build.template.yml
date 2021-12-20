@@ -1,0 +1,15 @@
+parameters:
+  - name: artifact
+    default: extension
+  - name: env
+    default: dev
+    values:
+      - dev
+      - prod
+
+steps:
+  - task: Npm@1
+    displayName: 'Compile - ${{ parameters.env }}'
+    inputs:
+      command: custom
+      customCommand: 'run build:${{ parameters.env }}'

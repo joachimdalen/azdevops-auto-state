@@ -1,0 +1,59 @@
+parameters:
+  - name: artifact
+    default: extension
+  - name: env
+    default: dev
+  - name: extensionVisibility
+    type: string
+    default: private
+    values:
+      - default
+      - private
+      - private_preview
+      - public
+      - public_preview
+jobs:
+  - job:
+    steps:
+      - template: install.template.yml
+      - template: build.template.yml
+        parameters:
+          env: ${{ parameters.env }}
+      - task: Npm@1
+        displayName: 'Build changelog'
+        inputs:
+          command: custom
+          customCommand: run changelog:${{ parameters.env }}
+      - task: Npm@1
+        displayName: 'Build readme'
+        inputs:
+          command: custom
+          customCommand: run docs:readme
+      - task: TfxInstaller@3
+        displayName: 'Install Tfx'
+        inputs:
+          version: 'v0.8.1'
+      - template: ci/install-and-build.yml
+      - task: PackageAzureDevOpsExtension@3
+        displayName: 'Package extension'
+        inputs:
+          rootFolder: '$(System.DefaultWorkingDirectory)'
+          publisherId: '$(PublisherID)'
+          extensionId: '$(ExtensionID)'
+          extensionName: '$(ExtensionName)'
+          extensionVersion: ${{ parameters.taskVersion }}
+          updateTasksVersion: true
+          updateTasksVersionType: 'patch'
+          extensionPricing: 'free'
+          extensionVisibility: ${{ parameters.extensionVisibility }}
+      - task: CopyFiles@2
+        displayName: 'Move artifacts'
+        inputs:
+          Contents: '**/*.vsix'
+          TargetFolder: '$(Build.ArtifactStagingDirectory)'
+      - task: PublishPipelineArtifact@1
+        displayName: 'Publish artifacts'
+        inputs:
+          targetPath: '$(Build.ArtifactStagingDirectory)'
+          artifactName: '${{ parameters.artifact }}'
+          publishLocation: pipeline

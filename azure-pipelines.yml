@@ -1,0 +1,64 @@
+parameters:
+  - name: DEPLOY_DEV
+    displayName: 'Deploy DEV'
+    type: boolean
+    default: false
+  - name: DEPLOY_QA
+    displayName: 'Deploy QA'
+    type: boolean
+    default: false
+  - name: DEPLOY_PROD
+    displayName: 'Deploy Prod'
+    type: boolean
+    default: false
+
+trigger: none
+pr: none
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  npm_config_cache: $(Pipeline.Workspace)/.npm
+  isMaster: $[eq(variables['Build.SourceBranch'], 'refs/heads/master')]
+  isDevelop: $[eq(variables['Build.SourceBranch'], 'refs/heads/develop')]
+  marketplaceServiceConnection: 'marketplace-joachim-dalen'
+
+stages:
+  - stage: 'run_tests'
+    displayName: Test & Build
+    jobs:
+      - job:
+        steps:
+          - template: ci/install.template.yml
+          - template: ci/run-tests.template.yml
+  - stage: verify_changelog
+    displayName: 'Check changelog'
+    jobs:
+      - job:
+        steps:
+          - task: Bash@3
+            displayName: 'Check'
+
+  - stage: package_dev
+    displayName: '[DEV] Package extension'
+    dependsOn: 'run_tests'
+    condition: eq(variables.isDevelop, true)
+    variables:
+      - group: 'mp-auto-state-dev'
+    jobs:
+      - template: ci/build-extension-artifact.yml
+        parameters:
+          env: dev
+          extensionVisibility: private
+
+  - stage: publish_dev
+    displayName: '[DEV] Publish extension'
+    dependsOn: 'package_dev'
+    condition: eq(variables.isDevelop, true)
+    variables:
+      - group: 'mp-auto-state-dev'
+    jobs:
+      - template: ci/publish-extension.yml
+        parameters:
+          env: dev
+          extensionVisibility: private
