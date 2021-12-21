@@ -1,16 +1,4 @@
 parameters:
-  - name: DEPLOY_DEV
-    displayName: 'Deploy DEV'
-    type: boolean
-    default: false
-  - name: DEPLOY_QA
-    displayName: 'Deploy QA'
-    type: boolean
-    default: false
-  - name: DEPLOY_PROD
-    displayName: 'Deploy Prod'
-    type: boolean
-    default: false
   - name: taskVersion
     displayName: 'Task Version'
     type: string
