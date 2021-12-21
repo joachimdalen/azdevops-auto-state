@@ -32,7 +32,6 @@ jobs:
         displayName: 'Install Tfx'
         inputs:
           version: 'v0.8.1'
-      - template: ci/install-and-build.yml
       - task: QueryAzureDevOpsExtensionVersion@3
         displayName: 'Query existing version'
         inputs:
