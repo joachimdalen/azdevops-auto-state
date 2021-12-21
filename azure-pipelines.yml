@@ -19,6 +19,7 @@ pool:
 
 variables:
   npm_config_cache: $(Pipeline.Workspace)/.npm
+  isTemp: $[or(startsWith(variables['Build.SourceBranch'], 'refs/heads/feature')), startsWith(variables['Build.SourceBranch'], 'refs/heads/bugfix')))]
   isMaster: $[eq(variables['Build.SourceBranch'], 'refs/heads/master')]
   isDevelop: $[eq(variables['Build.SourceBranch'], 'refs/heads/develop')]
   marketplaceServiceConnection: 'marketplace-joachim-dalen'
@@ -31,7 +32,9 @@ stages:
         steps:
           - template: ci/install.template.yml
           - template: ci/run-tests.template.yml
+  
   - stage: verify_changelog
+    dependsOn: 'run_tests'
     displayName: 'Check changelog'
     jobs:
       - job:
@@ -42,7 +45,7 @@ stages:
   - stage: package_dev
     displayName: '[DEV] Package extension'
     dependsOn: 'run_tests'
-    condition: eq(variables.isDevelop, true)
+    condition: and(succeeded(), eq(variables.isTemp, true))
     variables:
       - group: 'mp-auto-state-dev'
     jobs:
@@ -54,11 +57,59 @@ stages:
   - stage: publish_dev
     displayName: '[DEV] Publish extension'
     dependsOn: 'package_dev'
-    condition: eq(variables.isDevelop, true)
+    condition: and(succeeded(), eq(variables.isTemp, true))
     variables:
       - group: 'mp-auto-state-dev'
     jobs:
       - template: ci/publish-extension.yml
         parameters:
-          env: dev
+          pipelineEnv: auto-state-dev-env
           extensionVisibility: private
+
+  - stage: package_qa
+    displayName: '[QA] Package extension'
+    dependsOn: 'verify_changelog'
+    condition: and(succeeded(), eq(variables.isDevelop, true))
+    variables:
+      - group: 'mp-auto-state-dev'
+    jobs:
+      - template: ci/build-extension-artifact.yml
+        parameters:
+          env: qa
+          extensionVisibility: private
+
+  - stage: publish_qa
+    displayName: '[QA] Publish extension'
+    dependsOn: 'package_qa'
+    condition: and(succeeded(), eq(variables.isDevelop, true))
+    variables:
+      - group: 'mp-auto-state-qa'
+    jobs:
+      - template: ci/publish-extension.yml
+        parameters:
+          pipelineEnv: auto-state-qa-env
+          extensionVisibility: private
+
+  - stage: package_prod
+    displayName: '[PROD] Package extension'
+    dependsOn: 'verify_changelog'
+    condition: and(succeeded(), eq(variables.isMaster, true))
+    variables:
+      - group: 'mp-auto-state-prod'
+    jobs:
+      - template: ci/build-extension-artifact.yml
+        parameters:
+          env: prod
+          extensionVisibility: private
+
+  - stage: publish_prod
+    displayName: '[PROD] Publish extension'
+    dependsOn: 'package_prod'
+    condition: and(succeeded(), eq(variables.isMaster, true))
+    variables:
+      - group: 'mp-auto-state-prod'
+    jobs:
+      - template: ci/publish-extension.yml
+        parameters:
+          pipelineEnv: auto-state-prod-env
+          extensionVisibility: public_preview
