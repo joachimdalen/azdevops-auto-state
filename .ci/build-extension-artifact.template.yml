@@ -3,15 +3,14 @@ parameters:
     default: extension
   - name: env
     default: dev
-  - name: extensionVisibility
-    type: string
-    default: private
     values:
-      - default
-      - private
-      - private_preview
-      - public
-      - public_preview
+      - dev
+      - qa
+      - prod
+  - name: taskVersion
+    displayName: 'Task Version'
+    type: string
+    default: $(Task.Extension.Version)
 jobs:
   - job:
     steps:
@@ -34,18 +33,22 @@ jobs:
         inputs:
           version: 'v0.8.1'
       - template: ci/install-and-build.yml
+      - task: QueryAzureDevOpsExtensionVersion@3
+        displayName: 'Query existing version'
+        inputs:
+          connectTo: 'VsTeam'
+          connectedServiceName: $(marketplaceServiceConnection)
+          publisherId: '$(PublisherID)'
+          extensionId: '$(ExtensionID)'
+          versionAction: 'Patch'
+          outputVariable: 'Task.Extension.Version'
       - task: PackageAzureDevOpsExtension@3
         displayName: 'Package extension'
         inputs:
           rootFolder: '$(System.DefaultWorkingDirectory)'
-          publisherId: '$(PublisherID)'
-          extensionId: '$(ExtensionID)'
-          extensionName: '$(ExtensionName)'
+          patternManifest: 'vss-extension-${{ parameters.env }}.json'
+          updateTasksVersion: false
           extensionVersion: ${{ parameters.taskVersion }}
-          updateTasksVersion: true
-          updateTasksVersionType: 'patch'
-          extensionPricing: 'free'
-          extensionVisibility: ${{ parameters.extensionVisibility }}
       - task: CopyFiles@2
         displayName: 'Move artifacts'
         inputs:

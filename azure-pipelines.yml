@@ -11,6 +11,10 @@ parameters:
     displayName: 'Deploy Prod'
     type: boolean
     default: false
+  - name: taskVersion
+    displayName: 'Task Version'
+    type: string
+    default: $(Task.Extension.Version)
 
 trigger: none
 pr: none
@@ -32,7 +36,7 @@ stages:
         steps:
           - template: ci/install.template.yml
           - template: ci/run-tests.template.yml
-  
+
   - stage: verify_changelog
     dependsOn: 'run_tests'
     displayName: 'Check changelog'
@@ -52,7 +56,7 @@ stages:
       - template: ci/build-extension-artifact.yml
         parameters:
           env: dev
-          extensionVisibility: private
+          taskVersion: ${{ parameters.taskVersion }}
 
   - stage: publish_dev
     displayName: '[DEV] Publish extension'
@@ -76,7 +80,7 @@ stages:
       - template: ci/build-extension-artifact.yml
         parameters:
           env: qa
-          extensionVisibility: private
+          taskVersion: ${{ parameters.taskVersion }}
 
   - stage: publish_qa
     displayName: '[QA] Publish extension'
@@ -100,7 +104,7 @@ stages:
       - template: ci/build-extension-artifact.yml
         parameters:
           env: prod
-          extensionVisibility: private
+          taskVersion: ${{ parameters.taskVersion }}
 
   - stage: publish_prod
     displayName: '[PROD] Publish extension'

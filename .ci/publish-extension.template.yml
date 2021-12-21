@@ -28,15 +28,10 @@ jobs:
               inputs:
                 version: 'v0.8.1'
             - task: PublishAzureDevOpsExtension@3
-              displayName: 'Publish extension'
               inputs:
                 connectTo: 'VsTeam'
-                connectedServiceName: $(marketplaceServiceConnection)
+                connectedServiceName: 'marketplace-joachim-dalen'
                 fileType: 'vsix'
                 vsixFile: '**/*.vsix'
-                publisherId: '$(PublisherID)'
-                extensionId: '$(ExtensionID)'
-                extensionName: '$(ExtensionName)'
                 updateTasksVersion: false
-                extensionPricing: 'free'
                 extensionVisibility: ${{ parameters.extensionVisibility }}
