@@ -22,8 +22,8 @@ stages:
     jobs:
       - job:
         steps:
-          - template: ci/install.template.yml
-          - template: ci/run-tests.template.yml
+          - template: .ci/install.template.yml
+          - template: .ci/run-tests.template.yml
 
   - stage: verify_changelog
     dependsOn: 'run_tests'
@@ -53,7 +53,7 @@ stages:
     variables:
       - group: 'mp-auto-state-dev'
     jobs:
-      - template: ci/build-extension-artifact.yml
+      - template: .ci/build-extension-artifact.template.yml
         parameters:
           extensionEnv: dev
           taskVersion: ${{ parameters.taskVersion }}
@@ -65,7 +65,7 @@ stages:
     variables:
       - group: 'mp-auto-state-dev'
     jobs:
-      - template: ci/publish-extension.yml
+      - template: .ci/publish-extension.template.yml
         parameters:
           pipelineEnv: auto-state-dev-env
           extensionVisibility: private
@@ -77,7 +77,7 @@ stages:
     variables:
       - group: 'mp-auto-state-qa'
     jobs:
-      - template: ci/build-extension-artifact.yml
+      - template: .ci/build-extension-artifact.template.yml
         parameters:
           extensionEnv: qa
           taskVersion: ${{ parameters.taskVersion }}
@@ -89,7 +89,7 @@ stages:
     variables:
       - group: 'mp-auto-state-qa'
     jobs:
-      - template: ci/publish-extension.yml
+      - template: .ci/publish-extension.template.yml
         parameters:
           pipelineEnv: auto-state-qa-env
           extensionVisibility: private
@@ -101,7 +101,7 @@ stages:
     variables:
       - group: 'mp-auto-state-prod'
     jobs:
-      - template: ci/build-extension-artifact.yml
+      - template: .ci/build-extension-artifact.template.yml
         parameters:
           extensionEnv: prod
           taskVersion: ${{ parameters.taskVersion }}
@@ -113,7 +113,7 @@ stages:
     variables:
       - group: 'mp-auto-state-prod'
     jobs:
-      - template: ci/publish-extension.yml
+      - template: .ci/publish-extension.template.yml
         parameters:
           pipelineEnv: auto-state-prod-env
           extensionVisibility: public_preview
