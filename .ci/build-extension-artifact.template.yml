@@ -46,7 +46,7 @@ jobs:
         displayName: 'Package extension'
         inputs:
           rootFolder: '$(System.DefaultWorkingDirectory)'
-          patternManifest: 'vss-extension-${{ parameters.env }}.json'
+          patternManifest: 'vss-extension.${{ parameters.env }}.json'
           updateTasksVersion: false
           extensionVersion: ${{ parameters.taskVersion }}
       - task: CopyFiles@2
