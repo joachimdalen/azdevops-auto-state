@@ -1,0 +1,25 @@
+parameters:
+  - name: tagFormat
+    type: string
+  - name: tagDescription
+    type: string
+
+jobs:
+  - job:
+    steps:
+      - checkout: self
+        persistCredentials: true
+      - template: ci/tag-sources.yml
+        parameters:
+          tagFormat: v${{ parameters.taskVersion }}
+          tagDescription: 'Production Release'
+      - task: Bash@3
+        displayName: 'Create tag'
+        name: 'create_tag'
+        inputs:
+          targetType: 'inline'
+          script: |
+            git config --global user.name "OpsBot"
+            git config --global user.email "opsbot@dalenapps.no"
+            git tag -a ${{ parameters.tagFormat }} -m "${{ parameters.tagDescription }}"
+            git push --tags

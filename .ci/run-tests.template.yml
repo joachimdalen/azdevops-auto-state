@@ -1,0 +1,30 @@
+steps:
+  - task: Npm@1
+    displayName: 'Run tests'
+    inputs:
+      command: custom
+      customCommand: 'run test:coverage'
+  - task: Bash@3
+    displayName: 'Move cover files'
+    inputs:
+      targetType: 'inline'
+      script: |
+        cp -r $(Build.SourcesDirectory)/coverage $(Build.ArtifactStagingDirectory)
+  - task: Bash@3
+    displayName: 'Move report'
+    inputs:
+      targetType: 'inline'
+      script: |
+        mkdir $(Build.ArtifactStagingDirectory)/reports
+        cp $(Build.SourcesDirectory)/test-results.xml $(Build.ArtifactStagingDirectory)/reports/test-results.xml
+  - task: PublishTestResults@2
+    displayName: 'Publish test results'
+    inputs:
+      testResultsFormat: 'JUnit'
+      testResultsFiles: '$(Build.ArtifactStagingDirectory)/reports/test-results.xml'
+  - task: PublishCodeCoverageResults@1
+    displayName: 'Publish coverage'
+    inputs:
+      codeCoverageTool: 'Cobertura'
+      summaryFileLocation: '$(Build.ArtifactStagingDirectory)/coverage/cobertura-coverage.xml'
+      pathToSources: '$(Build.SourcesDirectory)/src'

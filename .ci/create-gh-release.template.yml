@@ -1,0 +1,30 @@
+parameters:
+  - name: version
+    type: string
+  - name: isPreview
+    type: boolean
+    default: false
+
+steps:
+  - checkout: none
+  - download: none
+  - download: 'current'
+    displayName: 'Download changelog'
+    artifact: 'changelog'
+  - task: Bash@3
+    displayName: 'Set version'
+    targetType: 'inline'
+    script: |
+
+  - task: GitHubRelease@1
+    displayName: 'Create GitHub Release'
+    inputs:
+      gitHubConnection: github-azdevops-auto-state
+      repositoryName: joachimdalen/azdevops-auto-state
+      tagSource: userSpecifiedTag
+      tag: v${{ parameters.version }}
+      title: 'v${{ parameters.version }}: Update'
+      addChangeLog: false
+      isPreRelease: ${{ parameters.isPreview }}
+      releaseNotesSource: filePath
+      releaseNotesFilePath: $(Pipeline.Workspace)/changelog/v${{ parameters.version }}.md

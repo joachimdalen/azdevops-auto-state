@@ -1,0 +1,62 @@
+parameters:
+  - name: artifact
+    default: extension
+  - name: env
+    default: dev
+    values:
+      - dev
+      - qa
+      - prod
+  - name: taskVersion
+    displayName: 'Task Version'
+    type: string
+    default: $(Task.Extension.Version)
+jobs:
+  - job:
+    steps:
+      - template: install.template.yml
+      - template: build.template.yml
+        parameters:
+          env: ${{ parameters.env }}
+      - task: Npm@1
+        displayName: 'Build changelog'
+        inputs:
+          command: custom
+          customCommand: run changelog:${{ parameters.env }}
+      - task: Npm@1
+        displayName: 'Build readme'
+        inputs:
+          command: custom
+          customCommand: run docs:readme
+      - task: TfxInstaller@3
+        displayName: 'Install Tfx'
+        inputs:
+          version: 'v0.8.1'
+      - template: ci/install-and-build.yml
+      - task: QueryAzureDevOpsExtensionVersion@3
+        displayName: 'Query existing version'
+        inputs:
+          connectTo: 'VsTeam'
+          connectedServiceName: $(marketplaceServiceConnection)
+          publisherId: '$(PublisherID)'
+          extensionId: '$(ExtensionID)'
+          versionAction: 'Patch'
+          outputVariable: 'Task.Extension.Version'
+      - task: PackageAzureDevOpsExtension@3
+        displayName: 'Package extension'
+        inputs:
+          rootFolder: '$(System.DefaultWorkingDirectory)'
+          patternManifest: 'vss-extension.${{ parameters.env }}.json'
+          updateTasksVersion: false
+          extensionVersion: ${{ parameters.taskVersion }}
+      - task: CopyFiles@2
+        displayName: 'Move artifacts'
+        inputs:
+          Contents: '**/*.vsix'
+          TargetFolder: '$(Build.ArtifactStagingDirectory)'
+      - task: PublishPipelineArtifact@1
+        displayName: 'Publish artifacts'
+        inputs:
+          targetPath: '$(Build.ArtifactStagingDirectory)'
+          artifactName: '${{ parameters.artifact }}'
+          publishLocation: pipeline

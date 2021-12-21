@@ -22,6 +22,6 @@
   },
   "files.associations": {
     "azure-pipelines.yml": "azure-pipelines",
-    "**/ci/*.yml": "azure-pipelines"
+    "**/.ci/**/*.yml": "azure-pipelines"
   },
 }
