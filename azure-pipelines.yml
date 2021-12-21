@@ -27,12 +27,24 @@ stages:
 
   - stage: verify_changelog
     dependsOn: 'run_tests'
+    condition: and(succeeded(), or(eq(variables.isDevelop, true), eq(variables.isMaster, true)))
     displayName: 'Check changelog'
     jobs:
       - job:
         steps:
-          - task: Bash@3
-            displayName: 'Check'
+        - task: GitGuardChanges@0
+          displayName: 'Verify changelog'
+          inputs:
+            ${{ if eq(variables.isMaster, true) }}:
+              sourceCommitHash: 'tag:v*[!-qa]'
+              matchPattern: '.azext/changelog.json'
+            ${{ else }}:
+              sourceCommitHash: 'tag:v*-qa'
+              matchPattern: '.azext/changelog-qa.json'
+            targetCommitHash: 'HEAD'
+            matchStrategy: 'single'
+            changed: true
+            breakOnFailure: true
 
   - stage: package_dev
     displayName: '[DEV] Package extension'
