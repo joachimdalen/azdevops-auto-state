@@ -9,10 +9,6 @@ jobs:
     steps:
       - checkout: self
         persistCredentials: true
-      - template: ci/tag-sources.yml
-        parameters:
-          tagFormat: v${{ parameters.taskVersion }}
-          tagDescription: 'Production Release'
       - task: Bash@3
         displayName: 'Create tag'
         name: 'create_tag'

@@ -11,15 +11,10 @@ steps:
   - download: 'current'
     displayName: 'Download changelog'
     artifact: 'changelog'
-  - task: Bash@3
-    displayName: 'Set version'
-    targetType: 'inline'
-    script: |
-
   - task: GitHubRelease@1
     displayName: 'Create GitHub Release'
     inputs:
-      gitHubConnection: github-azdevops-auto-state
+      gitHubConnection: github-azdevops-extensions
       repositoryName: joachimdalen/azdevops-auto-state
       tagSource: userSpecifiedTag
       tag: v${{ parameters.version }}

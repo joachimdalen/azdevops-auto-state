@@ -55,7 +55,7 @@ stages:
     jobs:
       - template: ci/build-extension-artifact.yml
         parameters:
-          env: dev
+          extensionEnv: dev
           taskVersion: ${{ parameters.taskVersion }}
 
   - stage: publish_dev
@@ -79,7 +79,7 @@ stages:
     jobs:
       - template: ci/build-extension-artifact.yml
         parameters:
-          env: qa
+          extensionEnv: qa
           taskVersion: ${{ parameters.taskVersion }}
 
   - stage: publish_qa
@@ -103,7 +103,7 @@ stages:
     jobs:
       - template: ci/build-extension-artifact.yml
         parameters:
-          env: prod
+          extensionEnv: prod
           taskVersion: ${{ parameters.taskVersion }}
 
   - stage: publish_prod

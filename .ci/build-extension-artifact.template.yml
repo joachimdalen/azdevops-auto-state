@@ -1,7 +1,7 @@
 parameters:
   - name: artifact
     default: extension
-  - name: env
+  - name: extensionEnv
     default: dev
     values:
       - dev
@@ -17,12 +17,12 @@ jobs:
       - template: install.template.yml
       - template: build.template.yml
         parameters:
-          env: ${{ parameters.env }}
+          extensionEnv: ${{ parameters.extensionEnv }}
       - task: Npm@1
         displayName: 'Build changelog'
         inputs:
           command: custom
-          customCommand: run changelog:${{ parameters.env }}
+          customCommand: run changelog:${{ parameters.extensionEnv }}
       - task: Npm@1
         displayName: 'Build readme'
         inputs:
@@ -46,7 +46,7 @@ jobs:
         displayName: 'Package extension'
         inputs:
           rootFolder: '$(System.DefaultWorkingDirectory)'
-          patternManifest: 'vss-extension.${{ parameters.env }}.json'
+          patternManifest: 'vss-extension.${{ parameters.extensionEnv }}.json'
           updateTasksVersion: false
           extensionVersion: ${{ parameters.taskVersion }}
       - task: CopyFiles@2
