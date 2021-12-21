@@ -5,6 +5,7 @@ parameters:
     default: dev
     values:
       - dev
+      - qa
       - prod
 
 steps:
