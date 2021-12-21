@@ -52,6 +52,7 @@
     <li><a href="#usage">Usage</a></li>
     <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#contributing">Contributing</a></li>
+    <li><a href="#release-and-merge-strategy">Release and merge strategy</a></li>
     <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
   </ol>
@@ -91,6 +92,10 @@ Auto State is hidden behind a feature flag for several reasons. After installing
   ```sh
   npm install -g tfx-cli
   ```
+
+- Pipelines uses the following extensions that needs to be installed in your organization in addition to default tasks:
+  - [GitGuard](https://marketplace.visualstudio.com/items?itemName=joachimdalen.gitguard) - Used to verify changes to files, such as changelog.
+  - [Azure DevOps Extension Tasks](https://marketplace.visualstudio.com/items?itemName=ms-devlabs.vsts-developer-tools-build-tasks) - Used to build and publish extension.
 
 ### Installation
 
@@ -160,6 +165,19 @@ If you want to contribute code, I ask that you follow some guidelines.
 5. Open a Pull Request
 
 <p align="right">(<a href="#top">back to top</a>)</p>
+
+## Release and merge strategy
+
+- `master` is only deployed to `PROD` and tagged with `v<extension_version>`
+  - Pull requests are always squash merged into `master`
+  - `master` is merged back to `develop` after release
+  - `master` is the only branch where GitHub releases are created for
+- `develop` is only deployed to `QA` and tagged with `v<extension_version>-qa`
+- `feature/*` and `bugfix/*` are deployed to `DEV` using local assets. So only manifest changes are deployed to dev.
+
+`QA` and `DEV` are private development and verfication environments (publications of the extensions.) Submit a new issue if you for some reason wish access to either of these.
+
+**Note** Access to these are not given for your local development. Please publish your own development release.
 
 <!-- LICENSE -->
 
