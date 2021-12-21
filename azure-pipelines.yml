@@ -63,7 +63,7 @@ stages:
     dependsOn: 'verify_changelog'
     condition: and(succeeded(), eq(variables.isDevelop, true))
     variables:
-      - group: 'mp-auto-state-dev'
+      - group: 'mp-auto-state-qa'
     jobs:
       - template: ci/build-extension-artifact.yml
         parameters:
