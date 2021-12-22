@@ -79,7 +79,6 @@ const AdminPage = (): React.ReactElement => {
   const refreshData = async (force = false): Promise<void> => {
     const loadResult = await ruleService.load(force);
     if (loadResult.success) {
-      console.log('Got result', loadResult);
       setConfiguration(loadResult.data || []);
 
       if (force) {

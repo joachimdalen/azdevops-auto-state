@@ -112,7 +112,6 @@ const ModalContent = (): React.ReactElement => {
   };
   const save = async () => {
     const config = DevOps.getConfiguration();
-    console.log(config);
     if (config.dialog) {
       const ac: Rule = {
         id: rule?.id,
