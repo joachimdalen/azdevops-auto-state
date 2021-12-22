@@ -1,0 +1,13 @@
+[
+  {
+    "version": "0.0.X",
+    "publishDate": "202X-XX-XX",
+    "modules": [
+      {
+        "version": "0.0.X",
+        "name": "core",
+        "changes": []
+      }
+    ]
+  }
+]
