@@ -62,8 +62,8 @@ jobs:
             mkdir $(Build.ArtifactStagingDirectory)/extension/
             mkdir $(Build.ArtifactStagingDirectory)/changelog/
             mv $(Build.SourcesDirectory)/*.vsix $(Build.ArtifactStagingDirectory)/extension/
-            mv $(Build.SourcesDirectory)/CHANGELOG.md $(Build.ArtifactStagingDirectory)/changelog/
-            mv $(Build.SourcesDirectory)/CHANGELOG-RELEASE.md $(Build.ArtifactStagingDirectory)/changelog/
+            cp $(Build.SourcesDirectory)/marketplace/docs/CHANGELOG.md $(Build.ArtifactStagingDirectory)/changelog/
+            mv $(Build.SourcesDirectory)/marketplace/docs/CHANGELOG-RELEASE.md $(Build.ArtifactStagingDirectory)/changelog/
       - task: PublishPipelineArtifact@1
         displayName: 'Publish ${{ parameters.artifact }} artifacts'
         inputs:
