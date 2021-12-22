@@ -182,8 +182,9 @@ class RuleService {
         message: 'Duplicate rule'
       };
     }
+
     return {
-      success: false
+      success: true
     };
   }
 
