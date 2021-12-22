@@ -148,7 +148,7 @@ class RuleService {
           message: 'Duplicate rule'
         };
       }
-      rootDoc.rules = [...rootDoc.rules, rule];
+      rootDoc.rules = [...rootDoc.rules, { id: uuidV4(), ...rule }];
     }
     const updatedDocument = await this._dataStore.setData(rootDoc);
 
