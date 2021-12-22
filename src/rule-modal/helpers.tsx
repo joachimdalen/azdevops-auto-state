@@ -25,13 +25,14 @@ export const getWorkItemTypeItems = (
 export const getStatesForWorkItemType = (
   types: WorkItemType[],
   type: string,
-  ignoreStates: string[]
+  currentStates: string[],
+  include = false
 ): IListBoxItem[] => {
   return types
     .filter(x => x.referenceName === type)
     .flatMap(x => {
       return x.states
-        .filter(y => !ignoreStates.includes(y.name))
+        .filter(y => currentStates.includes(y.name) === include)
         .map(state => {
           const item: IListBoxItem = {
             id: state.name,

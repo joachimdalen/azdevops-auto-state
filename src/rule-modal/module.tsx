@@ -89,7 +89,7 @@ const ModalContent = (): React.ReactElement => {
     [types, parentType]
   );
   const parentTargetStates: IListBoxItem[] = useMemo(
-    () => getStatesForWorkItemType(types, parentType, parentNotState),
+    () => getStatesForWorkItemType(types, parentType, parentNotState, true),
     [types, parentType, parentNotState]
   );
   const workItemTypeSelection = useDropdownSelection(workItemTypes, rule?.workItemType);
@@ -133,6 +133,7 @@ const ModalContent = (): React.ReactElement => {
       const validationResult: ActionResult<boolean> = await config.validate(res);
       if (validationResult.success) {
         setError(undefined);
+        config.dialog.close(res);
       } else {
         setError(validationResult);
       }
@@ -153,7 +154,7 @@ const ModalContent = (): React.ReactElement => {
       <ConditionalChildren renderChildren={!loading}>
         <ConditionalChildren renderChildren={error !== undefined}>
           <MessageCard className="margin-bottom-8" severity={MessageCardSeverity.Warning}>
-            {error?.message}
+            {error?.message || 'Unknown error'}
           </MessageCard>
         </ConditionalChildren>
         <div className="rhythm-vertical-16 flex-grow">
