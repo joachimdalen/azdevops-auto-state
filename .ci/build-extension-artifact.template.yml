@@ -49,7 +49,7 @@ jobs:
       - task: PackageAzureDevOpsExtension@3
         displayName: 'Package extension'
         inputs:
-          rootFolder: '$(System.DefaultWorkingDirectory)'
+          rootFolder: '$(Build.SourcesDirectory)'
           patternManifest: 'vss-extension.${{ parameters.extensionEnv }}.json'
           updateTasksVersion: false
           extensionVersion: ${{ parameters.taskVersion }}
@@ -57,12 +57,13 @@ jobs:
         displayName: 'Move artifacts'
         inputs:
           targetType: inline
+          workingDirectory: 
           script: |
             mkdir $(Build.ArtifactStagingDirectory)/extension/
             mkdir $(Build.ArtifactStagingDirectory)/changelog/
-            mv **/*.vsix $(Build.ArtifactStagingDirectory)/extension/
-            mv CHANGELOG.md $(Build.ArtifactStagingDirectory)/changelog/
-            mv CHANGELOG-RELEASE.md $(Build.ArtifactStagingDirectory)/changelog/
+            mv $(Build.SourcesDirectory)/*.vsix $(Build.ArtifactStagingDirectory)/extension/
+            mv $(Build.SourcesDirectory)/CHANGELOG.md $(Build.ArtifactStagingDirectory)/changelog/
+            mv $(Build.SourcesDirectory)/CHANGELOG-RELEASE.md $(Build.ArtifactStagingDirectory)/changelog/
       - task: PublishPipelineArtifact@1
         displayName: 'Publish ${{ parameters.artifact }} artifacts'
         inputs:
