@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.1",
   "devDependencies": {
-    "@joachimdalen/azext": "^0.0.1",
+    "@joachimdalen/azext": "^0.2.0",
     "@testing-library/jest-dom": "^5.15.1",
     "@testing-library/react": "^12.1.2",
     "@types/jest": "^27.0.3",
@@ -27,11 +27,10 @@
     "html-webpack-plugin": "^5.5.0",
     "jest": "^27.4.0",
     "jest-junit-reporter": "^1.1.0",
-    "node-sass": "^6.0.1",
     "rimraf": "^3.0.2",
+    "sass": "^1.45.1",
     "sass-loader": "^12.3.0",
     "style-loader": "^3.3.1",
-    "tfx-cli": "^0.9.3",
     "ts-jest": "^27.0.7",
     "ts-loader": "^9.2.6",
     "typescript": "^4.5.2",
@@ -63,7 +62,8 @@
     "lint": "eslint src --ignore-path .eslintignore --ext ts --ext tsx --ext js --ext jsx",
     "lint:fix": "eslint --fix src --ignore-path .eslintignore --ext ts --ext tsx --ext js --ext jsx",
     "test": "env TEST_REPORT_FILENAME=test-results.xml jest --verbose",
-    "test:coverage": "env TEST_REPORT_FILENAME=test-results.xml jest --verbose --coverage"
+    "test:coverage": "env TEST_REPORT_FILENAME=test-results.xml jest --verbose --coverage",
+    "postinstall": "npm i -g tfx-cli"
   },
   "jest": {
     "testEnvironment": "jsdom",
