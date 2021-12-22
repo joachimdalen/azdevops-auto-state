@@ -169,10 +169,11 @@ class RuleService {
       throw new Error('RuleService is not initialized. Call Load() first.');
     }
     const docIndex = this._data?.findIndex(x => x.id === rule.workItemType);
-    if (docIndex === undefined || docIndex < 0)
+    if (docIndex === undefined || docIndex < 0) {
       return {
-        success: false
+        success: true
       };
+    }
 
     const rootDoc = this._data[docIndex];
 
