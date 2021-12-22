@@ -4,14 +4,23 @@ parameters:
     type: string
     default: $(Task.Extension.Version)
 
-trigger: none
+trigger:
+  branches:
+    include:
+      - master
+  paths:
+    exclude:
+      - .azext/*
+      - .vscode/*
+      - .ci/*
+      - docs/*
 pr: none
 pool:
   vmImage: ubuntu-latest
 
 variables:
   npm_config_cache: $(Pipeline.Workspace)/.npm
-  isTemp: $[or(startsWith(variables['Build.SourceBranch'], 'refs/heads/feature')), startsWith(variables['Build.SourceBranch'], 'refs/heads/bugfix')))]
+  isTemp: $[or(startsWith(variables['Build.SourceBranch'], 'refs/heads/feature'), startsWith(variables['Build.SourceBranch'], 'refs/heads/bugfix'))]
   isMaster: $[eq(variables['Build.SourceBranch'], 'refs/heads/master')]
   isDevelop: $[eq(variables['Build.SourceBranch'], 'refs/heads/develop')]
   marketplaceServiceConnection: 'marketplace-joachim-dalen'
@@ -32,22 +41,22 @@ stages:
     jobs:
       - job:
         steps:
-        - task: GitGuardChanges@0
-          displayName: 'Verify changelog'
-          inputs:
-            ${{ if eq(variables.isMaster, true) }}:
-              sourceCommitHash: 'tag:v*[!-qa]'
-              matchPattern: '.azext/changelog.json'
-            ${{ else }}:
-              sourceCommitHash: 'tag:v*-qa'
-              matchPattern: '.azext/changelog-qa.json'
-            targetCommitHash: 'HEAD'
-            matchStrategy: 'single'
-            changed: true
-            breakOnFailure: true
+          - task: GitGuardChanges@0
+            displayName: 'Verify changelog'
+            inputs:
+              ${{ if eq(variables.isMaster, true) }}:
+                sourceCommitHash: 'tag:v*[!-qa]'
+                matchPattern: '.azext/changelog.json'
+              ${{ else }}:
+                sourceCommitHash: 'tag:v*-qa'
+                matchPattern: '.azext/changelog-qa.json'
+              targetCommitHash: 'HEAD'
+              matchStrategy: 'single'
+              changed: true
+              breakOnFailure: true
 
   - stage: package_dev
-    displayName: '[DEV] Package extension'
+    displayName: '[DEV] Package'
     dependsOn: 'run_tests'
     condition: and(succeeded(), eq(variables.isTemp, true))
     variables:
@@ -59,7 +68,7 @@ stages:
           taskVersion: ${{ parameters.taskVersion }}
 
   - stage: publish_dev
-    displayName: '[DEV] Publish extension'
+    displayName: '[DEV] Publish'
     dependsOn: 'package_dev'
     condition: and(succeeded(), eq(variables.isTemp, true))
     variables:
@@ -71,7 +80,7 @@ stages:
           extensionVisibility: private
 
   - stage: package_qa
-    displayName: '[QA] Package extension'
+    displayName: '[QA] Package'
     dependsOn: 'verify_changelog'
     condition: and(succeeded(), eq(variables.isDevelop, true))
     variables:
@@ -83,7 +92,7 @@ stages:
           taskVersion: ${{ parameters.taskVersion }}
 
   - stage: publish_qa
-    displayName: '[QA] Publish extension'
+    displayName: '[QA] Publish'
     dependsOn: 'package_qa'
     condition: and(succeeded(), eq(variables.isDevelop, true))
     variables:
@@ -95,7 +104,7 @@ stages:
           extensionVisibility: private
 
   - stage: package_prod
-    displayName: '[PROD] Package extension'
+    displayName: '[PROD] Package'
     dependsOn: 'verify_changelog'
     condition: and(succeeded(), eq(variables.isMaster, true))
     variables:
@@ -107,7 +116,7 @@ stages:
           taskVersion: ${{ parameters.taskVersion }}
 
   - stage: publish_prod
-    displayName: '[PROD] Publish extension'
+    displayName: '[PROD] Publish'
     dependsOn: 'package_prod'
     condition: and(succeeded(), eq(variables.isMaster, true))
     variables:
