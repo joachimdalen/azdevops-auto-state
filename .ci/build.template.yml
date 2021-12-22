@@ -11,4 +11,4 @@ steps:
     displayName: 'Compile - ${{ parameters.extensionEnv }}'
     inputs:
       command: custom
-      customCommand: 'run build:${{ parameters.extensionEnv }}'
+      customCommand: 'run compile:${{ parameters.extensionEnv }}'

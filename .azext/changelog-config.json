@@ -12,10 +12,9 @@
     "size": "h4",
     "format": "`{{name}}@{{version}}`"
   },
-  "taskMapping": {},
   "sectionSplitter": "---",
-  "tagSize": "h3",
-  "tagMapping": {
+  "typeSize": "h3",
+  "typeMapping": {
     "feature": ":rocket: Features",
     "fix": ":bug: Fixes",
     "tests": ":test_tube: Tests",

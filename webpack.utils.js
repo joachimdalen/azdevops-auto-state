@@ -1,4 +1,4 @@
-const vssConfig = require('./vss-extension.json');
+const vssConfig = require('./vss-extension.prod.json');
 const id = [vssConfig.publisher.toLowerCase(), vssConfig.id.toLowerCase()];
 
 module.exports = {
