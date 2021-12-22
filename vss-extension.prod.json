@@ -8,11 +8,7 @@
   "description": "An extension to automatically update states between parents and children",
   "categories": ["Azure Boards"],
   "demands": ["api-version/5.1"],
-  "tags": [
-    "work items",
-    "state",
-    "auto update"
-  ],
+  "tags": ["work items", "state", "auto update"],
   "galleryFlags": ["Public", "Preview"],
   "scopes": ["vso.work_write"],
   "icons": {
@@ -21,6 +17,21 @@
   "content": {
     "details": { "path": "marketplace/docs/README.md" },
     "changelog": { "path": "marketplace/docs/CHANGELOG.md" }
+  },
+  "links": {
+    "repository": {
+      "uri": "https://github.com/joachimdalen/azdevops-auto-state"
+    },
+    "issues": {
+      "uri": "https://github.com/joachimdalen/azdevops-auto-state/issues"
+    },
+    "privacypolicy": {
+      "uri": "https://github.com/joachimdalen/azdevops-auto-state/blob/master/PRIVACY.md"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "uri": "https://github.com/joachimdalen/azdevops-auto-state"
   },
   "branding": {
     "color": "#215564",
