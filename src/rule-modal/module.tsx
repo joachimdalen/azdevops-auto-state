@@ -75,21 +75,31 @@ const ModalContent = (): React.ReactElement => {
       });
   }, []);
 
-  const workItemTypes: IListBoxItem[] = useMemo(() => getWorkItemTypeItems(types), [types]);
-
+  const workItemTypes: IListBoxItem[] = useMemo(() => getWorkItemTypeItems(types, []), [types]);
+  const parentTypes: IListBoxItem[] = useMemo(
+    () => getWorkItemTypeItems(types, [workItemType]),
+    [types, workItemType]
+  );
   const workItemStates: IListBoxItem[] = useMemo(
-    () => getStatesForWorkItemType(types, workItemType),
+    () => getStatesForWorkItemType(types, workItemType, []),
     [workItemType]
   );
   const parentStates: IListBoxItem[] = useMemo(
-    () => getStatesForWorkItemType(types, parentType),
+    () => getStatesForWorkItemType(types, parentType, []),
     [types, parentType]
   );
+  const parentTargetStates: IListBoxItem[] = useMemo(
+    () => getStatesForWorkItemType(types, parentType, parentNotState),
+    [types, parentType, parentNotState]
+  );
   const workItemTypeSelection = useDropdownSelection(workItemTypes, rule?.workItemType);
-  const parentTypeSelection = useDropdownSelection(workItemTypes, rule?.parentType);
+  const parentTypeSelection = useDropdownSelection(parentTypes, rule?.parentType);
   const workItemStateSelection = useDropdownSelection(workItemStates, rule?.childState);
   const parentStateSelection = useDropdownMultiSelection(parentStates, rule?.parentNotState);
-  const parentTargetStateSelection = useDropdownSelection(parentStates, rule?.parentTargetState);
+  const parentTargetStateSelection = useDropdownSelection(
+    parentTargetStates,
+    rule?.parentTargetState
+  );
 
   const dismiss = () => {
     const config = DevOps.getConfiguration();
@@ -159,7 +169,7 @@ const ModalContent = (): React.ReactElement => {
           <FormItem label="And parent type is">
             <Dropdown
               placeholder="Select a work item type"
-              items={workItemTypes}
+              items={parentTypes}
               selection={parentTypeSelection}
               onSelect={(_, i) => setParentType(i.id)}
               renderItem={renderWorkItemCell}
@@ -187,9 +197,9 @@ const ModalContent = (): React.ReactElement => {
           </FormItem>
           <FormItem label="Set parent state to">
             <Dropdown
-              disabled={parentStates?.length === 0}
+              disabled={parentTargetStates?.length === 0}
               placeholder="Select a state"
-              items={parentStates}
+              items={parentTargetStates}
               selection={parentTargetStateSelection}
               onSelect={(_, i) => setParentTargetState(i.id)}
               renderItem={renderStateCell}

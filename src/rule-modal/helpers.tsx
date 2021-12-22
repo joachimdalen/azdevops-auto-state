@@ -4,31 +4,42 @@ import { ITableColumn, SimpleTableCell } from 'azure-devops-ui/Table';
 
 import StateTag from '../shared-ui/component/StateTag';
 
-export const getWorkItemTypeItems = (types: WorkItemType[]): IListBoxItem[] => {
-  return types.map(x => {
-    const item: IListBoxItem = {
-      id: x.referenceName,
-      text: x.name,
-      data: {
-        icon: x.icon
-      }
-    };
-    return item;
-  });
+export const getWorkItemTypeItems = (
+  types: WorkItemType[],
+  ignoreTypes: string[]
+): IListBoxItem[] => {
+  return types
+    .filter(x => !ignoreTypes.includes(x.referenceName))
+    .map(x => {
+      const item: IListBoxItem = {
+        id: x.referenceName,
+        text: x.name,
+        data: {
+          icon: x.icon
+        }
+      };
+      return item;
+    });
 };
 
-export const getStatesForWorkItemType = (types: WorkItemType[], type: string): IListBoxItem[] => {
+export const getStatesForWorkItemType = (
+  types: WorkItemType[],
+  type: string,
+  ignoreStates: string[]
+): IListBoxItem[] => {
   return types
     .filter(x => x.referenceName === type)
     .flatMap(x => {
-      return x.states.map(state => {
-        const item: IListBoxItem = {
-          id: state.name,
-          text: state.name,
-          data: state.color
-        };
-        return item;
-      });
+      return x.states
+        .filter(y => !ignoreStates.includes(y.name))
+        .map(state => {
+          const item: IListBoxItem = {
+            id: state.name,
+            text: state.name,
+            data: state.color
+          };
+          return item;
+        });
     });
 };
 
