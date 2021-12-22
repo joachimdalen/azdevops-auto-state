@@ -5,15 +5,11 @@
   "public": false,
   "name": "Auto State - QA",
   "publisher": "JoachimDalen",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "An extension to automatically update states between parents and children",
   "categories": ["Azure Boards"],
   "demands": ["api-version/5.1"],
-  "tags": [
-    "work items",
-    "state",
-    "auto update"
-  ],
+  "tags": ["work items", "state", "auto update"],
   "galleryFlags": ["Preview"],
   "scopes": ["vso.work_write"],
   "icons": {
@@ -31,7 +27,9 @@
     "issues": {
       "uri": "https://github.com/joachimdalen/azdevops-auto-state/issues"
     },
-    "privacypolicy": {}
+    "privacypolicy": {
+      "uri": "https://github.com/joachimdalen/azdevops-auto-state/blob/master/PRIVACY.md"
+    }
   },
   "repository": {
     "type": "git",
@@ -48,7 +46,7 @@
   ],
   "files": [
     {
-      "path": "docs/images",
+      "path": "marketplace/docs/images",
       "addressable": true
     },
     {
