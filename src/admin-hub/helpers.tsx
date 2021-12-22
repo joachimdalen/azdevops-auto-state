@@ -6,16 +6,11 @@ import {
   IContextualMenuProps,
   IGroup
 } from '@fluentui/react';
-import {
-  IDialogOptions,
-  IHostNavigationService,
-  IHostPageLayoutService
-} from 'azure-devops-extension-api';
+import { IHostNavigationService } from 'azure-devops-extension-api';
 import { WorkItemStateColor, WorkItemType } from 'azure-devops-extension-api/WorkItemTracking';
 import * as DevOps from 'azure-devops-extension-sdk';
 import { IHeaderCommandBarItem } from 'azure-devops-ui/HeaderCommandBar';
 
-import AddRuleResult from '../common/models/AddRuleResult';
 import Rule from '../common/models/Rule';
 import StateTag from '../shared-ui/component/StateTag';
 import WorkItemTypeTag from '../shared-ui/component/WorkItemTypeTag';
