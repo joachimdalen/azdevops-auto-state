@@ -100,24 +100,33 @@ Auto State is hidden behind a feature flag for several reasons. After installing
 ### Installation
 
 1. Clone the repo
+
    ```sh
    git clone https://github.com/joachimdalen/azdevops-auto-state.git
    ```
+
 2. Install dependencies
+
    ```sh
    > npm install
    ```
+
 3. Update publisher in `vss-extension-dev.json`
 4. Compile development version
+
    ```sh
    npm run prepare:dev
    ```
+
 5. [Publish extension](https://docs.microsoft.com/en-us/azure/devops/extend/publish/overview?view=azure-devops#publish-an-extension)
 6. [Share](https://docs.microsoft.com/en-us/azure/devops/extend/publish/overview?view=azure-devops#share-an-extension) and [install](https://docs.microsoft.com/en-us/azure/devops/extend/publish/overview?view=azure-devops#install-an-extension) extension
 7. Run extension
+
    ```sh
    npm run serve:dev
    ```
+
+   **Note:** You might need to open [https://localhost:3000/](https://localhost:3000/) in your browser from time to time to accept the unsecure certificate to have the extension load properly from your local environment.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
