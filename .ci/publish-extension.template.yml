@@ -28,6 +28,7 @@ jobs:
               inputs:
                 version: 'v0.8.1'
             - task: PublishAzureDevOpsExtension@3
+              displayName: "Publish to Marketplace"
               inputs:
                 connectTo: 'VsTeam'
                 connectedServiceName: 'marketplace-joachim-dalen'
