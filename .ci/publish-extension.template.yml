@@ -33,6 +33,6 @@ jobs:
                 connectTo: 'VsTeam'
                 connectedServiceName: 'marketplace-joachim-dalen'
                 fileType: 'vsix'
-                vsixFile: '**/*.vsix'
+                vsixFile: '*.vsix'
                 updateTasksVersion: false
                 extensionVisibility: ${{ parameters.extensionVisibility }}
