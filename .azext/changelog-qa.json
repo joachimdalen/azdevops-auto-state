@@ -18,7 +18,7 @@
         "name": "rule-modal",
         "changes": [
           {
-            "type": "feat",
+            "type": "feature",
             "description": "Added support for updating rule"
           }
         ]
@@ -28,7 +28,7 @@
         "name": "admin-hub",
         "changes": [
           {
-            "type": "feat",
+            "type": "feature",
             "description": "Added support for updating rule"
           }
         ]
