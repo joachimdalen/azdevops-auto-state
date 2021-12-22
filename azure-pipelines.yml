@@ -4,14 +4,23 @@ parameters:
     type: string
     default: $(Task.Extension.Version)
 
-trigger: none
+trigger:
+  branches:
+    include:
+      - master
+  paths:
+    exclude:
+      - .azext/*
+      - .vscode/*
+      - .ci/*
+      - docs/*
 pr: none
 pool:
   vmImage: ubuntu-latest
 
 variables:
   npm_config_cache: $(Pipeline.Workspace)/.npm
-  isTemp: $[or(startsWith(variables['Build.SourceBranch'], 'refs/heads/feature')), startsWith(variables['Build.SourceBranch'], 'refs/heads/bugfix')))]
+  isTemp: $[or(startsWith(variables['Build.SourceBranch'], 'refs/heads/feature'), startsWith(variables['Build.SourceBranch'], 'refs/heads/bugfix'))]
   isMaster: $[eq(variables['Build.SourceBranch'], 'refs/heads/master')]
   isDevelop: $[eq(variables['Build.SourceBranch'], 'refs/heads/develop')]
   marketplaceServiceConnection: 'marketplace-joachim-dalen'
@@ -32,19 +41,19 @@ stages:
     jobs:
       - job:
         steps:
-        - task: GitGuardChanges@0
-          displayName: 'Verify changelog'
-          inputs:
-            ${{ if eq(variables.isMaster, true) }}:
-              sourceCommitHash: 'tag:v*[!-qa]'
-              matchPattern: '.azext/changelog.json'
-            ${{ else }}:
-              sourceCommitHash: 'tag:v*-qa'
-              matchPattern: '.azext/changelog-qa.json'
-            targetCommitHash: 'HEAD'
-            matchStrategy: 'single'
-            changed: true
-            breakOnFailure: true
+          - task: GitGuardChanges@0
+            displayName: 'Verify changelog'
+            inputs:
+              ${{ if eq(variables.isMaster, true) }}:
+                sourceCommitHash: 'tag:v*[!-qa]'
+                matchPattern: '.azext/changelog.json'
+              ${{ else }}:
+                sourceCommitHash: 'tag:v*-qa'
+                matchPattern: '.azext/changelog-qa.json'
+              targetCommitHash: 'HEAD'
+              matchStrategy: 'single'
+              changed: true
+              breakOnFailure: true
 
   - stage: package_dev
     displayName: '[DEV] Package extension'
