@@ -5,7 +5,7 @@ import {
   IWorkItemNotificationListener
 } from 'azure-devops-extension-api/WorkItemTracking';
 
-import MetaService from '../common/services/MetaService';
+import DevOpsService from '../common/services/DevOpsService';
 import RuleProcessor from '../common/services/RuleProcessor';
 import { StorageService } from '../common/services/StorageService';
 import WorkItemService from '../common/services/WorkItemService';
@@ -21,7 +21,7 @@ class WorkItemListener implements IWorkItemNotificationListener {
     this._ruleProcessor = new RuleProcessor(
       new WorkItemService(),
       new StorageService(),
-      new MetaService()
+      new DevOpsService()
     );
   }
 

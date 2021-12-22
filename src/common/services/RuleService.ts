@@ -18,8 +18,8 @@ class RuleService {
     this._data = [];
   }
 
-  public async load(): Promise<ActionResult<RuleDocument[]>> {
-    if (this._isInitialized) return { success: true };
+  public async load(force = false): Promise<ActionResult<RuleDocument[]>> {
+    if (this._isInitialized && !force) return { success: true, data: this._data };
     try {
       const data = await this._dataStore.getData();
       this._data = data;
@@ -133,6 +133,7 @@ class RuleService {
   ): Promise<ActionResult<RuleDocument>> {
     const ruleIndex = rootDoc.rules.findIndex(x => x.id === rule?.id);
     if (ruleIndex >= 0) {
+      console.log('Found rule', ruleIndex, rule, rootDoc);
       const oldRule = rootDoc.rules[ruleIndex];
       if (this.isRuleSame(oldRule, rule)) {
         return {
@@ -142,6 +143,7 @@ class RuleService {
       }
       rootDoc.rules[ruleIndex] = rule;
     } else {
+      console.log('Did not find rule', ruleIndex, rule, rootDoc);
       if (rootDoc.rules.some(r => this.isRuleSame(r, rule))) {
         return {
           success: false,

@@ -188,7 +188,8 @@ const getListRowContextMenuItem = (
   };
 };
 export const getCommandBarItems = (
-  showEdit: (rule?: Rule) => Promise<void>
+  showEdit: (rule?: Rule) => Promise<void>,
+  refreshData: (force: boolean) => Promise<void>
 ): IHeaderCommandBarItem[] => [
   {
     id: 'open-docs',
@@ -200,6 +201,15 @@ export const getCommandBarItems = (
           value.openNewWindow('https://github.com/joachimdalen/azdevops-auto-state', '');
         }
       );
+    }
+  },
+  {
+    id: 'refresh-date',
+    text: 'Refresh Data',
+    isPrimary: true,
+    iconProps: { iconName: 'Refresh' },
+    onActivate: async () => {
+      await refreshData(true);
     }
   },
   {

@@ -8,7 +8,7 @@ import {
 } from 'azure-devops-extension-api/WorkItemTracking';
 
 import { getChildIds, getParentId } from '../workItemUtils';
-import MetaService, { IMetaService } from './MetaService';
+import DevOpsService, { IDevOpsService } from './DevOpsService';
 
 export interface IWorkItemService {
   getParentForWorkItem(id: number): Promise<WorkItem | undefined>;
@@ -21,9 +21,9 @@ export interface IWorkItemService {
 }
 
 class WorkItemService implements IWorkItemService {
-  private _metaService: IMetaService;
-  constructor(metaService?: IMetaService) {
-    this._metaService = metaService ?? new MetaService();
+  private _devOpsService: IDevOpsService;
+  constructor(devOpsService?: IDevOpsService) {
+    this._devOpsService = devOpsService ?? new DevOpsService();
   }
 
   public async getParentForWorkItem(
@@ -57,7 +57,7 @@ class WorkItemService implements IWorkItemService {
   }
 
   public async getWorkItemTypes(): Promise<WorkItemType[]> {
-    const project = await this._metaService.getProject();
+    const project = await this._devOpsService.getProject();
     if (project) {
       const client = getClient(WorkItemTrackingRestClient);
       const types = await client.getWorkItemTypes(project.name);

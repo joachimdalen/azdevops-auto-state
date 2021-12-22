@@ -19,6 +19,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import AddRuleResult from '../common/models/AddRuleResult';
 import Rule from '../common/models/Rule';
 import RuleDocument from '../common/models/WorkItemRules';
+import DevOpsService from '../common/services/DevOpsService';
 import RuleService from '../common/services/RuleService';
 import WorkItemService from '../common/services/WorkItemService';
 import webLogger from '../common/webLogger';
@@ -26,12 +27,11 @@ import LoadingSection from '../shared-ui/component/LoadingSection';
 import WorkItemTypeTag from '../shared-ui/component/WorkItemTypeTag';
 import { getCommandBarItems, getListColumns, groupBy, isGroup } from './helpers';
 
-type EditType = (rule?: Rule) => Promise<void>;
 const AdminPage = (): React.ReactElement => {
   const [types, setTypes] = useState<WorkItemType[]>([]);
   const [configuration, setConfiguration] = useState<RuleDocument[] | undefined>(undefined);
-  const [workItemService, ruleService] = useMemo(
-    () => [new WorkItemService(), new RuleService()],
+  const [workItemService, ruleService, devOpsService] = useMemo(
+    () => [new WorkItemService(), new RuleService(), new DevOpsService()],
     []
   );
 
@@ -43,10 +43,7 @@ const AdminPage = (): React.ReactElement => {
       setTypes(loadedTypes);
 
       try {
-        const loadResult = await ruleService.load();
-        if (loadResult.success) {
-          setConfiguration(loadResult.data || []);
-        }
+        await refreshData();
       } catch (error) {
         webLogger.error('Failed to get project configuration', error);
       } finally {
@@ -79,10 +76,21 @@ const AdminPage = (): React.ReactElement => {
 
   const showEditRule = async (rule?: Rule) =>
     ruleService.showEdit(handleDialogResult, result => ruleService.isValid(result?.rule), rule);
+  const refreshData = async (force = false): Promise<void> => {
+    const loadResult = await ruleService.load(force);
+    if (loadResult.success) {
+      console.log('Got result', loadResult);
+      setConfiguration(loadResult.data || []);
+
+      if (force) {
+        await devOpsService.showToast('Refreshed rules');
+      }
+    }
+  };
 
   const commandBarItems: IHeaderCommandBarItem[] = useMemo(
-    () => getCommandBarItems(showEditRule),
-    [showEditRule]
+    () => getCommandBarItems(showEditRule, refreshData),
+    [showEditRule, refreshData]
   );
   const columns: IColumn[] = useMemo(
     () => getListColumns(types, handleDeleteRule, showEditRule),
