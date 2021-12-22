@@ -46,12 +46,22 @@ class WorkItemService implements IWorkItemService {
     return wis;
   }
 
+  private sortWorkItemTypes(a: WorkItemType, b: WorkItemType) {
+    if (a.name < b.name) {
+      return -1;
+    }
+    if (a.name > b.name) {
+      return 1;
+    }
+    return 0;
+  }
+
   public async getWorkItemTypes(): Promise<WorkItemType[]> {
     const project = await this._metaService.getProject();
     if (project) {
       const client = getClient(WorkItemTrackingRestClient);
-      const types = client.getWorkItemTypes(project.name);
-      return types;
+      const types = await client.getWorkItemTypes(project.name);
+      return types.sort(this.sortWorkItemTypes);
     }
     return [];
   }
