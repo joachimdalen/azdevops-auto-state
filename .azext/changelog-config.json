@@ -31,7 +31,7 @@
   "knownAuthors": [],
   "useDescriptiveIssues": true,
   "replaceEmojis": {
-    "tags": true,
+    "types": true,
     "changelogTitle": true,
     "releaseTitle": true,
     "moduleTitle": true,
