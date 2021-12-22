@@ -52,9 +52,9 @@
   "scripts": {
     "prepare:dev": "npm run compile:dev && npm run changelog:dev && npm run docs:readme && npm run package:dev",
     "package:dev": "tfx extension create --root ./ --manifest-globs ./vss-extension.dev.json --rev-version",
-    "changelog:dev": "azext changelog generate --log-name ./.azext/changelog-dev.json --output ./marketplace/docs/CHANGELOG.md --format",
-    "changelog:qa": "azext changelog generate --log-name ./.azext/changelog-qa.json --output ./marketplace/docs/CHANGELOG.md --format",
-    "changelog:prod": "azext changelog generate --log-name ./.azext/changelog-prod.json --output ./marketplace/docs/CHANGELOG.md --format",
+    "changelog:dev": "azext changelog generate --log-name changelog-dev.json --output ./marketplace/docs/CHANGELOG.md --format",
+    "changelog:qa": "azext changelog generate --log-name changelog-qa.json --output ./marketplace/docs/CHANGELOG.md --format",
+    "changelog:prod": "azext changelog generate --log-name changelog-prod.json --output ./marketplace/docs/CHANGELOG.md --format",
     "compile:dev": "webpack --mode development --config ./webpack.config.dev.js",
     "compile:qa": "webpack --config ./webpack.config.prod.js",
     "compile:prod": "webpack --config ./webpack.config.prod.js",
