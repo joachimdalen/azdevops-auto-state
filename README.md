@@ -153,8 +153,6 @@ See the [open issues](https://github.com/joachimdalen/azdevops-auto-state/issues
 
 ## Contributing
 
-https://github.com/angular/angular/blob/master/CONTRIBUTING.md#cla
-
 Contributions are welcome, both in the form of suggestions and code. Create
 
 If you want to contribute code, I ask that you follow some guidelines.
