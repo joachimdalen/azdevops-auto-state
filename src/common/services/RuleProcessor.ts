@@ -92,12 +92,12 @@ class RuleProcessor implements IRuleProcessor {
 
     const parentType = getWorkItemType(parent, this._workItemTypes);
     if (rule.parentType !== parentType) return false;
-    const childState = getState(workItem);
-    if (rule.childState !== childState) return false;
-    if (isInState(parent, rule.parentNotState)) return false;
+    const transitionState = getState(workItem);
+    if (rule.transitionState !== transitionState) return false;
+    if (isInState(parent, rule.parentExcludedStates)) return false;
     if (isInState(parent, [rule.parentTargetState])) return false;
 
-    if (rule.allChildren && checkChildren) {
+    if (rule.childrenLookup && checkChildren) {
       return await this.IsChildrenRuleMatch(rule, childType, parent);
     }
 
@@ -108,7 +108,7 @@ class RuleProcessor implements IRuleProcessor {
     if (children === undefined) return false;
 
     if (children.every(wi => getWorkItemType(wi, this._workItemTypes) === childType)) {
-      const match = children?.every(wi => isInState(wi, [rule.childState]));
+      const match = children?.every(wi => isInState(wi, [rule.transitionState]));
       return match;
     }
 

@@ -193,9 +193,10 @@ class RuleService {
     if (ruleOne.workItemType !== ruleTwo.workItemType) return false;
     if (ruleOne.parentType !== ruleTwo.parentType) return false;
     if (ruleOne.parentTargetState !== ruleTwo.parentTargetState) return false;
-    if (ruleOne.childState !== ruleTwo.childState) return false;
-    if (ruleOne.allChildren !== ruleTwo.allChildren) return false;
-    if (!ruleOne.parentNotState.every(x => ruleTwo.parentNotState.includes(x))) return false;
+    if (ruleOne.transitionState !== ruleTwo.transitionState) return false;
+    if (ruleOne.childrenLookup !== ruleTwo.childrenLookup) return false;
+    if (!ruleOne.parentExcludedStates.every(x => ruleTwo.parentExcludedStates.includes(x)))
+      return false;
     return true;
   }
 

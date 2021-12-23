@@ -24,9 +24,9 @@ describe('RuleProcessor', () => {
 
       const rule: Rule = {
         id: '1',
-        allChildren: false,
-        childState: 'Active',
-        parentNotState: ['Active', 'Resolved', 'Closed'],
+        childrenLookup: false,
+        transitionState: 'Active',
+        parentExcludedStates: ['Active', 'Resolved', 'Closed'],
         parentTargetState: 'Active',
         parentType: WorkItemReferenceNames.UserStory,
         workItemType: WorkItemReferenceNames.Task
@@ -50,9 +50,9 @@ describe('RuleProcessor', () => {
 
       const rule: Rule = {
         id: '1',
-        allChildren: false,
-        childState: 'Active',
-        parentNotState: ['Active', 'Resolved', 'Closed'],
+        childrenLookup: false,
+        transitionState: 'Active',
+        parentExcludedStates: ['Active', 'Resolved', 'Closed'],
         parentTargetState: 'Active',
         parentType: WorkItemReferenceNames.UserStory,
         workItemType: WorkItemReferenceNames.Task
@@ -75,9 +75,9 @@ describe('RuleProcessor', () => {
 
       const rule: Rule = {
         id: '1',
-        allChildren: false,
-        childState: 'Active',
-        parentNotState: ['Active', 'Resolved', 'Closed'],
+        childrenLookup: false,
+        transitionState: 'Active',
+        parentExcludedStates: ['Active', 'Resolved', 'Closed'],
         parentTargetState: 'Active',
         parentType: WorkItemReferenceNames.Epic,
         workItemType: WorkItemReferenceNames.Feature
@@ -100,9 +100,9 @@ describe('RuleProcessor', () => {
 
       const rule: Rule = {
         id: '1',
-        allChildren: false,
-        childState: 'Active',
-        parentNotState: ['Active', 'Resolved', 'Closed'],
+        childrenLookup: false,
+        transitionState: 'Active',
+        parentExcludedStates: ['Active', 'Resolved', 'Closed'],
         parentTargetState: 'Active',
         parentType: WorkItemReferenceNames.Feature,
         workItemType: WorkItemReferenceNames.Task
@@ -125,9 +125,9 @@ describe('RuleProcessor', () => {
 
       const rule: Rule = {
         id: '1',
-        allChildren: false,
-        childState: 'Active',
-        parentNotState: ['Active', 'Resolved', 'Closed'],
+        childrenLookup: false,
+        transitionState: 'Active',
+        parentExcludedStates: ['Active', 'Resolved', 'Closed'],
         parentTargetState: 'Active',
         parentType: WorkItemReferenceNames.UserStory,
         workItemType: WorkItemReferenceNames.Task
@@ -150,9 +150,9 @@ describe('RuleProcessor', () => {
 
       const rule: Rule = {
         id: '1',
-        allChildren: false,
-        childState: 'Active',
-        parentNotState: ['Active', 'Resolved', 'Closed'],
+        childrenLookup: false,
+        transitionState: 'Active',
+        parentExcludedStates: ['Active', 'Resolved', 'Closed'],
         parentTargetState: 'Active',
         parentType: WorkItemReferenceNames.UserStory,
         workItemType: WorkItemReferenceNames.Task
@@ -175,9 +175,9 @@ describe('RuleProcessor', () => {
 
       const rule: Rule = {
         id: '1',
-        allChildren: false,
-        childState: 'Active',
-        parentNotState: ['Resolved', 'Closed'],
+        childrenLookup: false,
+        transitionState: 'Active',
+        parentExcludedStates: ['Resolved', 'Closed'],
         parentTargetState: 'Active',
         parentType: WorkItemReferenceNames.UserStory,
         workItemType: WorkItemReferenceNames.Task

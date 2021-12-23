@@ -47,10 +47,10 @@ describe('RuleService', () => {
       const workItemType = WorkItemReferenceNames.UserStory;
       const rule: Rule = {
         workItemType,
-        allChildren: false,
-        childState: 'Active',
+        childrenLookup: false,
+        transitionState: 'Active',
         parentType: WorkItemReferenceNames.Feature,
-        parentNotState: ['Active'],
+        parentExcludedStates: ['Active'],
         parentTargetState: 'Active'
       };
       jest.spyOn(StorageService.prototype, 'getData').mockResolvedValue([]);
