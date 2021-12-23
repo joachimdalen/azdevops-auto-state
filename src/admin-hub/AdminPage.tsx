@@ -9,7 +9,7 @@ import {
 } from '@fluentui/react';
 import { WorkItemType } from 'azure-devops-extension-api/WorkItemTracking';
 import { ConditionalChildren } from 'azure-devops-ui/ConditionalChildren';
-import { Header } from 'azure-devops-ui/Header';
+import { Header, TitleSize } from 'azure-devops-ui/Header';
 import { IHeaderCommandBarItem } from 'azure-devops-ui/HeaderCommandBar';
 import { Page } from 'azure-devops-ui/Page';
 import { Surface, SurfaceBackground } from 'azure-devops-ui/Surface';
@@ -127,7 +127,7 @@ const AdminPage = (): React.ReactElement => {
   return (
     <Surface background={SurfaceBackground.neutral}>
       <Page className="flex-grow">
-        <Header commandBarItems={commandBarItems} title="Auto State" />
+        <Header commandBarItems={commandBarItems} titleSize={TitleSize.Large} title="Auto State" />
         <div className="page-content padding-16">
           <LoadingSection isLoading={loading} text="Loading rules.." />
           <ConditionalChildren renderChildren={!loading && ruleItems.length === 0}>
