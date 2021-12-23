@@ -15,7 +15,11 @@ jest.mock('../../../common/webLogger');
 describe('RuleProcessor', () => {
   describe('IsRuleMatch', () => {
     test('returns true when matches', async () => {
-      const storageService: IStorageService = {} as IStorageService;
+      const storageService: IStorageService = {
+        getData() {
+          return Promise.resolve([]);
+        }
+      } as unknown as IStorageService;
       const workItemService: IWorkItemService = {
         getWorkItemTypes() {
           return Promise.resolve(getWorkItemTypes());
@@ -40,7 +44,11 @@ describe('RuleProcessor', () => {
       expect(res).toBeTruthy();
     });
     test('returns false when not matches', async () => {
-      const storageService: IStorageService = {} as IStorageService;
+      const storageService: IStorageService = {
+        getData() {
+          return Promise.resolve([]);
+        }
+      } as unknown as IStorageService;
 
       const workItemService: IWorkItemService = {
         getWorkItemTypes() {
@@ -66,7 +74,11 @@ describe('RuleProcessor', () => {
       expect(res).toBeFalsy();
     });
     test('returns false when child type does not match', async () => {
-      const storageService: IStorageService = {} as IStorageService;
+      const storageService: IStorageService = {
+        getData() {
+          return Promise.resolve([]);
+        }
+      } as unknown as IStorageService;
       const workItemService: IWorkItemService = {
         getWorkItemTypes() {
           return Promise.resolve(getWorkItemTypes());
@@ -91,7 +103,11 @@ describe('RuleProcessor', () => {
       expect(res).toBeFalsy();
     });
     test('returns false when parent type does not match', async () => {
-      const storageService: IStorageService = {} as IStorageService;
+      const storageService: IStorageService = {
+        getData() {
+          return Promise.resolve([]);
+        }
+      } as unknown as IStorageService;
       const workItemService: IWorkItemService = {
         getWorkItemTypes() {
           return Promise.resolve(getWorkItemTypes());
@@ -116,7 +132,11 @@ describe('RuleProcessor', () => {
       expect(res).toBeFalsy();
     });
     test('returns false when child state does not match', async () => {
-      const storageService: IStorageService = {} as IStorageService;
+      const storageService: IStorageService = {
+        getData() {
+          return Promise.resolve([]);
+        }
+      } as unknown as IStorageService;
       const workItemService: IWorkItemService = {
         getWorkItemTypes() {
           return Promise.resolve(getWorkItemTypes());
@@ -141,7 +161,11 @@ describe('RuleProcessor', () => {
       expect(res).toBeFalsy();
     });
     test('returns false when parent states does not match', async () => {
-      const storageService: IStorageService = {} as IStorageService;
+      const storageService: IStorageService = {
+        getData() {
+          return Promise.resolve([]);
+        }
+      } as unknown as IStorageService;
       const workItemService: IWorkItemService = {
         getWorkItemTypes() {
           return Promise.resolve(getWorkItemTypes());
@@ -166,7 +190,11 @@ describe('RuleProcessor', () => {
       expect(res).toBeFalsy();
     });
     test('returns false when parent state is already target state', async () => {
-      const storageService: IStorageService = {} as IStorageService;
+      const storageService: IStorageService = {
+        getData() {
+          return Promise.resolve([]);
+        }
+      } as unknown as IStorageService;
       const workItemService: IWorkItemService = {
         getWorkItemTypes() {
           return Promise.resolve(getWorkItemTypes());
