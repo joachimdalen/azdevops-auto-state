@@ -17,9 +17,15 @@ export const getWorkItemType = (
   workItem: WorkItem,
   workItemTypes: WorkItemType[]
 ): string | undefined => {
-  const type = workItem.fields[workItemType];
-  return workItemTypes.find(x => x.name === type)?.referenceName;
+  const type = getWorkItemTypeField(workItem);
+  return getWorkItemTypeFromName(type, workItemTypes);
 };
+
+export const getWorkItemTypeFromName = (
+  name: string,
+  workItemTypes: WorkItemType[]
+): string | undefined => workItemTypes.find(x => x.name === name)?.referenceName;
+export const getWorkItemTypeField = (workItem: WorkItem): string => workItem.fields[workItemType];
 
 export const getIdFormWorkItemUrl = (url: string): number | undefined => {
   const idString = url.split('/').pop();
