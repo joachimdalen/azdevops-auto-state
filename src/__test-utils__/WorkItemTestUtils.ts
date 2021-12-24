@@ -8,7 +8,7 @@ const getWorkItem = (
   id: number,
   type: WorkItemNames,
   state: string,
-  related?: WorkItem[],
+  related?: number[],
   relatedType?: 'parent' | 'children'
 ): WorkItem => {
   const relations: WorkItemRelation[] = (related || [])?.map(wi => {
@@ -17,7 +17,7 @@ const getWorkItem = (
         relatedType == 'parent'
           ? 'System.LinkTypes.Hierarchy-Reverse'
           : 'System.LinkTypes.Hierarchy-Forward',
-      url: `https://dev.azure.com/demoorg/demoproj/${wi.id}`,
+      url: `https://dev.azure.com/demoorg/demoproj/${wi}`,
       attributes: {}
     };
     return rel;

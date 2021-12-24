@@ -13,8 +13,8 @@ import {
   getWorkItemTypeFromName,
   isInState
 } from '../workItemUtils';
-import { IStorageService } from './StorageService';
-import { IWorkItemService } from './WorkItemService';
+import { IStorageService, StorageService } from './StorageService';
+import WorkItemService, { IWorkItemService } from './WorkItemService';
 
 export interface IRuleProcessor {
   Init(): Promise<void>;
@@ -25,12 +25,12 @@ export interface IRuleProcessor {
 class RuleProcessor implements IRuleProcessor {
   private _workItemTypes: WorkItemType[];
   private _ruleDocs: RuleDocument[];
-
-  constructor(
-    private readonly _workItemService: IWorkItemService,
-    private readonly _storageService: IStorageService
-  ) {
+  private readonly _workItemService: IWorkItemService;
+  private readonly _storageService: IStorageService;
+  constructor(workItemService?: IWorkItemService, storageService?: IStorageService) {
     webLogger.trace('Setting up rule processor');
+    this._storageService = storageService || new StorageService();
+    this._workItemService = workItemService || new WorkItemService();
     this._workItemTypes = [];
     this._ruleDocs = [];
   }
@@ -105,7 +105,8 @@ class RuleProcessor implements IRuleProcessor {
   }
   private async IsChildrenRuleMatch(rule: Rule, childType: string, parentWorkItem: WorkItem) {
     const children = await this._workItemService.getChildrenForWorkItem(parentWorkItem.id);
-    if (children === undefined) return false;
+    console.log('Children', children);
+    if (children === undefined) return true;
 
     if (children.every(wi => getWorkItemType(wi, this._workItemTypes) === childType)) {
       const match = children?.every(wi => isInState(wi, [rule.transitionState]));

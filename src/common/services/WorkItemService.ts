@@ -1,4 +1,4 @@
-import { getClient } from 'azure-devops-extension-api';
+import { getClient } from 'azure-devops-extension-api/Common';
 import {
   WorkItem,
   WorkItemExpand,
@@ -39,8 +39,9 @@ class WorkItemService implements IWorkItemService {
 
   public async getChildrenForWorkItem(workItemId: number): Promise<WorkItem[] | undefined> {
     const wi = await this.getWorkItem(workItemId);
+    console.log('wi', wi);
     const childIds = getChildIds(wi);
-
+    console.log('childids', childIds);
     if (childIds === undefined) return undefined;
     const wis = await this.getWorkItems(childIds);
     return wis;
