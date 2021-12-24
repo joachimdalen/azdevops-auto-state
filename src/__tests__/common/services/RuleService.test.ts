@@ -1,9 +1,10 @@
 import { v4 as uuidV4 } from 'uuid';
 
-import { WorkItemReferenceNames } from '../../../__test-utils__/WorkItemTestUtils';
+import { WorkItemNames, WorkItemReferenceNames } from '../../../__test-utils__/WorkItemTestUtils';
 import Rule from '../../../common/models/Rule';
 import RuleService from '../../../common/services/RuleService';
 import { StorageService } from '../../../common/services/StorageService';
+import RuleDocument from '../../../common/models/WorkItemRules';
 
 describe('RuleService', () => {
   describe('load', () => {
@@ -27,6 +28,14 @@ describe('RuleService', () => {
       expect(async () => {
         await ruleService.load();
       }).rejects.toThrow();
+    });
+    test('should only load once', async () => {
+      const getDataSpy = jest.spyOn(StorageService.prototype, 'getData').mockResolvedValue([]);
+      const ruleService = new RuleService();
+      await ruleService.load();
+      await ruleService.load();
+
+      expect(getDataSpy).toHaveBeenCalledTimes(1);
     });
   });
   describe('updateRule', () => {
@@ -67,6 +76,107 @@ describe('RuleService', () => {
 
       expect(result.success).toBeTruthy();
       expect(result.data?.length).toEqual(1);
+    });
+  });
+  describe('deleteRule', () => {
+    afterEach(() => {
+      jest.clearAllMocks();
+    });
+    it('should return if no items loaded', async () => {
+      jest.spyOn(StorageService.prototype, 'getData').mockResolvedValue([]);
+      const setDataSpy = jest
+        .spyOn(StorageService.prototype, 'setData')
+        .mockRejectedValue(undefined);
+
+      const ruleId = uuidV4();
+      const rule: Rule = {
+        id: ruleId,
+        workItemType: WorkItemNames.Task,
+        childrenLookup: false,
+        transitionState: 'Active',
+        parentType: WorkItemReferenceNames.Feature,
+        parentExcludedStates: ['Active'],
+        parentTargetState: 'Active'
+      };
+
+      const ruleService = new RuleService();
+      await ruleService.load();
+      const result = await ruleService.deleteRule(rule.workItemType, ruleId);
+
+      expect(setDataSpy).not.toHaveBeenCalled();
+      expect(result.success).toBeTruthy();
+    });
+    it('should delete rule when only rule', async () => {
+      const ruleId = uuidV4();
+      const rule: Rule = {
+        id: ruleId,
+        workItemType: WorkItemReferenceNames.Task,
+        childrenLookup: false,
+        transitionState: 'Active',
+        parentType: WorkItemReferenceNames.Feature,
+        parentExcludedStates: ['Active'],
+        parentTargetState: 'Active'
+      };
+      const ruleDoc: RuleDocument = {
+        id: WorkItemReferenceNames.Task,
+        rules: [rule]
+      };
+      jest.spyOn(StorageService.prototype, 'getData').mockResolvedValue([ruleDoc]);
+      const setDataSpy = jest
+        .spyOn(StorageService.prototype, 'setData')
+        .mockImplementation(data => {
+          return Promise.resolve(data);
+        });
+
+      const ruleService = new RuleService();
+      await ruleService.load();
+      const result = await ruleService.deleteRule(rule.workItemType, ruleId);
+
+      expect(setDataSpy).toHaveBeenCalledTimes(1);
+      expect(result.success).toBeTruthy();
+    });
+    it('should delete correct rule when multiple', async () => {
+      const ruleId = uuidV4();
+      const rule: Rule = {
+        id: ruleId,
+        workItemType: WorkItemReferenceNames.Task,
+        childrenLookup: false,
+        transitionState: 'Active',
+        parentType: WorkItemReferenceNames.Feature,
+        parentExcludedStates: ['Active'],
+        parentTargetState: 'Active'
+      };
+      const ruleIdTwo = uuidV4();
+      const ruleTwo: Rule = {
+        id: ruleIdTwo,
+        workItemType: WorkItemReferenceNames.Task,
+        childrenLookup: false,
+        transitionState: 'Active',
+        parentType: WorkItemReferenceNames.UserStory,
+        parentExcludedStates: ['Active'],
+        parentTargetState: 'Active'
+      };
+      const ruleDoc: RuleDocument = {
+        id: WorkItemReferenceNames.Task,
+        rules: [rule, ruleTwo]
+      };
+      jest.spyOn(StorageService.prototype, 'getData').mockResolvedValue([ruleDoc]);
+      let setData: RuleDocument | undefined;
+      const setDataSpy = jest
+        .spyOn(StorageService.prototype, 'setData')
+        .mockImplementation(data => {
+          setData = data;
+          return Promise.resolve(data);
+        });
+
+      const ruleService = new RuleService();
+      await ruleService.load();
+      const result = await ruleService.deleteRule(rule.workItemType, ruleId);
+
+      expect(setDataSpy).toHaveBeenCalledTimes(1);
+      expect(result.success).toBeTruthy();
+      expect(setData?.rules?.filter(x => x.id === ruleId).length).toEqual(0);
+      expect(setData?.rules?.length).toEqual(1);
     });
   });
 });
