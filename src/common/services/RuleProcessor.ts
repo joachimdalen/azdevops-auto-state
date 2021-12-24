@@ -105,7 +105,6 @@ class RuleProcessor implements IRuleProcessor {
   }
   private async IsChildrenRuleMatch(rule: Rule, childType: string, parentWorkItem: WorkItem) {
     const children = await this._workItemService.getChildrenForWorkItem(parentWorkItem.id);
-    console.log('Children', children);
     if (children === undefined) return true;
 
     if (children.every(wi => getWorkItemType(wi, this._workItemTypes) === childType)) {
@@ -114,16 +113,14 @@ class RuleProcessor implements IRuleProcessor {
     }
 
     const groupedTypes = groupBy(children, wi => getWorkItemTypeField(wi));
-    console.log(groupedTypes);
 
     for (const [type, workItems] of groupedTypes) {
-      console.log('Processing... ' + type, workItems);
       const rulesForType = this.dd(type, rule.parentTargetState);
       for (const workItem of workItems) {
-        console.log('Processing rules... ', rulesForType);
         const isMatch = rulesForType?.every(y =>
           this.IsRuleMatch(y, workItem, parentWorkItem, false)
         );
+
         console.log(isMatch);
       }
     }
