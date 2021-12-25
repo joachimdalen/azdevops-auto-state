@@ -5,13 +5,13 @@
       "fileMatch": [
         "/.azext/mapping.json"
       ],
-      "url": "https://raw.githubusercontent.com/joachimdalen/azext/feature/3-docs-generation/schemas/v1/mapping-schema.json"
+      "url": "https://raw.githubusercontent.com/joachimdalen/azext/master/schemas/v1/mapping-schema.json"
     },
     {
       "fileMatch": [
         "/.azext/readme.json"
       ],
-      "url": "https://raw.githubusercontent.com/joachimdalen/azext/feature/3-docs-generation/schemas/v1/readme-schema.json"
+      "url": "https://raw.githubusercontent.com/joachimdalen/azext/master/schemas/v1/readme-schema.json"
     }
   ],
   "[azure-pipelines]": {
