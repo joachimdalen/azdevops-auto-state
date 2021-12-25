@@ -1,5 +1,21 @@
 [
   {
+    "version": "0.0.9",
+    "publishDate": "2021-12-25",
+    "modules": [
+      {
+        "version": "0.0.9",
+        "name": "core",
+        "changes": [
+          {
+            "type": "other",
+            "description": "Update build config"
+          }
+        ]
+      }
+    ]
+  },
+  {
     "version": "0.0.8",
     "publishDate": "2021-12-25",
     "modules": [

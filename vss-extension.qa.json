@@ -5,7 +5,7 @@
   "public": false,
   "name": "Auto State - QA",
   "publisher": "JoachimDalen",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "An extension to automatically update states between parents and children",
   "categories": ["Azure Boards"],
   "demands": ["api-version/5.1"],
