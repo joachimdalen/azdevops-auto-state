@@ -1,99 +1,15 @@
 [
   {
-    "version": "0.0.7",
-    "publishDate": "2021-12-XX",
+    "version": "0.0.8",
+    "publishDate": "2021-12-25",
     "modules": [
       {
-        "version": "0.0.7",
+        "version": "0.0.8",
         "name": "Core",
         "changes": [
           {
-            "type": "docs",
-            "description": "Update README"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "version": "0.0.5",
-    "publishDate": "2021-12-11",
-    "modules": [
-      {
-        "version": "0.0.5",
-        "name": "Core",
-        "changes": [
-          {
-            "type": "fix",
-            "description": "Fixed extension logo not showing in documentation"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "version": "0.0.4",
-    "publishDate": "2021-12-11",
-    "modules": [
-      {
-        "version": "0.0.4",
-        "name": "Core",
-        "changes": [
-          {
-            "type": "docs",
-            "description": "Update readme"
-          },
-          {
-            "type": "fix",
-            "description": "Fixed images not showing in documentation"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "version": "0.0.3",
-    "publishDate": "2021-12-09",
-    "modules": [
-      {
-        "version": "0.0.3",
-        "name": "Core",
-        "changes": [
-          {
-            "type": "docs",
-            "description": "Update documentation"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "version": "0.0.2",
-    "publishDate": "2021-12-09",
-    "modules": [
-      {
-        "version": "0.0.2",
-        "name": "Core",
-        "changes": [
-          {
-            "type": "feature",
-            "description": "Add feature flag to control extension activation"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "version": "0.0.1",
-    "publishDate": "2021-11-28",
-    "modules": [
-      {
-        "version": "0.0.1",
-        "name": "Core",
-        "changes": [
-          {
-            "type": "feature",
-            "description": "Added extension"
+            "type": "maint",
+            "description": "Update"
           }
         ]
       }

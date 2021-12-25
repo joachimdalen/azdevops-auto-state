@@ -1,99 +1,15 @@
 [
   {
-    "version": "0.0.7",
-    "publishDate": "2021-12-XX",
+    "version": "0.0.8",
+    "publishDate": "2021-12-25",
     "modules": [
       {
-        "version": "0.0.7",
+        "version": "0.0.8",
         "name": "core",
         "changes": [
           {
-            "type": "docs",
-            "description": "Update README"
-          }
-        ]
-      },
-      {
-        "version": "0.0.7",
-        "name": "rule-modal",
-        "changes": [
-          {
-            "type": "feature",
-            "description": "Added support for updating rule"
-          }
-        ]
-      },
-      {
-        "version": "0.0.7",
-        "name": "admin-hub",
-        "changes": [
-          {
-            "type": "feature",
-            "description": "Added support for updating rule"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "version": "0.0.6",
-    "publishDate": "2021-12-13",
-    "modules": [
-      {
-        "version": "0.0.6",
-        "name": "Core",
-        "changes": [
-          {
-            "type": "fix",
-            "description": "Fix static files path v3"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "version": "0.0.5",
-    "publishDate": "2021-12-13",
-    "modules": [
-      {
-        "version": "0.0.5",
-        "name": "Core",
-        "changes": [
-          {
-            "type": "fix",
-            "description": "Fix static files path v2"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "version": "0.0.4",
-    "publishDate": "2021-12-13",
-    "modules": [
-      {
-        "version": "0.0.4",
-        "name": "Core",
-        "changes": [
-          {
-            "type": "fix",
-            "description": "Fix static files path"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "version": "0.0.3",
-    "publishDate": "2021-12-13",
-    "modules": [
-      {
-        "version": "0.0.3",
-        "name": "Core",
-        "changes": [
-          {
-            "type": "docs",
-            "description": "Added extension"
+            "type": "other",
+            "description": "Update"
           }
         ]
       }
