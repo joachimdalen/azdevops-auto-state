@@ -20,6 +20,7 @@
           {
             "type": "fix",
             "issue": 13,
+            "pullRequest": 14,
             "description": "Fixed an issue where `Children lookup` did not work properly"
           }
         ]

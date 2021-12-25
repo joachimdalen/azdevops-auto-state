@@ -1,4 +1,20 @@
 {
-  "issues": [],
-  "pullRequests": []
+  "issues": [
+    {
+      "id": 1088645645,
+      "number": 13,
+      "submitter": "joachimdalen",
+      "title": "\"Children lookup\" does not work as intended",
+      "url": "https://github.com/joachimdalen/azdevops-auto-state/issues/13"
+    }
+  ],
+  "pullRequests": [
+    {
+      "id": 809926568,
+      "number": 14,
+      "submitter": "joachimdalen",
+      "title": "Version 1.0.1",
+      "url": "https://github.com/joachimdalen/azdevops-auto-state/pull/14"
+    }
+  ]
 }
