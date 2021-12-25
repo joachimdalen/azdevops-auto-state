@@ -2,9 +2,9 @@ import { v4 as uuidV4 } from 'uuid';
 
 import { WorkItemNames, WorkItemReferenceNames } from '../../../__test-utils__/WorkItemTestUtils';
 import Rule from '../../../common/models/Rule';
+import RuleDocument from '../../../common/models/WorkItemRules';
 import RuleService from '../../../common/services/RuleService';
 import { StorageService } from '../../../common/services/StorageService';
-import RuleDocument from '../../../common/models/WorkItemRules';
 
 describe('RuleService', () => {
   describe('load', () => {
@@ -64,10 +64,7 @@ describe('RuleService', () => {
       };
       jest.spyOn(StorageService.prototype, 'getData').mockResolvedValue([]);
       const setDataSpy = jest.spyOn(StorageService.prototype, 'setData');
-      setDataSpy.mockResolvedValue({
-        id: rule.workItemType,
-        rules: [{ ...rule, id: uuidV4() }]
-      });
+      setDataSpy.mockImplementation(data => Promise.resolve(data));
 
       const ruleService = new RuleService();
       await ruleService.load();
