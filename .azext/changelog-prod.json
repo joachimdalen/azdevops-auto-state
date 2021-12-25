@@ -1,7 +1,23 @@
 [
   {
+    "version": "1.0.1",
+    "publishDate": "2021-12-25",
+    "modules": [
+      {
+        "version": "1.0.1",
+        "name": "Core",
+        "changes": [
+          {
+            "type": "docs",
+            "description": "Update links in manifest"
+          }
+        ]
+      }
+    ]
+  },
+  {
     "version": "1.0.0",
-    "publishDate": "202X-XX-XX",
+    "publishDate": "2021-12-25",
     "summary": "Published extension",
     "modules": []
   }

@@ -17,18 +17,20 @@
   },
   "content": {
     "details": { "path": "marketplace/docs/README.md" },
-    "changelog": { "path": "marketplace/docs/CHANGELOG.md" },
-    "license": { "path": "LICENSE" }
+    "changelog": { "path": "marketplace/docs/CHANGELOG.md" }
   },
   "links": {
     "repository": {
       "uri": "https://github.com/joachimdalen/azdevops-auto-state"
     },
-    "issues": {
+    "support": {
       "uri": "https://github.com/joachimdalen/azdevops-auto-state/issues"
     },
     "privacypolicy": {
       "uri": "https://github.com/joachimdalen/azdevops-auto-state/blob/master/PRIVACY.md"
+    },
+    "license": {
+      "uri": "https://github.com/joachimdalen/azdevops-auto-state/blob/master/LICENSE"
     }
   },
   "repository": {
