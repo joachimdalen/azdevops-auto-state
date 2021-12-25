@@ -91,6 +91,9 @@ module.exports = {
       .filter(x => x.generate)
       .map(entry => {
         return new HtmlWebpackPlugin({
+          meta: {
+            charset: 'UTF-8'
+          },
           filename: entry.name + '.html',
           inject: false,
           templateContent: ({ htmlWebpackPlugin }) =>
