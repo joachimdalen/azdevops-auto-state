@@ -1,5 +1,21 @@
 [
   {
+    "version": "0.0.10",
+    "publishDate": "2021-12-25",
+    "modules": [
+      {
+        "version": "0.0.10",
+        "name": "core",
+        "changes": [
+          {
+            "type": "other",
+            "description": "Add charset to index files"
+          }
+        ]
+      }
+    ]
+  },
+  {
     "version": "0.0.9",
     "publishDate": "2021-12-25",
     "modules": [
