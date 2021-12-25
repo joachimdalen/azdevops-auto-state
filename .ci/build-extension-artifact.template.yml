@@ -40,7 +40,7 @@ jobs:
         displayName: 'Build single version changelog'
         inputs:
           command: custom
-          customCommand: run changelog:${{ parameters.extensionEnv }}:version -- --version $(Task.Extension.Version)
+          customCommand: run changelog:${{ parameters.extensionEnv }}:version -- --version ${{ parameters.taskVersion }}
       - task: Npm@1
         displayName: 'Build readme'
         inputs:
