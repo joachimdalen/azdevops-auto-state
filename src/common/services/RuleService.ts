@@ -36,7 +36,7 @@ class RuleService {
     workItemType: string,
     ruleId: string
   ): Promise<ActionResult<RuleDocument[]>> {
-    if (!this._data) {
+    if (this._data.length === 0) {
       return { success: true, data: this._data };
     }
 

@@ -113,27 +113,37 @@ class RuleProcessor implements IRuleProcessor {
     }
 
     const groupedTypes = groupBy(children, wi => getWorkItemTypeField(wi));
+    const results: boolean[] = [];
 
     for (const [type, workItems] of groupedTypes) {
-      const rulesForType = this.dd(type, rule.parentTargetState);
-      for (const workItem of workItems) {
-        const isMatch = rulesForType?.every(y =>
-          this.IsRuleMatch(y, workItem, parentWorkItem, false)
-        );
-
-        console.log(isMatch);
+      const rulesForType = this.getChildRule(type, rule.parentTargetState, rule.parentType);
+      if (rulesForType === undefined) {
+        results.push(false);
+      } else {
+        for (const workItem of workItems) {
+          const isMatch = rulesForType?.every(y =>
+            this.IsRuleMatch(y, workItem, parentWorkItem, false)
+          );
+          results.push(isMatch);
+        }
       }
     }
 
-    return false;
+    if (results.length === 0) return false;
+    return results.every(x => x === true);
   }
-  private dd(workItemType: string, parentState: string): Rule[] | undefined {
+  private getChildRule(
+    workItemType: string,
+    parentType: string,
+    parentState: string
+  ): Rule[] | undefined {
     const docs = this._ruleDocs.find(
       x => x.id === getWorkItemTypeFromName(workItemType, this._workItemTypes)
     );
-    console.log(this._ruleDocs, docs, parentState);
 
-    return docs?.rules.filter(x => x.parentTargetState === parentState);
+    return docs?.rules.filter(
+      x => x.parentTargetState === parentState && x.parentType === parentType
+    );
   }
 }
 
