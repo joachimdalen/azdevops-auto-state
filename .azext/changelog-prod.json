@@ -12,6 +12,17 @@
             "description": "Update links in manifest"
           }
         ]
+      },
+      {
+        "version": "1.0.1",
+        "name": "observer",
+        "changes": [
+          {
+            "type": "fix",
+            "issue": 13,
+            "description": "Fixed an issue where `Children lookup` did not work properly"
+          }
+        ]
       }
     ]
   },
