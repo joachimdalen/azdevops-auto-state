@@ -4,7 +4,7 @@
   "public": true,
   "name": "Auto State",
   "publisher": "JoachimDalen",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "An extension to automatically update states between parents and children",
   "categories": ["Azure Boards"],
   "demands": ["api-version/5.1"],

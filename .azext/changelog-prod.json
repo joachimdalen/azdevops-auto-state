@@ -1,13 +1,8 @@
 [
   {
-    "version": "0.0.X",
+    "version": "1.0.0",
     "publishDate": "202X-XX-XX",
-    "modules": [
-      {
-        "version": "0.0.X",
-        "name": "core",
-        "changes": []
-      }
-    ]
+    "summary": "Published extension",
+    "modules": []
   }
 ]
