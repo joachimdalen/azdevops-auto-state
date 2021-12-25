@@ -2,8 +2,8 @@ export default interface Rule {
   id?: string;
   workItemType: string;
   parentType: string;
-  childState: string;
-  parentNotState: string[];
+  transitionState: string;
+  parentExcludedStates: string[];
   parentTargetState: string;
-  allChildren: boolean;
+  childrenLookup: boolean;
 }

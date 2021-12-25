@@ -21,8 +21,6 @@
   </p>
 </div>
 
-This extension aims to auto update parent workitems based on a set of rules when the child workitem is started.
-
 ![rule-editor](marketplace/docs/images/rule-editor.png)
 
 ## Activating the extension
@@ -33,6 +31,10 @@ For this extension to work properly there are a few steps that needs to be taken
 - Rules needs to be configured. The rule editor is found under `Project Settings > Extensions > Auto State`
 
 ![feature-toogle](marketplace/docs/images/feature-toggle.png)
+
+### Usage
+
+Documentation on rule usage can be found on [GitHub](https://github.com/joachimdalen/azdevops-auto-state/blob/master/docs/RULES.md)
 
 ### Limitations
 

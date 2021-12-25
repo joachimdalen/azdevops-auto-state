@@ -1,5 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const ScriptTags = require('./webpack-script-tags-plugin');
 
 const modules = [
   {
@@ -44,9 +45,9 @@ module.exports = {
   },
   // stats: 'errors-only',
   optimization: {
-    runtimeChunk: {
-      name: entrypoint => `${entrypoint.name}-runtime`
-    },
+    // runtimeChunk: {
+    //   name: entrypoint => `${entrypoint.name}-runtime`
+    // },
     splitChunks: {
       cacheGroups: {
         vendor: {
@@ -79,15 +80,21 @@ module.exports = {
       },
       {
         test: /\.woff$/,
-        type: 'asset/resource'
+        type: 'asset/resource',
+        generator: {
+          filename: '[name][ext]'
+        }
       }
     ]
   },
-  plugins: [].concat(
+  plugins: [new ScriptTags()].concat(
     modules
       .filter(x => x.generate)
       .map(entry => {
         return new HtmlWebpackPlugin({
+          meta: {
+            charset: 'UTF-8'
+          },
           filename: entry.name + '.html',
           inject: false,
           templateContent: ({ htmlWebpackPlugin }) =>

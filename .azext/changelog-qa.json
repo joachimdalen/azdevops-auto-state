@@ -1,99 +1,79 @@
 [
   {
-    "version": "0.0.7",
-    "publishDate": "2021-12-XX",
+    "version": "0.0.12",
+    "publishDate": "2021-12-25",
     "modules": [
       {
-        "version": "0.0.7",
+        "version": "0.0.11",
         "name": "core",
         "changes": [
           {
-            "type": "docs",
-            "description": "Update README"
-          }
-        ]
-      },
-      {
-        "version": "0.0.7",
-        "name": "rule-modal",
-        "changes": [
-          {
-            "type": "feature",
-            "description": "Added support for updating rule"
-          }
-        ]
-      },
-      {
-        "version": "0.0.7",
-        "name": "admin-hub",
-        "changes": [
-          {
-            "type": "feature",
-            "description": "Added support for updating rule"
+            "type": "other",
+            "description": "Refactoring"
           }
         ]
       }
     ]
   },
   {
-    "version": "0.0.6",
-    "publishDate": "2021-12-13",
+    "version": "0.0.11",
+    "publishDate": "2021-12-25",
     "modules": [
       {
-        "version": "0.0.6",
-        "name": "Core",
+        "version": "0.0.11",
+        "name": "core",
         "changes": [
           {
-            "type": "fix",
-            "description": "Fix static files path v3"
+            "type": "other",
+            "description": "Add charset to script files"
           }
         ]
       }
     ]
   },
   {
-    "version": "0.0.5",
-    "publishDate": "2021-12-13",
+    "version": "0.0.10",
+    "publishDate": "2021-12-25",
     "modules": [
       {
-        "version": "0.0.5",
-        "name": "Core",
+        "version": "0.0.10",
+        "name": "core",
         "changes": [
           {
-            "type": "fix",
-            "description": "Fix static files path v2"
+            "type": "other",
+            "description": "Add charset to index files"
           }
         ]
       }
     ]
   },
   {
-    "version": "0.0.4",
-    "publishDate": "2021-12-13",
+    "version": "0.0.9",
+    "publishDate": "2021-12-25",
     "modules": [
       {
-        "version": "0.0.4",
-        "name": "Core",
+        "version": "0.0.9",
+        "name": "core",
         "changes": [
           {
-            "type": "fix",
-            "description": "Fix static files path"
+            "type": "other",
+            "description": "Update build config"
           }
         ]
       }
     ]
   },
   {
-    "version": "0.0.3",
-    "publishDate": "2021-12-13",
+    "version": "0.0.8",
+    "publishDate": "2021-12-25",
     "modules": [
       {
-        "version": "0.0.3",
-        "name": "Core",
+        "version": "0.0.8",
+        "name": "core",
         "changes": [
           {
-            "type": "docs",
-            "description": "Added extension"
+            "type": "other",
+            "description": "Update"
           }
         ]
       }

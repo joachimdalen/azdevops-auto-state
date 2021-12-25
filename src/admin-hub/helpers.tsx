@@ -6,16 +6,11 @@ import {
   IContextualMenuProps,
   IGroup
 } from '@fluentui/react';
-import {
-  IDialogOptions,
-  IHostNavigationService,
-  IHostPageLayoutService
-} from 'azure-devops-extension-api';
+import { IHostNavigationService } from 'azure-devops-extension-api';
 import { WorkItemStateColor, WorkItemType } from 'azure-devops-extension-api/WorkItemTracking';
 import * as DevOps from 'azure-devops-extension-sdk';
 import { IHeaderCommandBarItem } from 'azure-devops-ui/HeaderCommandBar';
 
-import AddRuleResult from '../common/models/AddRuleResult';
 import Rule from '../common/models/Rule';
 import StateTag from '../shared-ui/component/StateTag';
 import WorkItemTypeTag from '../shared-ui/component/WorkItemTypeTag';
@@ -40,27 +35,27 @@ export const getListColumns = (
 ): IColumn[] => {
   const columns: IColumn[] = [
     {
-      key: 'childState',
-      name: 'When Child State',
-      fieldName: 'childState',
+      key: 'transitionState',
+      name: 'Transition state',
+      fieldName: 'transitionState',
       className: 'flex-self-center',
       minWidth: 50,
       maxWidth: 300,
       isResizable: true,
-      onRender: (item?: any, index?: number, column?: IColumn) => {
-        const state = getState(types, item.workItemType, item.childState);
+      onRender: (item: Rule, index?: number, column?: IColumn) => {
+        const state = getState(types, item.workItemType, item.transitionState);
         return state === undefined ? state : <StateTag color={state.color} text={state.name} />;
       }
     },
     {
       key: 'parentType',
-      name: 'And parent type',
+      name: 'Parent type',
       fieldName: 'parentType',
       className: 'flex-self-center',
       minWidth: 100,
       maxWidth: 300,
       isResizable: true,
-      onRender: (item?: any, index?: number, column?: IColumn) => {
+      onRender: (item: Rule, index?: number, column?: IColumn) => {
         const type = getWorkItemType(types, item.parentType);
         return type === undefined ? (
           item.parentType
@@ -70,18 +65,18 @@ export const getListColumns = (
       }
     },
     {
-      key: 'parentNotState',
-      name: 'Parent state is not',
-      fieldName: 'parentNotState',
+      key: 'parentExcludedStates',
+      name: 'Parent not in state',
+      fieldName: 'parentExcludedStates',
       className: 'flex-self-center',
       minWidth: 100,
       maxWidth: 300,
       isResizable: true,
-      onRender: (item?: any, index?: number, column?: IColumn) => {
+      onRender: (item: Rule, index?: number, column?: IColumn) => {
         const states = getWorkItemType(types, item.parentType);
         return (
           <div className="flex-column">
-            {item.parentNotState.map((s: string) => {
+            {item.parentExcludedStates.map((s: string) => {
               const state = states?.states?.find(x => x.name === s);
               return state !== undefined ? (
                 <StateTag key={state.name} text={state.name} color={state.color} />
@@ -95,27 +90,27 @@ export const getListColumns = (
     },
     {
       key: 'parentTargetState',
-      name: 'Set parent state to',
+      name: 'Parent target state',
       fieldName: 'parentTargetState',
       className: 'flex-self-center',
       minWidth: 100,
       maxWidth: 300,
       isResizable: true,
-      onRender: (item?: any, index?: number, column?: IColumn) => {
+      onRender: (item: Rule, index?: number, column?: IColumn) => {
         const state = getState(types, item.parentType, item.parentTargetState);
         return state === undefined ? state : <StateTag color={state.color} text={state.name} />;
       }
     },
     {
-      key: 'allChildren',
-      name: 'When all children',
-      fieldName: 'allChildren',
+      key: 'childrenLookup',
+      name: 'Children lookup',
+      fieldName: 'childrenLookup',
       className: 'flex-self-center',
       minWidth: 100,
       maxWidth: 300,
       isResizable: true,
-      onRender: (item?: any, index?: number, column?: IColumn) => {
-        return item.allChildren ? 'YES' : 'NO';
+      onRender: (item: Rule, index?: number, column?: IColumn) => {
+        return item.childrenLookup ? 'YES' : 'NO';
       }
     },
     {
@@ -124,7 +119,7 @@ export const getListColumns = (
       fieldName: 'actions',
       className: 'flex-self-center',
       minWidth: 100,
-      onRender: (item?: any, index?: number, column?: IColumn) => {
+      onRender: (item: Rule, index?: number, column?: IColumn) => {
         return (
           <IconButton
             splitButtonMenuProps={{}}
@@ -193,7 +188,8 @@ const getListRowContextMenuItem = (
   };
 };
 export const getCommandBarItems = (
-  showEdit: (rule?: Rule) => Promise<void>
+  showEdit: (rule?: Rule) => Promise<void>,
+  refreshData: (force: boolean) => Promise<void>
 ): IHeaderCommandBarItem[] => [
   {
     id: 'open-docs',
@@ -205,6 +201,15 @@ export const getCommandBarItems = (
           value.openNewWindow('https://github.com/joachimdalen/azdevops-auto-state', '');
         }
       );
+    }
+  },
+  {
+    id: 'refresh-date',
+    text: 'Refresh Data',
+    isPrimary: true,
+    iconProps: { iconName: 'Refresh' },
+    onActivate: async () => {
+      await refreshData(true);
     }
   },
   {

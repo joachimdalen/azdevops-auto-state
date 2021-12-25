@@ -58,17 +58,16 @@
     "changelog:dev:version": "azext changelog generate --log-name changelog-dev.json --output ./marketplace/docs/CHANGELOG-RELEASE.md --format",
     "changelog:qa:version": "azext changelog generate --log-name changelog-qa.json --output ./marketplace/docs/CHANGELOG-RELEASE.md --format",
     "changelog:prod:version": "azext changelog generate --log-name changelog-prod.json --output ./marketplace/docs/CHANGELOG-RELEASE.md --format",
-    "compile:dev": "webpack --mode development --config ./webpack.config.dev.js",
-    "compile:qa": "webpack --config ./webpack.config.prod.js",
-    "compile:prod": "webpack --config ./webpack.config.prod.js",
-    "serve:dev": "npx webpack serve --config ./webpack.config.dev.js",
+    "compile:dev": "webpack --mode development --config ./build-scripts/webpack.config.dev.js",
+    "compile:qa": "webpack --config ./build-scripts/webpack.config.prod.js",
+    "compile:prod": "webpack --config ./build-scripts/webpack.config.prod.js",
+    "serve:dev": "npx webpack serve --config ./build-scripts/webpack.config.dev.js",
     "docs:readme": "azext readme generate --input ./marketplace/raw/README.md --output ./marketplace/docs/README.md",
     "clean-build": "rimraf dist",
     "lint": "eslint src --ignore-path .eslintignore --ext ts --ext tsx --ext js --ext jsx",
     "lint:fix": "eslint --fix src --ignore-path .eslintignore --ext ts --ext tsx --ext js --ext jsx",
     "test": "env TEST_REPORT_FILENAME=test-results.xml jest --verbose",
-    "test:coverage": "env TEST_REPORT_FILENAME=test-results.xml jest --verbose --coverage",
-    "postinstall": "npm i -g tfx-cli"
+    "test:coverage": "env TEST_REPORT_FILENAME=test-results.xml jest --verbose --coverage"
   },
   "jest": {
     "testEnvironment": "jsdom",
@@ -84,7 +83,10 @@
     },
     "preset": "ts-jest/presets/js-with-babel",
     "testResultsProcessor": "./node_modules/jest-junit-reporter",
-    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "src/**",
+      "!src/__test-utils__/*"
+    ],
     "coverageReporters": [
       "json",
       "html",
