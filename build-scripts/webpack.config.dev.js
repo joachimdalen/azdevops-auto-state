@@ -4,7 +4,7 @@ const common = require('./webpack.common.js');
 const { getOutputName } = require('./webpack.utils');
 
 module.exports = merge(common, {
-  mode: 'development',
+  mode: 'production',
   devServer: {
     watchFiles: {
       paths: ['src/**']
@@ -26,11 +26,7 @@ module.exports = merge(common, {
     historyApiFallback: {
       disableDotRule: true,
       rewrites: [
-        { from: /\/static\/.+/, to: '/' },
-        { from: 'dist/control.html', to: 'control.html' },
-        { from: 'dist/panel.html', to: 'panel.html' },
-        { from: 'admin.html', to: 'admin-hub.html' },
-        { from: 'modal.html', to: 'rule-modal.html' }
+        { from: /\/static\/.+/, to: '/' }
       ]
     }
   },
