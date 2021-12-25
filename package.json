@@ -67,8 +67,7 @@
     "lint": "eslint src --ignore-path .eslintignore --ext ts --ext tsx --ext js --ext jsx",
     "lint:fix": "eslint --fix src --ignore-path .eslintignore --ext ts --ext tsx --ext js --ext jsx",
     "test": "env TEST_REPORT_FILENAME=test-results.xml jest --verbose",
-    "test:coverage": "env TEST_REPORT_FILENAME=test-results.xml jest --verbose --coverage",
-    "postinstall": "npm i -g tfx-cli"
+    "test:coverage": "env TEST_REPORT_FILENAME=test-results.xml jest --verbose --coverage"
   },
   "jest": {
     "testEnvironment": "jsdom",
