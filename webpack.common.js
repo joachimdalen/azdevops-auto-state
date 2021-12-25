@@ -44,9 +44,9 @@ module.exports = {
   },
   // stats: 'errors-only',
   optimization: {
-    runtimeChunk: {
-      name: entrypoint => `${entrypoint.name}-runtime`
-    },
+    // runtimeChunk: {
+    //   name: entrypoint => `${entrypoint.name}-runtime`
+    // },
     splitChunks: {
       cacheGroups: {
         vendor: {
@@ -79,7 +79,10 @@ module.exports = {
       },
       {
         test: /\.woff$/,
-        type: 'asset/resource'
+        type: 'asset/resource',
+        generator: {
+          filename: '[name][ext]'
+        }
       }
     ]
   },
