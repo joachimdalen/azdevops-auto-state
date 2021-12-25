@@ -1,5 +1,33 @@
 [
   {
+    "version": "1.0.1",
+    "publishDate": "2021-12-25",
+    "modules": [
+      {
+        "version": "1.0.1",
+        "name": "Core",
+        "changes": [
+          {
+            "type": "docs",
+            "description": "Update links in manifest"
+          }
+        ]
+      },
+      {
+        "version": "1.0.1",
+        "name": "observer",
+        "changes": [
+          {
+            "type": "fix",
+            "issue": 13,
+            "pullRequest": 14,
+            "description": "Fixed an issue where `Children lookup` did not work properly"
+          }
+        ]
+      }
+    ]
+  },
+  {
     "version": "0.0.12",
     "publishDate": "2021-12-25",
     "modules": [

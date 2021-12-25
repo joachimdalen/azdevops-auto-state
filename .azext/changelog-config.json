@@ -1,5 +1,5 @@
 {
-  "repository": "joachimdalen/auto-state",
+  "repository": "joachimdalen/azdevops-auto-state",
   "changelogTitle": {
     "size": "h1",
     "format": "Changelog"
@@ -28,7 +28,7 @@
   "attributionSubTitle": {
     "format": "Thank you to the following for contributing to the latest release"
   },
-  "knownAuthors": [],
+  "knownAuthors": ["joachimdalen"],
   "useDescriptiveIssues": true,
   "replaceEmojis": {
     "types": true,
