@@ -21,8 +21,6 @@
   </p>
 </div>
 
-This extension aims to auto update parent workitems based on a set of rules when the child workitem is started.
-
 ![rule-editor](marketplace/docs/images/rule-editor.png)
 
 ## Activating the extension
