@@ -38,8 +38,6 @@ class RuleProcessor implements IRuleProcessor {
   public async Init(): Promise<void> {
     if (this._workItemTypes.length === 0) {
       this._workItemTypes = await this._workItemService.getWorkItemTypes();
-    } else {
-      webLogger.information('Already initialized');
     }
 
     if (this._ruleDocs.length === 0) {
