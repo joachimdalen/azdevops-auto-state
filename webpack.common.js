@@ -1,5 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const ScriptTags = require('./webpack-script-tags-plugin');
 
 const modules = [
   {
@@ -86,7 +87,7 @@ module.exports = {
       }
     ]
   },
-  plugins: [].concat(
+  plugins: [new ScriptTags()].concat(
     modules
       .filter(x => x.generate)
       .map(entry => {

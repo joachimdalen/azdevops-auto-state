@@ -1,5 +1,21 @@
 [
   {
+    "version": "0.0.11",
+    "publishDate": "2021-12-25",
+    "modules": [
+      {
+        "version": "0.0.11",
+        "name": "core",
+        "changes": [
+          {
+            "type": "other",
+            "description": "Add charset to script files"
+          }
+        ]
+      }
+    ]
+  },
+  {
     "version": "0.0.10",
     "publishDate": "2021-12-25",
     "modules": [
