@@ -52,21 +52,15 @@ describe('workItemUtils', () => {
 
   describe('getParentId', () => {
     test('returns correct id', () => {
-      const parent = getWorkItem(8999, WorkItemNames.Feature, 'Active');
-      const id = getParentId(getWorkItem(1255, WorkItemNames.UserStory, 'New', [parent], 'parent'));
+      const id = getParentId(getWorkItem(1255, WorkItemNames.UserStory, 'New', [8999], 'parent'));
       expect(id).toEqual(8999);
     });
   });
 
   describe('getChildIds', () => {
     test('returns correct ids', () => {
-      const children = [
-        getWorkItem(1234, WorkItemNames.UserStory, 'New'),
-        getWorkItem(1235, WorkItemNames.UserStory, 'Active'),
-        getWorkItem(1855, WorkItemNames.UserStory, 'New')
-      ];
       const ids = getChildIds(
-        getWorkItem(8999, WorkItemNames.Feature, 'Active', children, 'children')
+        getWorkItem(8999, WorkItemNames.Feature, 'Active', [1234, 1235, 1855], 'children')
       );
       expect(ids).toEqual([1234, 1235, 1855]);
     });

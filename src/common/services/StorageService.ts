@@ -2,7 +2,7 @@ import { IExtensionDataService } from 'azure-devops-extension-api';
 import * as DevOps from 'azure-devops-extension-sdk';
 
 import RuleDocument from '../models/WorkItemRules';
-import MetaService, { IMetaService } from './MetaService';
+import DevOpsService, { IDevOpsService } from './DevOpsService';
 
 export interface IStorageService {
   getRulesForWorkItemType(
@@ -23,13 +23,13 @@ enum CollectionNames {
 }
 
 class StorageService implements IStorageService {
-  private readonly _metaService: IMetaService;
+  private readonly _devOpsService: IDevOpsService;
   private scopeType: ScopeType;
   private dataService?: IExtensionDataService;
   private _collectionName?: string;
 
   public constructor() {
-    this._metaService = new MetaService();
+    this._devOpsService = new DevOpsService();
     this.scopeType = ScopeType.Default;
   }
 
@@ -41,7 +41,7 @@ class StorageService implements IStorageService {
     }
 
     if (this._collectionName === undefined) {
-      const project = await this._metaService.getProject();
+      const project = await this._devOpsService.getProject();
 
       if (project === undefined) {
         throw new Error('Failed to find project');

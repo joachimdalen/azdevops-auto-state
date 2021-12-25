@@ -34,6 +34,10 @@ For this extension to work properly there are a few steps that needs to be taken
 
 ![feature-toogle](marketplace/docs/images/feature-toggle.png)
 
+### Usage
+
+Documentation on rule usage can be found on [GitHub](https://github.com/joachimdalen/azdevops-auto-state/blob/master/docs/RULES.md)
+
 ### Limitations
 
 - This extension does not work when doing mass updates

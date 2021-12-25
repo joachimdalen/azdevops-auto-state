@@ -36,10 +36,10 @@ const ModalContent = (): React.ReactElement => {
   const [types, setTypes] = useState<WorkItemType[]>([]);
   const [workItemType, setWorkItemType] = useState('');
   const [parentType, setParentType] = useState('');
-  const [parentNotState, setParentNotState] = useState<string[]>([]);
+  const [parentExcludedStates, setParentExcludedStates] = useState<string[]>([]);
   const [parentTargetState, setParentTargetState] = useState('');
-  const [childState, setChildState] = useState('');
-  const [allChildren, setAllChildren] = useState(false);
+  const [transitionState, setTransitionState] = useState('');
+  const [childrenLookup, setChildrenLookup] = useState(false);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     loadTheme(createTheme(appTheme));
@@ -60,10 +60,10 @@ const ModalContent = (): React.ReactElement => {
             setRule(rle);
             setWorkItemType(rle.workItemType);
             setParentType(rle.parentType);
-            setChildState(rle.childState);
-            setParentNotState(rle.parentNotState);
+            setTransitionState(rle.transitionState);
+            setParentExcludedStates(rle.parentExcludedStates);
             setParentTargetState(rle.parentTargetState);
-            setAllChildren(rle.allChildren);
+            setChildrenLookup(rle.childrenLookup);
           }
         });
         DevOps.notifyLoadSucceeded().then(() => {
@@ -75,21 +75,34 @@ const ModalContent = (): React.ReactElement => {
       });
   }, []);
 
-  const workItemTypes: IListBoxItem[] = useMemo(() => getWorkItemTypeItems(types), [types]);
-
+  const workItemTypes: IListBoxItem[] = useMemo(() => getWorkItemTypeItems(types, []), [types]);
+  const parentTypes: IListBoxItem[] = useMemo(
+    () => getWorkItemTypeItems(types, [workItemType]),
+    [types, workItemType]
+  );
   const workItemStates: IListBoxItem[] = useMemo(
-    () => getStatesForWorkItemType(types, workItemType),
+    () => getStatesForWorkItemType(types, workItemType, []),
     [workItemType]
   );
   const parentStates: IListBoxItem[] = useMemo(
-    () => getStatesForWorkItemType(types, parentType),
+    () => getStatesForWorkItemType(types, parentType, []),
     [types, parentType]
   );
+  const parentTargetStates: IListBoxItem[] = useMemo(
+    () => getStatesForWorkItemType(types, parentType, parentExcludedStates, true),
+    [types, parentType, parentExcludedStates]
+  );
   const workItemTypeSelection = useDropdownSelection(workItemTypes, rule?.workItemType);
-  const parentTypeSelection = useDropdownSelection(workItemTypes, rule?.parentType);
-  const workItemStateSelection = useDropdownSelection(workItemStates, rule?.childState);
-  const parentStateSelection = useDropdownMultiSelection(parentStates, rule?.parentNotState);
-  const parentTargetStateSelection = useDropdownSelection(parentStates, rule?.parentTargetState);
+  const parentTypeSelection = useDropdownSelection(parentTypes, rule?.parentType);
+  const transitionStateSelection = useDropdownSelection(workItemStates, rule?.transitionState);
+  const parentExcludedStatesSelection = useDropdownMultiSelection(
+    parentStates,
+    rule?.parentExcludedStates
+  );
+  const parentTargetStateSelection = useDropdownSelection(
+    parentTargetStates,
+    rule?.parentTargetState
+  );
 
   const dismiss = () => {
     const config = DevOps.getConfiguration();
@@ -102,16 +115,15 @@ const ModalContent = (): React.ReactElement => {
   };
   const save = async () => {
     const config = DevOps.getConfiguration();
-    console.log(config);
     if (config.dialog) {
       const ac: Rule = {
         id: rule?.id,
         workItemType: workItemType,
         parentType: parentType,
-        childState: childState,
-        parentNotState: parentNotState,
+        transitionState: transitionState,
+        parentExcludedStates: parentExcludedStates,
         parentTargetState: parentTargetState,
-        allChildren: allChildren
+        childrenLookup: childrenLookup
       };
 
       const res: AddRuleResult = {
@@ -123,6 +135,7 @@ const ModalContent = (): React.ReactElement => {
       const validationResult: ActionResult<boolean> = await config.validate(res);
       if (validationResult.success) {
         setError(undefined);
+        config.dialog.close(res);
       } else {
         setError(validationResult);
       }
@@ -130,10 +143,10 @@ const ModalContent = (): React.ReactElement => {
   };
 
   const addOrRemove = (id: string) => {
-    if (parentNotState.includes(id)) {
-      setParentNotState(prev => prev.filter(x => x !== id));
+    if (parentExcludedStates.includes(id)) {
+      setParentExcludedStates(prev => prev.filter(x => x !== id));
     } else {
-      setParentNotState(prev => [...prev, id]);
+      setParentExcludedStates(prev => [...prev, id]);
     }
   };
 
@@ -143,11 +156,11 @@ const ModalContent = (): React.ReactElement => {
       <ConditionalChildren renderChildren={!loading}>
         <ConditionalChildren renderChildren={error !== undefined}>
           <MessageCard className="margin-bottom-8" severity={MessageCardSeverity.Warning}>
-            {error?.message}
+            {error?.message || 'Unknown error'}
           </MessageCard>
         </ConditionalChildren>
         <div className="rhythm-vertical-16 flex-grow">
-          <FormItem label="When work item type is">
+          <FormItem label="Work item type">
             <Dropdown
               placeholder="Select a work item type"
               items={workItemTypes}
@@ -156,49 +169,49 @@ const ModalContent = (): React.ReactElement => {
               renderItem={renderWorkItemCell}
             />
           </FormItem>
-          <FormItem label="And parent type is">
+          <FormItem label="Parent type">
             <Dropdown
               placeholder="Select a work item type"
-              items={workItemTypes}
+              items={parentTypes}
               selection={parentTypeSelection}
               onSelect={(_, i) => setParentType(i.id)}
               renderItem={renderWorkItemCell}
             />
           </FormItem>
-          <FormItem label="When child state is">
+          <FormItem label="Transition state">
             <Dropdown
               disabled={workItemStates?.length === 0}
               placeholder="Select a state"
               items={workItemStates}
-              selection={workItemStateSelection}
-              onSelect={(_, i) => setChildState(i.id)}
+              selection={transitionStateSelection}
+              onSelect={(_, i) => setTransitionState(i.id)}
               renderItem={renderStateCell}
             />
           </FormItem>
-          <FormItem label="And parent states is not">
+          <FormItem label="Parent not in state">
             <Dropdown
               disabled={parentStates?.length === 0}
               placeholder="Select states"
               items={parentStates}
-              selection={parentStateSelection}
+              selection={parentExcludedStatesSelection}
               onSelect={(_, i) => addOrRemove(i.id)}
               renderItem={renderStateCell}
             />
           </FormItem>
-          <FormItem label="Set parent state to">
+          <FormItem label="Parent target state">
             <Dropdown
-              disabled={parentStates?.length === 0}
+              disabled={parentTargetStates?.length === 0}
               placeholder="Select a state"
-              items={parentStates}
+              items={parentTargetStates}
               selection={parentTargetStateSelection}
               onSelect={(_, i) => setParentTargetState(i.id)}
               renderItem={renderStateCell}
             />
           </FormItem>
           <Checkbox
-            label="Only if all children is state"
-            checked={allChildren}
-            onChange={(_, c) => setAllChildren(c)}
+            label="Children lookup"
+            checked={childrenLookup}
+            onChange={(_, c) => setChildrenLookup(c)}
           />
         </div>
         <ButtonGroup className="justify-space-between margin-top-16">

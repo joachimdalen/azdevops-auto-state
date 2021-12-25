@@ -8,7 +8,7 @@ const getWorkItem = (
   id: number,
   type: WorkItemNames,
   state: string,
-  related?: WorkItem[],
+  related?: number[],
   relatedType?: 'parent' | 'children'
 ): WorkItem => {
   const relations: WorkItemRelation[] = (related || [])?.map(wi => {
@@ -17,7 +17,7 @@ const getWorkItem = (
         relatedType == 'parent'
           ? 'System.LinkTypes.Hierarchy-Reverse'
           : 'System.LinkTypes.Hierarchy-Forward',
-      url: `https://dev.azure.com/demoorg/demoproj/${wi.id}`,
+      url: `https://dev.azure.com/demoorg/demoproj/${wi}`,
       attributes: {}
     };
     return rel;
@@ -44,7 +44,8 @@ const getWorkItemTypes = (): WorkItemType[] => {
     getWorkItemType(WorkItemNames.Epic, WorkItemReferenceNames.Epic),
     getWorkItemType(WorkItemNames.Feature, WorkItemReferenceNames.Feature),
     getWorkItemType(WorkItemNames.UserStory, WorkItemReferenceNames.UserStory),
-    getWorkItemType(WorkItemNames.Task, WorkItemReferenceNames.Task)
+    getWorkItemType(WorkItemNames.Task, WorkItemReferenceNames.Task),
+    getWorkItemType(WorkItemNames.Documentation, WorkItemReferenceNames.Documentation)
   ];
 };
 
@@ -63,13 +64,15 @@ enum WorkItemReferenceNames {
   Epic = 'Microsoft.VSTS.WorkItemTypes.Epic',
   Feature = 'Microsoft.VSTS.WorkItemTypes.Feature',
   UserStory = 'Microsoft.VSTS.WorkItemTypes.UserStory',
-  Task = 'Microsoft.VSTS.WorkItemTypes.Task'
+  Task = 'Microsoft.VSTS.WorkItemTypes.Task',
+  Documentation = 'DemoProject.Documentation'
 }
 enum WorkItemNames {
   Epic = 'Epic',
   Feature = 'Feature',
   UserStory = 'User Story',
-  Task = 'Task'
+  Task = 'Task',
+  Documentation = 'Documentation'
 }
 
 export { getWorkItem, getWorkItemTypes, WorkItemReferenceNames, WorkItemNames };

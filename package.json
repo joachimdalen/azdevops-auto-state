@@ -84,7 +84,10 @@
     },
     "preset": "ts-jest/presets/js-with-babel",
     "testResultsProcessor": "./node_modules/jest-junit-reporter",
-    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "src/**",
+      "!src/__test-utils__/*"
+    ],
     "coverageReporters": [
       "json",
       "html",

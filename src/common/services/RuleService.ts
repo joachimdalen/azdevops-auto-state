@@ -18,8 +18,8 @@ class RuleService {
     this._data = [];
   }
 
-  public async load(): Promise<ActionResult<RuleDocument[]>> {
-    if (this._isInitialized) return { success: true };
+  public async load(force = false): Promise<ActionResult<RuleDocument[]>> {
+    if (this._isInitialized && !force) return { success: true, data: this._data };
     try {
       const data = await this._dataStore.getData();
       this._data = data;
@@ -36,7 +36,7 @@ class RuleService {
     workItemType: string,
     ruleId: string
   ): Promise<ActionResult<RuleDocument[]>> {
-    if (!this._data) {
+    if (this._data.length === 0) {
       return { success: true, data: this._data };
     }
 
@@ -148,7 +148,7 @@ class RuleService {
           message: 'Duplicate rule'
         };
       }
-      rootDoc.rules = [...rootDoc.rules, rule];
+      rootDoc.rules = [...rootDoc.rules, { id: uuidV4(), ...rule }];
     }
     const updatedDocument = await this._dataStore.setData(rootDoc);
 
@@ -169,10 +169,11 @@ class RuleService {
       throw new Error('RuleService is not initialized. Call Load() first.');
     }
     const docIndex = this._data?.findIndex(x => x.id === rule.workItemType);
-    if (docIndex === undefined || docIndex < 0)
+    if (docIndex === undefined || docIndex < 0) {
       return {
-        success: false
+        success: true
       };
+    }
 
     const rootDoc = this._data[docIndex];
 
@@ -182,8 +183,9 @@ class RuleService {
         message: 'Duplicate rule'
       };
     }
+
     return {
-      success: false
+      success: true
     };
   }
 
@@ -191,9 +193,10 @@ class RuleService {
     if (ruleOne.workItemType !== ruleTwo.workItemType) return false;
     if (ruleOne.parentType !== ruleTwo.parentType) return false;
     if (ruleOne.parentTargetState !== ruleTwo.parentTargetState) return false;
-    if (ruleOne.childState !== ruleTwo.childState) return false;
-    if (ruleOne.allChildren !== ruleTwo.allChildren) return false;
-    if (!ruleOne.parentNotState.every(x => ruleTwo.parentNotState.includes(x))) return false;
+    if (ruleOne.transitionState !== ruleTwo.transitionState) return false;
+    if (ruleOne.childrenLookup !== ruleTwo.childrenLookup) return false;
+    if (!ruleOne.parentExcludedStates.every(x => ruleTwo.parentExcludedStates.includes(x)))
+      return false;
     return true;
   }
 
