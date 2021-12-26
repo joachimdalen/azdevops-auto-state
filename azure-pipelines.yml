@@ -3,6 +3,10 @@ parameters:
     displayName: 'Task Version'
     type: string
     default: $(Task.Extension.Version)
+  - name: deployToDev
+    displayName: 'Deploy to DEV instead of QA'
+    type: boolean
+    default: false
 
 trigger:
   branches:
@@ -20,9 +24,7 @@ pool:
 
 variables:
   npm_config_cache: $(Pipeline.Workspace)/.npm
-  isTemp: $[or(startsWith(variables['Build.SourceBranch'], 'refs/heads/feature'), startsWith(variables['Build.SourceBranch'], 'refs/heads/bugfix'))]
   isMaster: $[eq(variables['Build.SourceBranch'], 'refs/heads/master')]
-  isDevelop: $[eq(variables['Build.SourceBranch'], 'refs/heads/develop')]
   marketplaceServiceConnection: 'marketplace-joachim-dalen'
 
 stages:
@@ -34,31 +36,10 @@ stages:
           - template: .ci/install.template.yml
           - template: .ci/run-tests.template.yml
 
-  - stage: verify_changelog
-    dependsOn: 'run_tests'
-    condition: and(succeeded(), or(eq(variables.isDevelop, true), eq(variables.isMaster, true)))
-    displayName: 'Check changelog'
-    jobs:
-      - job:
-        steps:
-          - task: GitGuardChanges@0
-            displayName: 'Verify changelog'
-            inputs:
-              ${{ if eq(variables.isMaster, true) }}:
-                sourceCommitHash: 'tag:v*[!-qa]'
-                matchPattern: '.azext/changelog.json'
-              ${{ else }}:
-                sourceCommitHash: 'tag:v*-qa'
-                matchPattern: '.azext/changelog-qa.json'
-              targetCommitHash: 'HEAD'
-              matchStrategy: 'single'
-              changed: true
-              breakOnFailure: true
-
   - stage: package_dev
     displayName: '[DEV] Package'
     dependsOn: 'run_tests'
-    condition: and(succeeded(), eq(variables.isTemp, true))
+    condition: and(succeeded(), eq(parameters.deployToDev, true)  eq(variables.isMaster, false))
     variables:
       - group: 'mp-auto-state-dev'
     jobs:
@@ -70,7 +51,7 @@ stages:
   - stage: publish_dev
     displayName: '[DEV] Publish'
     dependsOn: 'package_dev'
-    condition: and(succeeded(), eq(variables.isTemp, true))
+    condition: and(succeeded(), eq(parameters.deployToDev, true)  eq(variables.isMaster, false))
     variables:
       - group: 'mp-auto-state-dev'
     jobs:
@@ -81,8 +62,8 @@ stages:
 
   - stage: package_qa
     displayName: '[QA] Package'
-    dependsOn: 'verify_changelog'
-    condition: and(succeeded(), eq(variables.isDevelop, true))
+    dependsOn: 'run_tests'
+    condition: and(succeeded(), eq(parameters.deployToDev, false)  eq(variables.isMaster, false))
     variables:
       - group: 'mp-auto-state-qa'
     jobs:
@@ -94,7 +75,7 @@ stages:
   - stage: publish_qa
     displayName: '[QA] Publish'
     dependsOn: 'package_qa'
-    condition: and(succeeded(), eq(variables.isDevelop, true))
+    condition: and(succeeded(), eq(parameters.deployToDev, false)  eq(variables.isMaster, false))
     variables:
       - group: 'mp-auto-state-qa'
     jobs:
@@ -102,6 +83,23 @@ stages:
         parameters:
           pipelineEnv: auto-state-qa-env
           extensionVisibility: private
+
+  - stage: verify_changelog
+    dependsOn: 'run_tests'
+    condition: and(succeeded(), eq(variables.isMaster, true)))
+    displayName: 'Check changelog'
+    jobs:
+      - job:
+        steps:
+          - task: GitGuardChanges@0
+            displayName: '[PROD] Verify changelog'
+            inputs:
+              sourceCommitHash: 'tag:v*[!-qa]'
+              matchPattern: '.azext/changelog-prod.json'
+              targetCommitHash: 'HEAD'
+              matchStrategy: 'single'
+              changed: true
+              breakOnFailure: true
 
   - stage: package_prod
     displayName: '[PROD] Package'
