@@ -178,7 +178,7 @@ If you want to contribute code, I ask that you follow some guidelines.
 - `master` is only deployed to `PROD` and tagged with `v<extension_version>`
   - Pull requests are always squash merged into `master`
   - `master` is the only branch where GitHub releases are created for
-- `feature/*` and `bugfix/*` are deployed to `QA` and tagged with `v<extension_version>-qa`. For deployment to `DEV` using local assets (only manifest changes are deployed to dev), the `Deploy to DEV instead of QA` option needs to be checked when running the deployment pipeline.
+- `feature/*` and `bugfix/*` are deployed to `QA`. For deployment to `DEV` using local assets (only manifest changes are deployed to dev), the `Deploy to DEV instead of QA` option needs to be checked when running the deployment pipeline.
 
 `QA` and `DEV` are private development and verfication environments (publications of the extensions.) Submit a new issue if you for some reason wish access to either of these.
 
