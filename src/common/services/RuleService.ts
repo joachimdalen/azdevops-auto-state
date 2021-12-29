@@ -1,4 +1,4 @@
-import { IDialogOptions, IHostPageLayoutService } from 'azure-devops-extension-api';
+import { IDialogOptions, IHostPageLayoutService, IPanelOptions } from 'azure-devops-extension-api';
 import * as DevOps from 'azure-devops-extension-sdk';
 import { v4 as uuidV4 } from 'uuid';
 
@@ -209,14 +209,13 @@ class RuleService {
       'ms.vss-features.host-page-layout-service'
     );
 
-    const options: IDialogOptions<AddRuleResult> = {
+    const options: IPanelOptions<AddRuleResult> = {
       title: rule === undefined ? 'Add rule' : 'Edit rule',
       onClose: handleDialogResult,
-      lightDismiss: false,
-      configuration: { rule: rule, validate: isValid }
+      configuration: { rule: rule, validate: isValid },
     };
 
-    dialogService.openCustomDialog(DevOps.getExtensionContext().id + '.rule-modal', options);
+    dialogService.openPanel(DevOps.getExtensionContext().id + '.rule-modal', options);
   }
 }
 
