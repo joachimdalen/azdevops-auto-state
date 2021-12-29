@@ -86,7 +86,7 @@ stages:
 
   - stage: verify_changelog
     dependsOn: 'run_tests'
-    condition: and(succeeded(), eq(variables.isMaster, true)))
+    condition: and(succeeded(), eq(variables.isMaster, true))
     displayName: 'Check changelog'
     jobs:
       - job:
