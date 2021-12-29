@@ -60,7 +60,8 @@ describe('RuleService', () => {
         transitionState: 'Active',
         parentType: WorkItemReferenceNames.Feature,
         parentExcludedStates: ['Active'],
-        parentTargetState: 'Active'
+        parentTargetState: 'Active',
+        processParent: false,
       };
       jest.spyOn(StorageService.prototype, 'getData').mockResolvedValue([]);
       const setDataSpy = jest.spyOn(StorageService.prototype, 'setData');
@@ -93,7 +94,8 @@ describe('RuleService', () => {
         transitionState: 'Active',
         parentType: WorkItemReferenceNames.Feature,
         parentExcludedStates: ['Active'],
-        parentTargetState: 'Active'
+        parentTargetState: 'Active',
+        processParent: false,
       };
 
       const ruleService = new RuleService();
@@ -112,7 +114,8 @@ describe('RuleService', () => {
         transitionState: 'Active',
         parentType: WorkItemReferenceNames.Feature,
         parentExcludedStates: ['Active'],
-        parentTargetState: 'Active'
+        parentTargetState: 'Active',
+        processParent: false,
       };
       const ruleDoc: RuleDocument = {
         id: WorkItemReferenceNames.Task,
@@ -141,7 +144,8 @@ describe('RuleService', () => {
         transitionState: 'Active',
         parentType: WorkItemReferenceNames.Feature,
         parentExcludedStates: ['Active'],
-        parentTargetState: 'Active'
+        parentTargetState: 'Active',
+        processParent: false,
       };
       const ruleIdTwo = uuidV4();
       const ruleTwo: Rule = {
@@ -151,7 +155,8 @@ describe('RuleService', () => {
         transitionState: 'Active',
         parentType: WorkItemReferenceNames.UserStory,
         parentExcludedStates: ['Active'],
-        parentTargetState: 'Active'
+        parentTargetState: 'Active',
+        processParent: false,
       };
       const ruleDoc: RuleDocument = {
         id: WorkItemReferenceNames.Task,

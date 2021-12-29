@@ -1,5 +1,7 @@
 import '@testing-library/jest-dom/extend-expect';
+
 import { v4 as uuidV4 } from 'uuid';
+
 import {
   mockGetWorkItem,
   mockGetWorkItems
@@ -48,7 +50,8 @@ describe('RuleProcessor', () => {
         parentExcludedStates: ['Resolved', 'Closed'],
         parentTargetState: 'Resolved',
         parentType: WorkItemReferenceNames.UserStory,
-        workItemType: WorkItemReferenceNames.Task
+        workItemType: WorkItemReferenceNames.Task,
+        processParent: false
       };
       const ruleProcessor = new RuleProcessor();
       await ruleProcessor.Init();
@@ -81,7 +84,8 @@ describe('RuleProcessor', () => {
         parentExcludedStates: ['Resolved', 'Closed'],
         parentTargetState: 'Resolved',
         parentType: WorkItemReferenceNames.UserStory,
-        workItemType: WorkItemReferenceNames.Task
+        workItemType: WorkItemReferenceNames.Task,
+        processParent: false
       };
 
       const ruleProcessor = new RuleProcessor();
@@ -98,7 +102,8 @@ describe('RuleProcessor', () => {
         parentExcludedStates: ['Resolved', 'Closed'],
         parentTargetState: 'Resolved',
         parentType: WorkItemReferenceNames.UserStory,
-        workItemType: WorkItemReferenceNames.Task
+        workItemType: WorkItemReferenceNames.Task,
+        processParent: false
       };
       jest.spyOn(StorageService.prototype, 'getData').mockResolvedValue([
         {
@@ -149,7 +154,8 @@ describe('RuleProcessor', () => {
         parentExcludedStates: ['Resolved', 'Closed'],
         parentTargetState: 'Resolved',
         parentType: WorkItemReferenceNames.UserStory,
-        workItemType: WorkItemReferenceNames.Task
+        workItemType: WorkItemReferenceNames.Task,
+        processParent: false
       };
       const ruleTwo: Rule = {
         id: uuidV4(),
@@ -158,7 +164,8 @@ describe('RuleProcessor', () => {
         parentExcludedStates: ['Resolved', 'Closed'],
         parentTargetState: 'Resolved',
         parentType: WorkItemReferenceNames.UserStory,
-        workItemType: WorkItemReferenceNames.Documentation
+        workItemType: WorkItemReferenceNames.Documentation,
+        processParent: false,
       };
       jest.spyOn(StorageService.prototype, 'getData').mockResolvedValue([
         {
@@ -231,7 +238,8 @@ describe('RuleProcessor', () => {
         parentExcludedStates: ['Resolved', 'Closed'],
         parentTargetState: 'Resolved',
         parentType: WorkItemReferenceNames.UserStory,
-        workItemType: WorkItemReferenceNames.Task
+        workItemType: WorkItemReferenceNames.Task,
+        processParent: false
       };
 
       const ruleProcessor = new RuleProcessor();
@@ -257,7 +265,8 @@ describe('RuleProcessor', () => {
         parentExcludedStates: ['Active', 'Resolved', 'Closed'],
         parentTargetState: 'Active',
         parentType: WorkItemReferenceNames.UserStory,
-        workItemType: WorkItemReferenceNames.Task
+        workItemType: WorkItemReferenceNames.Task,
+        processParent: false
       };
       const ruleProcessor = new RuleProcessor();
       await ruleProcessor.Init();
@@ -282,7 +291,8 @@ describe('RuleProcessor', () => {
         parentExcludedStates: ['Active', 'Resolved', 'Closed'],
         parentTargetState: 'Active',
         parentType: WorkItemReferenceNames.UserStory,
-        workItemType: WorkItemReferenceNames.Task
+        workItemType: WorkItemReferenceNames.Task,
+        processParent: false
       };
 
       const ruleProcessor = new RuleProcessor();
@@ -308,7 +318,8 @@ describe('RuleProcessor', () => {
         parentExcludedStates: ['Active', 'Resolved', 'Closed'],
         parentTargetState: 'Active',
         parentType: WorkItemReferenceNames.UserStory,
-        workItemType: WorkItemReferenceNames.Task
+        workItemType: WorkItemReferenceNames.Task,
+        processParent: false
       };
 
       const ruleProcessor = new RuleProcessor();
@@ -334,7 +345,8 @@ describe('RuleProcessor', () => {
         parentExcludedStates: ['Active', 'Resolved', 'Closed'],
         parentTargetState: 'Active',
         parentType: WorkItemReferenceNames.Epic,
-        workItemType: WorkItemReferenceNames.Feature
+        workItemType: WorkItemReferenceNames.Feature,
+        processParent: false
       };
 
       const ruleProcessor = new RuleProcessor();
@@ -360,7 +372,8 @@ describe('RuleProcessor', () => {
         parentExcludedStates: ['Active', 'Resolved', 'Closed'],
         parentTargetState: 'Active',
         parentType: WorkItemReferenceNames.Feature,
-        workItemType: WorkItemReferenceNames.Task
+        workItemType: WorkItemReferenceNames.Task,
+        processParent: false
       };
 
       const ruleProcessor = new RuleProcessor();
@@ -386,7 +399,8 @@ describe('RuleProcessor', () => {
         parentExcludedStates: ['Active', 'Resolved', 'Closed'],
         parentTargetState: 'Active',
         parentType: WorkItemReferenceNames.UserStory,
-        workItemType: WorkItemReferenceNames.Task
+        workItemType: WorkItemReferenceNames.Task,
+        processParent: false
       };
 
       const ruleProcessor = new RuleProcessor();
@@ -411,7 +425,8 @@ describe('RuleProcessor', () => {
         parentExcludedStates: ['Active', 'Resolved', 'Closed'],
         parentTargetState: 'Active',
         parentType: WorkItemReferenceNames.UserStory,
-        workItemType: WorkItemReferenceNames.Task
+        workItemType: WorkItemReferenceNames.Task,
+        processParent: false
       };
 
       const ruleProcessor = new RuleProcessor();

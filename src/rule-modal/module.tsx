@@ -40,6 +40,7 @@ const ModalContent = (): React.ReactElement => {
   const [parentTargetState, setParentTargetState] = useState('');
   const [transitionState, setTransitionState] = useState('');
   const [childrenLookup, setChildrenLookup] = useState(false);
+  const [processParent, setProcessParent] = useState(false);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     loadTheme(createTheme(appTheme));
@@ -64,6 +65,7 @@ const ModalContent = (): React.ReactElement => {
             setParentExcludedStates(rle.parentExcludedStates);
             setParentTargetState(rle.parentTargetState);
             setChildrenLookup(rle.childrenLookup);
+            setProcessParent(rle.processParent);
           }
         });
         DevOps.notifyLoadSucceeded().then(() => {
@@ -123,7 +125,8 @@ const ModalContent = (): React.ReactElement => {
         transitionState: transitionState,
         parentExcludedStates: parentExcludedStates,
         parentTargetState: parentTargetState,
-        childrenLookup: childrenLookup
+        childrenLookup: childrenLookup,
+        processParent: processParent
       };
 
       const res: AddRuleResult = {

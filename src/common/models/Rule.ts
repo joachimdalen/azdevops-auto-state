@@ -6,4 +6,5 @@ export default interface Rule {
   parentExcludedStates: string[];
   parentTargetState: string;
   childrenLookup: boolean;
+  processParent:boolean;
 }
