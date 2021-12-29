@@ -27,7 +27,6 @@ variables:
   isMaster: $[eq(variables['Build.SourceBranch'], 'refs/heads/master')]
   marketplaceServiceConnection: 'marketplace-joachim-dalen'
 
-
 stages:
   - stage: 'run_tests'
     displayName: Test & Build
@@ -40,7 +39,7 @@ stages:
   - stage: package_dev
     displayName: '[DEV] Package'
     dependsOn: 'run_tests'
-    condition: and(succeeded(), eq(${{ parameters.deployToDev }}, true)  eq(variables.isMaster, false))
+    condition: and(succeeded(), eq(${{ parameters.deployToDev }}, true),  eq(variables.isMaster, false))
     variables:
       - group: 'mp-auto-state-dev'
     jobs:
@@ -52,7 +51,7 @@ stages:
   - stage: publish_dev
     displayName: '[DEV] Publish'
     dependsOn: 'package_dev'
-    condition: and(succeeded(), eq(${{ parameters.deployToDev }}, true)  eq(variables.isMaster, false))
+    condition: and(succeeded(), eq(${{ parameters.deployToDev }}, true),  eq(variables.isMaster, false))
     variables:
       - group: 'mp-auto-state-dev'
     jobs:
@@ -64,7 +63,7 @@ stages:
   - stage: package_qa
     displayName: '[QA] Package'
     dependsOn: 'run_tests'
-    condition: and(succeeded(), eq(${{ parameters.deployToDev }}, false)  eq(variables.isMaster, false))
+    condition: and(succeeded(), eq(${{ parameters.deployToDev }}, false),  eq(variables.isMaster, false))
     variables:
       - group: 'mp-auto-state-qa'
     jobs:
@@ -76,7 +75,7 @@ stages:
   - stage: publish_qa
     displayName: '[QA] Publish'
     dependsOn: 'package_qa'
-    condition: and(succeeded(), eq(${{ parameters.deployToDev }}, false)  eq(variables.isMaster, false))
+    condition: and(succeeded(), eq(${{ parameters.deployToDev }}, false),  eq(variables.isMaster, false))
     variables:
       - group: 'mp-auto-state-qa'
     jobs:
