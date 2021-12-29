@@ -1,11 +1,4 @@
 <div id="top"></div>
-
-[![Contributors][contributors-shield]][contributors-url]
-[![Forks][forks-shield]][forks-url]
-[![Stargazers][stars-shield]][stars-url]
-[![Issues][issues-shield]][issues-url]
-[![MIT License][license-shield]][license-url]
-
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
@@ -18,17 +11,29 @@
   <p align="center">
     An extension to automatically update states between parents and children
     <br />
-    <a href="https://github.com/joachimdalen/azdevops-auto-state"><strong>Explore the docs »</strong></a>
+    <a href="https://github.com/joachimdalen/azdevops-auto-state/blob/master/docs/RULES.md"><strong>Explore the docs »</strong></a>
     <br />
     <br />
     <a href="https://marketplace.visualstudio.com/items?itemName=joachimdalen.auto-state">View Extension</a>
     ·
-    <a href="https://marketplace.visualstudio.com/items?itemName=joachimdalen.auto-state">Changelog</a>
+    <a href="hhttps://github.com/joachimdalen/azdevops-auto-state/blob/master/CHANGELOG.md">Changelog</a>
     ·
     <a href="https://github.com/joachimdalen/azdevops-auto-state/issues">Report Bug</a>
     ·
     <a href="https://github.com/joachimdalen/azdevops-auto-state/issues">Request Feature</a>
   </p>
+</div>
+
+<div align="center">
+  <img alt="Azure DevOps builds" src="https://img.shields.io/azure-devops/build/dalenapps/6531387f-baea-443c-a284-0d0e786e56c3/43?color=0078d7&label=Master%20Build&logo=azure-devops&style=flat-square">
+  <img alt="Issues" src="https://img.shields.io/github/issues/joachimdalen/azdevops-auto-state.svg?style=flat-square">
+  <img alt="License" src="https://img.shields.io/github/license/joachimdalen/azdevops-auto-state?style=flat-square">
+</div>
+<div align="center">
+
+  <img alt="Visual Studio Marketplace Installs - Azure DevOps Extension" src="https://img.shields.io/visual-studio-marketplace/azure-devops/installs/total/joachimdalen.auto-state?label=Marketplace%20Installs&style=flat-square">
+  <img alt="Visual Studio Marketplace Last Updated" src="https://img.shields.io/visual-studio-marketplace/last-updated/joachimdalen.auto-state?style=flat-square">
+<img alt="Visual Studio Marketplace Rating" src="https://img.shields.io/visual-studio-marketplace/r/joachimdalen.auto-state?style=flat-square">
 </div>
 
 <!-- TABLE OF CONTENTS -->
@@ -134,7 +139,7 @@ Auto State is hidden behind a feature flag for several reasons. After installing
 
 ## Usage
 
-Usage documentation comming soon..
+See [RULES](./docs/RULES.md) for rule usage.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -177,10 +182,8 @@ If you want to contribute code, I ask that you follow some guidelines.
 
 - `master` is only deployed to `PROD` and tagged with `v<extension_version>`
   - Pull requests are always squash merged into `master`
-  - `master` is merged back to `develop` after release
   - `master` is the only branch where GitHub releases are created for
-- `develop` is only deployed to `QA` and tagged with `v<extension_version>-qa`
-- `feature/*` and `bugfix/*` are deployed to `DEV` using local assets. So only manifest changes are deployed to dev.
+- `feature/*` and `bugfix/*` are deployed to `QA`. For deployment to `DEV` using local assets (only manifest changes are deployed to dev), the `Deploy to DEV instead of QA` option needs to be checked when running the deployment pipeline.
 
 `QA` and `DEV` are private development and verfication environments (publications of the extensions.) Submit a new issue if you for some reason wish access to either of these.
 
@@ -205,15 +208,5 @@ If you have generic questions about the project or usage you can make contact in
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
-[contributors-shield]: https://img.shields.io/github/contributors/joachimdalen/azdevops-auto-state.svg?style=for-the-badge
-[contributors-url]: https://github.com/joachimdalen/azdevops-auto-state/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/joachimdalen/azdevops-auto-state.svg?style=for-the-badge
-[forks-url]: https://github.com/joachimdalen/azdevops-auto-state/network/members
-[stars-shield]: https://img.shields.io/github/stars/joachimdalen/azdevops-auto-state.svg?style=for-the-badge
-[stars-url]: https://github.com/joachimdalen/azdevops-auto-state/stargazers
-[issues-shield]: https://img.shields.io/github/issues/joachimdalen/azdevops-auto-state.svg?style=for-the-badge
-[issues-url]: https://github.com/joachimdalen/azdevops-auto-state/issues
-[license-shield]: https://img.shields.io/github/license/joachimdalen/azdevops-auto-state.svg?style=for-the-badge
-[license-url]: https://github.com/joachimdalen/azdevops-auto-state/blob/master/LICENSE.txt
 [product-screenshot]: marketplace/docs/images/rule-editor.png
 [feature-toggle-screenshot]: marketplace/docs/images/feature-toggle.png
