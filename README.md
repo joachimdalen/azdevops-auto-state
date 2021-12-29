@@ -16,7 +16,7 @@
     <br />
     <a href="https://marketplace.visualstudio.com/items?itemName=joachimdalen.auto-state">View Extension</a>
     ·
-    <a href="hhttps://github.com/joachimdalen/azdevops-auto-state/blob/master/CHANGELOG.md">Changelog</a>
+    <a href="https://github.com/joachimdalen/azdevops-auto-state/blob/master/CHANGELOG.md">Changelog</a>
     ·
     <a href="https://github.com/joachimdalen/azdevops-auto-state/issues">Report Bug</a>
     ·
