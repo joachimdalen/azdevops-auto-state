@@ -114,6 +114,18 @@ export const getListColumns = (
       }
     },
     {
+      key: 'processParent',
+      name: 'Process Parent',
+      fieldName: 'processParent',
+      className: 'flex-self-center',
+      minWidth: 100,
+      maxWidth: 300,
+      isResizable: true,
+      onRender: (item: Rule, index?: number, column?: IColumn) => {
+        return item.processParent ? 'YES' : 'NO';
+      }
+    },
+    {
       key: 'actions',
       name: 'Actions',
       fieldName: 'actions',
