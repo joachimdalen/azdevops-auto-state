@@ -5,13 +5,12 @@ import { WorkItemType } from 'azure-devops-extension-api/WorkItemTracking';
 import * as DevOps from 'azure-devops-extension-sdk';
 import { Button } from 'azure-devops-ui/Button';
 import { ButtonGroup } from 'azure-devops-ui/ButtonGroup';
-import { Checkbox } from 'azure-devops-ui/Checkbox';
 import { ConditionalChildren } from 'azure-devops-ui/ConditionalChildren';
 import { Dropdown } from 'azure-devops-ui/Dropdown';
-import { Toggle } from 'azure-devops-ui/Toggle';
 import { FormItem } from 'azure-devops-ui/FormItem';
 import { IListBoxItem } from 'azure-devops-ui/ListBox';
 import { MessageCard, MessageCardSeverity } from 'azure-devops-ui/MessageCard';
+import { Toggle } from 'azure-devops-ui/Toggle';
 import { useEffect, useMemo, useState } from 'react';
 
 import { ActionResult } from '../common/models/ActionResult';
@@ -109,16 +108,16 @@ const ModalContent = (): React.ReactElement => {
 
   const dismiss = () => {
     const config = DevOps.getConfiguration();
-    if (config.dialog) {
+    if (config.panel) {
       const res: AddRuleResult = {
         result: 'CANCEL'
       };
-      config.dialog.close(res);
+      config.panel.close(res);
     }
   };
   const save = async () => {
     const config = DevOps.getConfiguration();
-    if (config.dialog) {
+    if (config.panel) {
       const ac: Rule = {
         id: rule?.id,
         workItemType: workItemType,
@@ -139,7 +138,7 @@ const ModalContent = (): React.ReactElement => {
       const validationResult: ActionResult<boolean> = await config.validate(res);
       if (validationResult.success) {
         setError(undefined);
-        config.dialog.close(res);
+        config.panel.close(res);
       } else {
         setError(validationResult);
       }
