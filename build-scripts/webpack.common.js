@@ -1,37 +1,26 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ScriptTags = require('./webpack-script-tags-plugin');
+const { entries, modules } = require('./entry-points');
 
-const modules = [
-  {
-    name: 'observer',
-    entry: './src/observer/module',
-    root: 'observer-container',
-    generate: true
-  },
-  {
-    name: 'admin-hub',
-    entry: './src/admin-hub/module',
-    root: 'admin-hub-container',
-    generate: true
-  },
-  {
-    name: 'rule-modal',
-    entry: './src/rule-modal/module',
-    root: 'modal-container',
-    generate: true
-  }
-];
+console.log(entries);
 
-const entries = modules.reduce(
+const vendorGroups = modules.reduce(
   (obj, item) => ({
     ...obj,
-    [item.name]: item.entry
+    [`${item.name}-vendor`]: {
+      test: /[\\/]node_modules[\\/]/,
+      name: `${item.name}.vendor`,
+      enforce: true,
+      chunks: chunk => {
+        return chunk.name === item.name;
+      }
+    }
   }),
   {}
 );
 
-console.log(entries);
+console.log(vendorGroups);
 
 module.exports = {
   devtool: 'inline-source-map',
@@ -45,18 +34,11 @@ module.exports = {
   },
   // stats: 'errors-only',
   optimization: {
-    // runtimeChunk: {
-    //   name: entrypoint => `${entrypoint.name}-runtime`
-    // },
+    runtimeChunk: {
+      name: entrypoint => `${entrypoint.name}.runtime`
+    },
     splitChunks: {
-      cacheGroups: {
-        vendor: {
-          test: /[\\/]node_modules[\\/]/,
-          name: 'vendors',
-          enforce: true,
-          chunks: 'all'
-        }
-      }
+      cacheGroups: vendorGroups
     }
   },
   module: {

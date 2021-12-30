@@ -25,9 +25,7 @@ module.exports = merge(common, {
     static: [path.resolve(__dirname, 'dist')],
     historyApiFallback: {
       disableDotRule: true,
-      rewrites: [
-        { from: /\/static\/.+/, to: '/' }
-      ]
+      rewrites: [{ from: /\/static\/.+/, to: '/' }]
     }
   },
   output: {
