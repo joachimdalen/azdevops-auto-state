@@ -195,6 +195,7 @@ class RuleService {
     if (ruleOne.parentTargetState !== ruleTwo.parentTargetState) return false;
     if (ruleOne.transitionState !== ruleTwo.transitionState) return false;
     if (ruleOne.childrenLookup !== ruleTwo.childrenLookup) return false;
+    if (ruleOne.processParent !== ruleTwo.processParent) return false;
     if (!ruleOne.parentExcludedStates.every(x => ruleTwo.parentExcludedStates.includes(x)))
       return false;
     return true;
@@ -212,7 +213,7 @@ class RuleService {
     const options: IPanelOptions<AddRuleResult> = {
       title: rule === undefined ? 'Add rule' : 'Edit rule',
       onClose: handleDialogResult,
-      configuration: { rule: rule, validate: isValid },
+      configuration: { rule: rule, validate: isValid }
     };
 
     dialogService.openPanel(DevOps.getExtensionContext().id + '.rule-modal', options);

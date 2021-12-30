@@ -1,7 +1,6 @@
 import { WorkItem, WorkItemType } from 'azure-devops-extension-api/WorkItemTracking';
 
-import { groupBy } from '../../admin-hub/helpers';
-import { asyncFilter } from '../helpers';
+import { asyncFilter, groupBy } from '../helpers';
 import Rule from '../models/Rule';
 import RuleDocument from '../models/WorkItemRules';
 import WorkItemRules from '../models/WorkItemRules';
