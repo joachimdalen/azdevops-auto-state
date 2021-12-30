@@ -194,8 +194,6 @@ class RuleService {
     if (ruleOne.parentType !== ruleTwo.parentType) return false;
     if (ruleOne.parentTargetState !== ruleTwo.parentTargetState) return false;
     if (ruleOne.transitionState !== ruleTwo.transitionState) return false;
-    if (ruleOne.childrenLookup !== ruleTwo.childrenLookup) return false;
-    if (ruleOne.processParent !== ruleTwo.processParent) return false;
     if (!ruleOne.parentExcludedStates.every(x => ruleTwo.parentExcludedStates.includes(x)))
       return false;
     return true;

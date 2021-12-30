@@ -20,12 +20,6 @@ export interface IWorkItemService {
 
 class WorkItemService implements IWorkItemService {
   private _devOpsService: IDevOpsService;
-  private _requiredFields: string[] = [
-    "System.State",
-    "System.WorkItemType",
-    "System.Parent",
-    "System.Id"
-  ]
   constructor(devOpsService?: IDevOpsService) {
     this._devOpsService = devOpsService ?? new DevOpsService();
   }
