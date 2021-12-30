@@ -22,11 +22,6 @@ export interface IRuleProcessor {
   IsRuleMatch(rule: Rule, workItem: WorkItem, parent: WorkItem): Promise<boolean>;
 }
 
-interface ProcessedRule {
-  parentId: number;
-  rule: Rule;
-}
-
 class RuleProcessor implements IRuleProcessor {
   private _workItemTypes: WorkItemType[];
   private _ruleDocs: RuleDocument[];
