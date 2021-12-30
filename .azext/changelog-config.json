@@ -15,11 +15,12 @@
   "sectionSplitter": "---",
   "typeSize": "h3",
   "typeMapping": {
-    "feature": ":rocket: Features",
-    "fix": ":bug: Fixes",
-    "tests": ":test_tube: Tests",
-    "other": ":speech_balloon: Other",
-    "docs": ":memo: Documentation"
+    "feature": ":rocket: Features ({{changeCount}})",
+    "fix": ":bug: Fixes ({{changeCount}})",
+    "tests": ":test_tube: Tests ({{changeCount}})",
+    "other": ":speech_balloon: Other ({{changeCount}})",
+    "docs": ":memo: Documentation ({{changeCount}})",
+    "maint": ":hammer_and_wrench: Maintenance ({{changeCount}})"
   },
   "attributionTitleFormat": {
     "size": "h2",
@@ -28,8 +29,12 @@
   "attributionSubTitle": {
     "format": "Thank you to the following for contributing to the latest release"
   },
+  "attributionLinkTextFormat": {
+    "format": "@{{ghUsername}}"
+  },
   "knownAuthors": ["joachimdalen"],
   "useDescriptiveIssues": true,
+  "useDescriptivePullRequests": true,
   "replaceEmojis": {
     "types": true,
     "changelogTitle": true,
@@ -37,6 +42,7 @@
     "moduleTitle": true,
     "attributionTitle": true,
     "attributionSubTitle": true,
+    "moduleChangesTitle": true,
     "githubIssues": false,
     "githubPullRequests": false,
     "notes": true,
