@@ -68,3 +68,4 @@ docs/CHANGELOG*.md
 test-results.xml
 !*webpack*.js
 !src/__mocks__/*.js
+!build-scripts/*.js
