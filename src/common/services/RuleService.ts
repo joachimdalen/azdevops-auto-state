@@ -190,6 +190,9 @@ class RuleService {
   }
 
   private isRuleSame(ruleOne: Rule, ruleTwo: Rule) {
+    if (ruleOne.id && ruleTwo.id) {
+      if (ruleOne.id === ruleTwo.id) return false;
+    }
     if (ruleOne.workItemType !== ruleTwo.workItemType) return false;
     if (ruleOne.parentType !== ruleTwo.parentType) return false;
     if (ruleOne.parentTargetState !== ruleTwo.parentTargetState) return false;
