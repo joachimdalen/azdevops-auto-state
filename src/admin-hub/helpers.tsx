@@ -1,10 +1,13 @@
 import {
   ContextualMenuItemType,
+  FontIcon,
   IColumn,
+  Icon,
   IconButton,
   IContextualMenuItem,
   IContextualMenuProps,
-  IGroup
+  IGroup,
+  mergeStyles
 } from '@fluentui/react';
 import { IHostNavigationService } from 'azure-devops-extension-api';
 import { WorkItemStateColor, WorkItemType } from 'azure-devops-extension-api/WorkItemTracking';
@@ -110,7 +113,15 @@ export const getListColumns = (
       maxWidth: 300,
       isResizable: true,
       onRender: (item: Rule, index?: number, column?: IColumn) => {
-        return item.childrenLookup ? 'YES' : 'NO';
+        return (
+          <FontIcon
+            className={mergeStyles({
+              fontSize: 20,
+              color: item.childrenLookup ? 'green' : 'red'
+            })}
+            iconName={item.childrenLookup ? 'Accept' : 'Clear'}
+          />
+        );
       }
     },
     {
@@ -122,7 +133,15 @@ export const getListColumns = (
       maxWidth: 300,
       isResizable: true,
       onRender: (item: Rule, index?: number, column?: IColumn) => {
-        return item.processParent ? 'YES' : 'NO';
+        return (
+          <FontIcon
+            className={mergeStyles({
+              fontSize: 20,
+              color: item.processParent ? 'green' : 'red'
+            })}
+            iconName={item.processParent ? 'Accept' : 'Clear'}
+          />
+        );
       }
     },
     {
