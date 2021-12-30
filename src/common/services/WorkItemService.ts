@@ -2,7 +2,6 @@ import { getClient } from 'azure-devops-extension-api/Common';
 import {
   WorkItem,
   WorkItemExpand,
-  WorkItemField,
   WorkItemTrackingRestClient,
   WorkItemType
 } from 'azure-devops-extension-api/WorkItemTracking';
@@ -16,12 +15,17 @@ export interface IWorkItemService {
   getWorkItemTypes(): Promise<WorkItemType[]>;
   getWorkItem(id: number): Promise<WorkItem>;
   getWorkItems(ids: number[]): Promise<WorkItem[]>;
-  getFields(): Promise<WorkItemField[]>;
   setWorkItemState(id: number, state: string): Promise<WorkItem>;
 }
 
 class WorkItemService implements IWorkItemService {
   private _devOpsService: IDevOpsService;
+  private _requiredFields: string[] = [
+    "System.State",
+    "System.WorkItemType",
+    "System.Parent",
+    "System.Id"
+  ]
   constructor(devOpsService?: IDevOpsService) {
     this._devOpsService = devOpsService ?? new DevOpsService();
   }
@@ -87,12 +91,6 @@ class WorkItemService implements IWorkItemService {
       WorkItemExpand.Relations
     );
     return wit;
-  }
-
-  public async getFields(): Promise<WorkItemField[]> {
-    const client = getClient(WorkItemTrackingRestClient);
-    const fields = await client.getFields();
-    return fields;
   }
 
   public async setWorkItemState(id: number, state: string): Promise<WorkItem> {

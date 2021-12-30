@@ -17,8 +17,14 @@ import WorkItemService, { IWorkItemService } from './WorkItemService';
 
 export interface IRuleProcessor {
   Init(): Promise<void>;
-  ProcessWorkItem(workItemId: number): Promise<void>;
+  Process(workItemId: number): Promise<void>;
+  ProcessWorkItem(workItemId: number): Promise<number | undefined>;
   IsRuleMatch(rule: Rule, workItem: WorkItem, parent: WorkItem): Promise<boolean>;
+}
+
+interface ProcessedRule {
+  parentId: number;
+  rule: Rule;
 }
 
 class RuleProcessor implements IRuleProcessor {
@@ -46,8 +52,31 @@ class RuleProcessor implements IRuleProcessor {
   private getRulesForWorkItemType(workItemType: string): RuleDocument | undefined {
     return this._ruleDocs.find(x => x.id === workItemType);
   }
+  private async ProcessInternal(workItemId: number, processed: number[]) {
+    const procsessedIds: number[] = [...processed];
+    const parentToProcess = await this.ProcessWorkItem(workItemId);
+    console.log('processedIds', procsessedIds);
+    if (parentToProcess !== undefined) {
+      if (procsessedIds.includes(parentToProcess)) {
+        webLogger.information('Parent ' + parentToProcess + ' already processed');
+      } else {
+        webLogger.information('Processing work item ' + parentToProcess);
+        const nextLevelForWorkItem = await this.ProcessWorkItem(parentToProcess);
+        procsessedIds.push(parentToProcess);
+        if (nextLevelForWorkItem !== undefined) {
+          console.log('Next level is ', parentToProcess);
+          this.ProcessInternal(nextLevelForWorkItem, procsessedIds);
+        }
+      }
+    }
+  }
 
-  public async ProcessWorkItem(workItemId: number): Promise<void> {
+  public async Process(workItemId: number): Promise<void> {
+    this.ProcessInternal(workItemId, []);
+  }
+
+  public async ProcessWorkItem(workItemId: number): Promise<number | undefined> {
+    let parentToProcess: number | undefined = undefined;
     const currentWi: WorkItem = await this._workItemService.getWorkItem(workItemId);
     const parentWi: WorkItem | undefined = await this._workItemService.getParentForWorkItem(
       workItemId
@@ -59,7 +88,7 @@ class RuleProcessor implements IRuleProcessor {
 
     if (workItemType === undefined) return;
 
-    const ruleDoc: WorkItemRules | undefined = await this.getRulesForWorkItemType(workItemType);
+    const ruleDoc: WorkItemRules | undefined = this.getRulesForWorkItemType(workItemType);
 
     if (ruleDoc === undefined) return;
 
@@ -75,7 +104,13 @@ class RuleProcessor implements IRuleProcessor {
         rule.parentTargetState
       );
       webLogger.information('Updated ' + parentWi.id + ' to ' + updated.fields['System.State']);
+
+      if (rule.processParent) {
+        parentToProcess = parentWi.id;
+      }
     }
+
+    return parentToProcess;
   }
 
   public async IsRuleMatch(
