@@ -44,13 +44,15 @@ class RuleProcessor implements IRuleProcessor {
       this._ruleDocs = await this._storageService.getData();
     }
   }
+
   private getRulesForWorkItemType(workItemType: string): RuleDocument | undefined {
     return this._ruleDocs.find(x => x.id === workItemType);
   }
+
   private async ProcessInternal(workItemId: number, processed: number[]) {
     const procsessedIds: number[] = [...processed];
     const parentToProcess = await this.ProcessWorkItem(workItemId);
-    console.log('processedIds', procsessedIds);
+    console.log(['processedIds', procsessedIds, 'parentToProcess', parentToProcess]);
     if (parentToProcess !== undefined) {
       if (procsessedIds.includes(parentToProcess)) {
         webLogger.information('Parent ' + parentToProcess + ' already processed');
@@ -60,14 +62,14 @@ class RuleProcessor implements IRuleProcessor {
         procsessedIds.push(parentToProcess);
         if (nextLevelForWorkItem !== undefined) {
           console.log('Next level is ', parentToProcess);
-          this.ProcessInternal(nextLevelForWorkItem, procsessedIds);
+          await this.ProcessInternal(nextLevelForWorkItem, procsessedIds);
         }
       }
     }
   }
 
   public async Process(workItemId: number): Promise<void> {
-    this.ProcessInternal(workItemId, []);
+    await this.ProcessInternal(workItemId, []);
   }
 
   public async ProcessWorkItem(workItemId: number): Promise<number | undefined> {
