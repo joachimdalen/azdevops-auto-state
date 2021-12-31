@@ -1,6 +1,13 @@
 {
   "issues": [
     {
+      "id": 1068816069,
+      "number": 1,
+      "submitter": "joachimdalen",
+      "title": "Allow recursive update of parents",
+      "url": "https://github.com/joachimdalen/azdevops-auto-state/issues/1"
+    },
+    {
       "id": 1088645645,
       "number": 13,
       "submitter": "joachimdalen",

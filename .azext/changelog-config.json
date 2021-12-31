@@ -12,6 +12,10 @@
     "size": "h4",
     "format": "`{{name}}@{{version}}`"
   },
+  "moduleChangesTitle": {
+    "size": "h2",
+    "format": ":package: Module changes"
+  },
   "sectionSplitter": "---",
   "typeSize": "h3",
   "typeMapping": {
