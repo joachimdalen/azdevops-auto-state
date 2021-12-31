@@ -481,6 +481,7 @@ describe('RuleProcessor', () => {
       await ruleProcessor.Init();
       const res = await ruleProcessor.Process(workItem.id);
 
+      expect(mockUpdateWorkItem).not.toHaveBeenCalled();
       expect(res).toBeUndefined();
     });
 
@@ -502,6 +503,7 @@ describe('RuleProcessor', () => {
       const ruleProcessor = new RuleProcessor();
       await ruleProcessor.Init();
       const res = await ruleProcessor.Process(workItem.id);
+      expect(mockUpdateWorkItem).not.toHaveBeenCalled();
       expect(res).toBeUndefined();
     });
 
@@ -526,6 +528,7 @@ describe('RuleProcessor', () => {
       const ruleProcessor = new RuleProcessor();
       await ruleProcessor.Init();
       const res = await ruleProcessor.Process(workItem.id);
+      expect(mockUpdateWorkItem).not.toHaveBeenCalled();
       expect(res).toBeUndefined();
     });
 
@@ -574,6 +577,16 @@ describe('RuleProcessor', () => {
       await ruleProcessor.Init();
       const res = await ruleProcessor.Process(workItem.id);
 
+      expect(mockUpdateWorkItem).toHaveBeenCalledWith(
+        [{ op: 'add', path: '/fields/System.State', value: 'Active' }],
+        122,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined
+      );
+      expect(mockUpdateWorkItem).toHaveBeenCalledTimes(1);
       expect(res).toBeUndefined();
     });
 
@@ -659,6 +672,24 @@ describe('RuleProcessor', () => {
       await ruleProcessor.Init();
       await ruleProcessor.Process(workItem.id);
 
+      expect(mockUpdateWorkItem).toHaveBeenCalledWith(
+        [{ op: 'add', path: '/fields/System.State', value: 'Active' }],
+        122,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined
+      );
+      expect(mockUpdateWorkItem).toHaveBeenCalledWith(
+        [{ op: 'add', path: '/fields/System.State', value: 'Active' }],
+        121,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined
+      );
       expect(mockUpdateWorkItem).toHaveBeenCalledTimes(2);
     });
   });
