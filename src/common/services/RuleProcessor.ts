@@ -52,7 +52,7 @@ class RuleProcessor implements IRuleProcessor {
   private async ProcessInternal(workItemId: number, processed: number[]) {
     const procsessedIds: number[] = [...processed];
     const parentToProcess = await this.ProcessWorkItem(workItemId);
-    console.log(['processedIds', procsessedIds, 'parentToProcess', parentToProcess]);
+    webLogger.trace(['processedIds', procsessedIds, 'parentToProcess', parentToProcess]);
     if (parentToProcess !== undefined) {
       if (procsessedIds.includes(parentToProcess)) {
         webLogger.information('Parent ' + parentToProcess + ' already processed');
@@ -61,7 +61,7 @@ class RuleProcessor implements IRuleProcessor {
         const nextLevelForWorkItem = await this.ProcessWorkItem(parentToProcess);
         procsessedIds.push(parentToProcess);
         if (nextLevelForWorkItem !== undefined) {
-          console.log('Next level is ', parentToProcess);
+          webLogger.trace('Next level is ', parentToProcess);
           await this.ProcessInternal(nextLevelForWorkItem, procsessedIds);
         }
       }
