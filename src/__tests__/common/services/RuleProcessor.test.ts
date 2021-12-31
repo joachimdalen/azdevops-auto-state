@@ -1,10 +1,12 @@
 import '@testing-library/jest-dom/extend-expect';
 
+import { WorkItem } from 'azure-devops-extension-api/WorkItemTracking';
 import { v4 as uuidV4 } from 'uuid';
 
 import {
   mockGetWorkItem,
-  mockGetWorkItems
+  mockGetWorkItems,
+  mockUpdateWorkItem
 } from '../../../__mocks__/azure-devops-extension-api/Wit';
 import {
   getWorkItem,
@@ -17,13 +19,14 @@ import RuleProcessor from '../../../common/services/RuleProcessor';
 import { StorageService } from '../../../common/services/StorageService';
 import WorkItemService from '../../../common/services/WorkItemService';
 
-jest.mock('../../../common/webLogger');
 jest.mock('azure-devops-extension-api');
 describe('RuleProcessor', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    jest.resetAllMocks();
     mockGetWorkItem.mockClear();
     mockGetWorkItems.mockClear();
+    mockUpdateWorkItem.mockClear();
   });
 
   describe('IsRuleMatch', () => {
@@ -31,14 +34,17 @@ describe('RuleProcessor', () => {
       jest.clearAllMocks();
       mockGetWorkItem.mockClear();
       mockGetWorkItems.mockClear();
+      mockUpdateWorkItem.mockClear();
     });
     test('returns true when only child', async () => {
       jest.spyOn(StorageService.prototype, 'getData').mockResolvedValue([]);
       jest
         .spyOn(WorkItemService.prototype, 'getWorkItemTypes')
         .mockResolvedValue(getWorkItemTypes());
-      const parentWorkItem = getWorkItem(9, WorkItemNames.UserStory, 'Active', [11], 'children');
-      const workItem = getWorkItem(11, WorkItemNames.Task, 'Closed', [9], 'parent');
+      const parentWorkItem = getWorkItem(9, WorkItemNames.UserStory, 'Active', [
+        { id: 11, type: 'children' }
+      ]);
+      const workItem = getWorkItem(11, WorkItemNames.Task, 'Closed', [{ id: 9, type: 'parent' }]);
 
       mockGetWorkItem.mockResolvedValueOnce(parentWorkItem);
       mockGetWorkItems.mockResolvedValueOnce([workItem]);
@@ -64,16 +70,16 @@ describe('RuleProcessor', () => {
         .spyOn(WorkItemService.prototype, 'getWorkItemTypes')
         .mockResolvedValue(getWorkItemTypes());
 
-      const parentWorkItem = getWorkItem(
-        9,
-        WorkItemNames.UserStory,
-        'Active',
-        [11, 113, 222],
-        'children'
-      );
-      const workItem = getWorkItem(11, WorkItemNames.Task, 'Closed', [9], 'parent');
-      const taskItem = getWorkItem(113, WorkItemNames.Task, 'Closed', [9], 'parent');
-      const taskItemTwo = getWorkItem(222, WorkItemNames.Task, 'Closed', [9], 'parent');
+      const parentWorkItem = getWorkItem(9, WorkItemNames.UserStory, 'Active', [
+        { id: 11, type: 'children' },
+        { id: 113, type: 'children' },
+        { id: 222, type: 'children' }
+      ]);
+      const workItem = getWorkItem(11, WorkItemNames.Task, 'Closed', [{ id: 9, type: 'parent' }]);
+      const taskItem = getWorkItem(113, WorkItemNames.Task, 'Closed', [{ id: 9, type: 'parent' }]);
+      const taskItemTwo = getWorkItem(222, WorkItemNames.Task, 'Closed', [
+        { id: 9, type: 'parent' }
+      ]);
       mockGetWorkItem.mockResolvedValueOnce(parentWorkItem);
       mockGetWorkItems.mockResolvedValueOnce([workItem, taskItem, taskItemTwo]);
 
@@ -115,23 +121,20 @@ describe('RuleProcessor', () => {
         .spyOn(WorkItemService.prototype, 'getWorkItemTypes')
         .mockResolvedValue(getWorkItemTypes());
 
-      const parentWorkItem = getWorkItem(
-        9,
-        WorkItemNames.UserStory,
-        'Active',
-        [11, 113, 222, 2232],
-        'children'
-      );
-      const workItem = getWorkItem(11, WorkItemNames.Task, 'Closed', [9], 'parent');
-      const taskItem = getWorkItem(113, WorkItemNames.Task, 'Closed', [9], 'parent');
-      const taskItemTwo = getWorkItem(222, WorkItemNames.Task, 'Closed', [9], 'parent');
-      const documentationItemOne = getWorkItem(
-        2232,
-        WorkItemNames.Documentation,
-        'Active',
-        [9],
-        'parent'
-      );
+      const parentWorkItem = getWorkItem(9, WorkItemNames.UserStory, 'Active', [
+        { id: 11, type: 'children' },
+        { id: 113, type: 'children' },
+        { id: 222, type: 'children' },
+        { id: 2232, type: 'children' }
+      ]);
+      const workItem = getWorkItem(11, WorkItemNames.Task, 'Closed', [{ id: 9, type: 'parent' }]);
+      const taskItem = getWorkItem(113, WorkItemNames.Task, 'Closed', [{ id: 9, type: 'parent' }]);
+      const taskItemTwo = getWorkItem(222, WorkItemNames.Task, 'Closed', [
+        { id: 9, type: 'parent' }
+      ]);
+      const documentationItemOne = getWorkItem(2232, WorkItemNames.Documentation, 'Active', [
+        { id: 9, type: 'parent' }
+      ]);
       mockGetWorkItem.mockResolvedValueOnce(parentWorkItem);
       mockGetWorkItems.mockResolvedValueOnce([
         workItem,
@@ -165,7 +168,7 @@ describe('RuleProcessor', () => {
         parentTargetState: 'Resolved',
         parentType: WorkItemReferenceNames.UserStory,
         workItemType: WorkItemReferenceNames.Documentation,
-        processParent: false,
+        processParent: false
       };
       jest.spyOn(StorageService.prototype, 'getData').mockResolvedValue([
         {
@@ -181,23 +184,20 @@ describe('RuleProcessor', () => {
         .spyOn(WorkItemService.prototype, 'getWorkItemTypes')
         .mockResolvedValue(getWorkItemTypes());
 
-      const parentWorkItem = getWorkItem(
-        9,
-        WorkItemNames.UserStory,
-        'Active',
-        [11, 113, 222, 2232],
-        'children'
-      );
-      const workItem = getWorkItem(11, WorkItemNames.Task, 'Closed', [9], 'parent');
-      const taskItem = getWorkItem(113, WorkItemNames.Task, 'Closed', [9], 'parent');
-      const taskItemTwo = getWorkItem(222, WorkItemNames.Task, 'Closed', [9], 'parent');
-      const documentationItemOne = getWorkItem(
-        2232,
-        WorkItemNames.Documentation,
-        'Closed',
-        [9],
-        'parent'
-      );
+      const parentWorkItem = getWorkItem(9, WorkItemNames.UserStory, 'Active', [
+        { id: 11, type: 'children' },
+        { id: 113, type: 'children' },
+        { id: 222, type: 'children' },
+        { id: 2232, type: 'children' }
+      ]);
+      const workItem = getWorkItem(11, WorkItemNames.Task, 'Closed', [{ id: 9, type: 'parent' }]);
+      const taskItem = getWorkItem(113, WorkItemNames.Task, 'Closed', [{ id: 9, type: 'parent' }]);
+      const taskItemTwo = getWorkItem(222, WorkItemNames.Task, 'Closed', [
+        { id: 9, type: 'parent' }
+      ]);
+      const documentationItemOne = getWorkItem(2232, WorkItemNames.Documentation, 'Closed', [
+        { id: 9, type: 'parent' }
+      ]);
       mockGetWorkItem.mockResolvedValueOnce(parentWorkItem);
       mockGetWorkItems.mockResolvedValueOnce([
         workItem,
@@ -218,16 +218,16 @@ describe('RuleProcessor', () => {
         .spyOn(WorkItemService.prototype, 'getWorkItemTypes')
         .mockResolvedValue(getWorkItemTypes());
 
-      const parentWorkItem = getWorkItem(
-        9,
-        WorkItemNames.UserStory,
-        'New',
-        [11, 113, 222],
-        'children'
-      );
-      const workItem = getWorkItem(11, WorkItemNames.Task, 'Closed', [9], 'parent');
-      const taskItem = getWorkItem(113, WorkItemNames.Task, 'Closed', [9], 'parent');
-      const taskItemTwo = getWorkItem(222, WorkItemNames.Task, 'Active', [9], 'parent');
+      const parentWorkItem = getWorkItem(9, WorkItemNames.UserStory, 'New', [
+        { id: 11, type: 'children' },
+        { id: 113, type: 'children' },
+        { id: 222, type: 'children' }
+      ]);
+      const workItem = getWorkItem(11, WorkItemNames.Task, 'Closed', [{ id: 9, type: 'parent' }]);
+      const taskItem = getWorkItem(113, WorkItemNames.Task, 'Closed', [{ id: 9, type: 'parent' }]);
+      const taskItemTwo = getWorkItem(222, WorkItemNames.Task, 'Active', [
+        { id: 9, type: 'parent' }
+      ]);
       mockGetWorkItem.mockResolvedValueOnce(parentWorkItem);
       mockGetWorkItems.mockResolvedValueOnce([workItem, taskItem, taskItemTwo]);
 
@@ -253,8 +253,10 @@ describe('RuleProcessor', () => {
       jest
         .spyOn(WorkItemService.prototype, 'getWorkItemTypes')
         .mockResolvedValue(getWorkItemTypes());
-      const parentWorkItem = getWorkItem(9, WorkItemNames.UserStory, 'Active', [11], 'children');
-      const workItem = getWorkItem(11, WorkItemNames.Task, 'Active', [9], 'parent');
+      const parentWorkItem = getWorkItem(9, WorkItemNames.UserStory, 'Active', [
+        { id: 11, type: 'children' }
+      ]);
+      const workItem = getWorkItem(11, WorkItemNames.Task, 'Active', [{ id: 9, type: 'parent' }]);
 
       mockGetWorkItem.mockResolvedValueOnce(parentWorkItem);
       mockGetWorkItems.mockResolvedValueOnce([workItem]);
@@ -278,8 +280,10 @@ describe('RuleProcessor', () => {
       jest
         .spyOn(WorkItemService.prototype, 'getWorkItemTypes')
         .mockResolvedValue(getWorkItemTypes());
-      const parentWorkItem = getWorkItem(9, WorkItemNames.UserStory, 'New', [11], 'children');
-      const workItem = getWorkItem(11, WorkItemNames.Task, 'Active', [9], 'parent');
+      const parentWorkItem = getWorkItem(9, WorkItemNames.UserStory, 'New', [
+        { id: 11, type: 'children' }
+      ]);
+      const workItem = getWorkItem(11, WorkItemNames.Task, 'Active', [{ id: 9, type: 'parent' }]);
 
       mockGetWorkItem.mockResolvedValueOnce(parentWorkItem);
       mockGetWorkItems.mockResolvedValueOnce([workItem]);
@@ -305,8 +309,10 @@ describe('RuleProcessor', () => {
       jest
         .spyOn(WorkItemService.prototype, 'getWorkItemTypes')
         .mockResolvedValue(getWorkItemTypes());
-      const parentWorkItem = getWorkItem(9, WorkItemNames.UserStory, 'Active', [11], 'children');
-      const workItem = getWorkItem(11, WorkItemNames.Task, 'Active', [9], 'parent');
+      const parentWorkItem = getWorkItem(9, WorkItemNames.UserStory, 'Active', [
+        { id: 11, type: 'children' }
+      ]);
+      const workItem = getWorkItem(11, WorkItemNames.Task, 'Active', [{ id: 9, type: 'parent' }]);
 
       mockGetWorkItem.mockResolvedValueOnce(parentWorkItem);
       mockGetWorkItems.mockResolvedValueOnce([workItem]);
@@ -332,8 +338,10 @@ describe('RuleProcessor', () => {
       jest
         .spyOn(WorkItemService.prototype, 'getWorkItemTypes')
         .mockResolvedValue(getWorkItemTypes());
-      const parentWorkItem = getWorkItem(9, WorkItemNames.UserStory, 'New', [11], 'children');
-      const workItem = getWorkItem(11, WorkItemNames.Task, 'Active', [9], 'parent');
+      const parentWorkItem = getWorkItem(9, WorkItemNames.UserStory, 'New', [
+        { id: 11, type: 'children' }
+      ]);
+      const workItem = getWorkItem(11, WorkItemNames.Task, 'Active', [{ id: 9, type: 'parent' }]);
 
       mockGetWorkItem.mockResolvedValueOnce(parentWorkItem);
       mockGetWorkItems.mockResolvedValueOnce([workItem]);
@@ -359,8 +367,10 @@ describe('RuleProcessor', () => {
       jest
         .spyOn(WorkItemService.prototype, 'getWorkItemTypes')
         .mockResolvedValue(getWorkItemTypes());
-      const parentWorkItem = getWorkItem(9, WorkItemNames.UserStory, 'New', [11], 'children');
-      const workItem = getWorkItem(11, WorkItemNames.Task, 'Active', [9], 'parent');
+      const parentWorkItem = getWorkItem(9, WorkItemNames.UserStory, 'New', [
+        { id: 11, type: 'children' }
+      ]);
+      const workItem = getWorkItem(11, WorkItemNames.Task, 'Active', [{ id: 9, type: 'parent' }]);
 
       mockGetWorkItem.mockResolvedValueOnce(parentWorkItem);
       mockGetWorkItems.mockResolvedValueOnce([workItem]);
@@ -386,8 +396,10 @@ describe('RuleProcessor', () => {
       jest
         .spyOn(WorkItemService.prototype, 'getWorkItemTypes')
         .mockResolvedValue(getWorkItemTypes());
-      const parentWorkItem = getWorkItem(9, WorkItemNames.UserStory, 'New', [11], 'children');
-      const workItem = getWorkItem(11, WorkItemNames.Task, 'New', [9], 'parent');
+      const parentWorkItem = getWorkItem(9, WorkItemNames.UserStory, 'New', [
+        { id: 11, type: 'children' }
+      ]);
+      const workItem = getWorkItem(11, WorkItemNames.Task, 'New', [{ id: 9, type: 'parent' }]);
 
       mockGetWorkItem.mockResolvedValueOnce(parentWorkItem);
       mockGetWorkItems.mockResolvedValueOnce([workItem]);
@@ -413,8 +425,10 @@ describe('RuleProcessor', () => {
       jest
         .spyOn(WorkItemService.prototype, 'getWorkItemTypes')
         .mockResolvedValue(getWorkItemTypes());
-      const parentWorkItem = getWorkItem(9, WorkItemNames.UserStory, 'Active', [11], 'children');
-      const workItem = getWorkItem(11, WorkItemNames.Task, 'Active', [9], 'parent');
+      const parentWorkItem = getWorkItem(9, WorkItemNames.UserStory, 'Active', [
+        { id: 11, type: 'children' }
+      ]);
+      const workItem = getWorkItem(11, WorkItemNames.Task, 'Active', [{ id: 9, type: 'parent' }]);
 
       mockGetWorkItem.mockResolvedValueOnce(parentWorkItem);
       mockGetWorkItems.mockResolvedValueOnce([workItem]);
@@ -433,6 +447,219 @@ describe('RuleProcessor', () => {
       await ruleProcessor.Init();
       const res = await ruleProcessor.IsRuleMatch(rule, workItem, parentWorkItem);
       expect(res).toBeFalsy();
+    });
+  });
+
+  describe('Process', () => {
+    const getDataSpy = jest.spyOn(StorageService.prototype, 'getData');
+
+    beforeEach(() => {
+      jest.clearAllMocks();
+      jest.resetAllMocks();
+      mockGetWorkItem.mockClear();
+      mockGetWorkItems.mockClear();
+      mockUpdateWorkItem.mockClear();
+      getDataSpy.mockResolvedValue([]);
+      jest
+        .spyOn(WorkItemService.prototype, 'getWorkItemTypes')
+        .mockResolvedValue(getWorkItemTypes());
+    });
+
+    test('returns undefined if no parent is return', async () => {
+      const workItem = getWorkItem(123, WorkItemNames.Task, 'Active', [
+        { id: 122, type: 'parent' }
+      ]);
+      mockGetWorkItem.mockImplementation(id => {
+        switch (id) {
+          case 123:
+            return Promise.resolve(workItem);
+          default:
+            return Promise.resolve(undefined);
+        }
+      });
+      const ruleProcessor = new RuleProcessor();
+      await ruleProcessor.Init();
+      const res = await ruleProcessor.Process(workItem.id);
+
+      expect(res).toBeUndefined();
+    });
+
+    test('returns undefined if unknown work item type', async () => {
+      const parentWorkItem = getWorkItem(122, WorkItemNames.UserStory, 'New', [
+        { id: 123, type: 'children' }
+      ]);
+      const workItem = getWorkItem(123, 'DemoTask' as any, 'Active', [{ id: 122, type: 'parent' }]);
+      mockGetWorkItem.mockImplementation(id => {
+        switch (id) {
+          case 123:
+            return Promise.resolve(workItem);
+          case 122:
+            return Promise.resolve(parentWorkItem);
+          default:
+            return Promise.reject('No such item');
+        }
+      });
+      const ruleProcessor = new RuleProcessor();
+      await ruleProcessor.Init();
+      const res = await ruleProcessor.Process(workItem.id);
+      expect(res).toBeUndefined();
+    });
+
+    test('returns undefined if no rules for type', async () => {
+      const parentWorkItem = getWorkItem(122, WorkItemNames.UserStory, 'New', [
+        { id: 123, type: 'children' }
+      ]);
+      const workItem = getWorkItem(123, WorkItemNames.Task, 'Active', [
+        { id: 122, type: 'parent' }
+      ]);
+      getDataSpy.mockResolvedValue([{ id: WorkItemReferenceNames.UserStory, rules: [] }]);
+      mockGetWorkItem.mockImplementation(id => {
+        switch (id) {
+          case 123:
+            return Promise.resolve(workItem);
+          case 122:
+            return Promise.resolve(parentWorkItem);
+          default:
+            return Promise.reject('No such item');
+        }
+      });
+      const ruleProcessor = new RuleProcessor();
+      await ruleProcessor.Init();
+      const res = await ruleProcessor.Process(workItem.id);
+      expect(res).toBeUndefined();
+    });
+
+    test('update work item state when rule matches', async () => {
+      const parentWorkItem = getWorkItem(122, WorkItemNames.UserStory, 'New', [
+        { id: 123, type: 'children' }
+      ]);
+      const workItem = getWorkItem(123, WorkItemNames.Task, 'Active', [
+        { id: 122, type: 'parent' }
+      ]);
+      getDataSpy.mockResolvedValue([
+        {
+          id: WorkItemReferenceNames.Task,
+          rules: [
+            {
+              id: '1',
+              parentType: WorkItemReferenceNames.UserStory,
+              workItemType: WorkItemReferenceNames.Task,
+              transitionState: 'Active',
+              parentExcludedStates: ['Active', 'Resolved', 'Closed'],
+              parentTargetState: 'Active',
+              childrenLookup: false,
+              processParent: false
+            }
+          ]
+        }
+      ]);
+      mockUpdateWorkItem.mockImplementation((document, id) => {
+        const newWi = { ...workItem };
+        newWi.fields['System.State'] = document[0].value;
+        return Promise.resolve(newWi);
+      });
+
+      mockGetWorkItem.mockImplementation(id => {
+        switch (id) {
+          case 123:
+            return Promise.resolve(workItem);
+          case 122:
+            return Promise.resolve(parentWorkItem);
+          default:
+            return Promise.reject('No such item');
+        }
+      });
+
+      const ruleProcessor = new RuleProcessor();
+      await ruleProcessor.Init();
+      const res = await ruleProcessor.Process(workItem.id);
+
+      expect(res).toBeUndefined();
+    });
+
+    test('update work item and parent state when rule matches', async () => {
+      const workItems = new Map<number, WorkItem>();
+      const parentParentWorkItem = getWorkItem(121, WorkItemNames.Feature, 'New', [
+        {
+          id: 122,
+          type: 'children'
+        }
+      ]);
+      const parentWorkItem = getWorkItem(122, WorkItemNames.UserStory, 'New', [
+        {
+          id: 123,
+          type: 'children'
+        },
+        {
+          id: 121,
+          type: 'parent'
+        }
+      ]);
+      const workItem = getWorkItem(123, WorkItemNames.Task, 'Active', [
+        {
+          id: 122,
+          type: 'parent'
+        }
+      ]);
+
+      workItems.set(workItem.id, workItem);
+      workItems.set(parentWorkItem.id, parentWorkItem);
+      workItems.set(parentParentWorkItem.id, parentParentWorkItem);
+
+      getDataSpy.mockResolvedValue([
+        {
+          id: WorkItemReferenceNames.Task,
+          rules: [
+            {
+              id: '1',
+              parentType: WorkItemReferenceNames.UserStory,
+              workItemType: WorkItemReferenceNames.Task,
+              transitionState: 'Active',
+              parentExcludedStates: ['Active', 'Resolved', 'Closed'],
+              parentTargetState: 'Active',
+              childrenLookup: false,
+              processParent: true
+            }
+          ]
+        },
+        {
+          id: WorkItemReferenceNames.UserStory,
+          rules: [
+            {
+              id: '2',
+              parentType: WorkItemReferenceNames.Feature,
+              workItemType: WorkItemReferenceNames.UserStory,
+              transitionState: 'Active',
+              parentExcludedStates: ['Active', 'Resolved', 'Closed'],
+              parentTargetState: 'Active',
+              childrenLookup: false,
+              processParent: false
+            }
+          ]
+        }
+      ]);
+      mockUpdateWorkItem.mockImplementation((document, id) => {
+        const newWi = workItems.get(id);
+
+        if (newWi === undefined) {
+          return Promise.reject('Err');
+        }
+
+        newWi.fields['System.State'] = document[0].value;
+        workItems.set(id, newWi);
+
+        return Promise.resolve(newWi);
+      });
+
+      mockGetWorkItem.mockImplementation(id => {
+        return workItems.get(id);
+      });
+
+      const ruleProcessor = new RuleProcessor();
+      await ruleProcessor.Init();
+      await ruleProcessor.Process(workItem.id);
+
+      expect(mockUpdateWorkItem).toHaveBeenCalledTimes(2);
     });
   });
 });
