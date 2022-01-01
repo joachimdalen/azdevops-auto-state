@@ -17,6 +17,13 @@
   ],
   "pullRequests": [
     {
+      "id": 812533162,
+      "number": 19,
+      "submitter": "joachimdalen",
+      "title": "Add recursive updating and rule improvements",
+      "url": "https://github.com/joachimdalen/azdevops-auto-state/pull/19"
+    },
+    {
       "id": 809926568,
       "number": 14,
       "submitter": "joachimdalen",
