@@ -6,7 +6,7 @@
   "public": false,
   "name": "Auto State - DEV",
   "publisher": "JoachimDalen",
-  "version": "0.0.8",
+  "version": "1.0.2",
   "description": "An extension to automatically update states between parents and children",
   "categories": ["Azure Boards"],
   "demands": ["api-version/5.1"],
@@ -83,6 +83,44 @@
       "targets": [],
       "properties": {
         "uri": "rule-modal.html"
+      },
+      "constraints": [
+        {
+          "name": "Feature",
+          "properties": {
+            "featureId": "joachimdalen.auto-state-dev.auto-state-enabled"
+          }
+        }
+      ]
+    },
+    {
+      "id": "rule-tester",
+      "type": "ms.vss-web.external-content",
+      "targets": [],
+      "properties": {
+        "uri": "rule-tester.html"
+      },
+      "constraints": [
+        {
+          "name": "Feature",
+          "properties": {
+            "featureId": "joachimdalen.auto-state-dev.auto-state-enabled"
+          }
+        }
+      ]
+    },
+    {
+      "id": "rule-tester-toolbar",
+      "type": "ms.vss-web.action",
+      "description": "Show the Auto State rule tester",
+      "targets": ["ms.vss-work-web.work-item-toolbar-menu"],
+      "properties": {
+        "text": "Auto State Tester",
+        "title": "Auto State Tester",
+        "icon": "extension-icon.png",
+        "group": "actions",
+        "uri": "rule-tester-action.html",
+        "registeredObjectId": "rule-tester-action"
       },
       "constraints": [
         {
