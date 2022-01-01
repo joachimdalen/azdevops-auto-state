@@ -57,6 +57,10 @@ describe('workItemUtils', () => {
       );
       expect(id).toEqual(8999);
     });
+    test('returns undefined when no parent', () => {
+      const id = getParentId(getWorkItem(1255, WorkItemNames.UserStory, 'New'));
+      expect(id).toBeUndefined();
+    });
   });
 
   describe('getChildIds', () => {
@@ -69,6 +73,11 @@ describe('workItemUtils', () => {
         ])
       );
       expect(ids).toEqual([1234, 1235, 1855]);
+    });
+    test('returns undefined when empty relations', () => {
+      const wi = getWorkItem(8999, WorkItemNames.Feature, 'Active');
+      const ids = getChildIds(wi);
+      expect(ids).toBeUndefined();
     });
   });
 });

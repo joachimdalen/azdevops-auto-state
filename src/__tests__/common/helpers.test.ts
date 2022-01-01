@@ -2,7 +2,7 @@ import { asyncFilter, groupBy } from '../../common/helpers';
 
 describe('commom-helpers', () => {
   describe('asyncFilter', () => {
-    test('filters correctly', async () => {
+    it('filters correctly', async () => {
       const items = [true, false, true];
       const result = await asyncFilter(items, x => Promise.resolve(x));
       expect(result.length).toEqual(2);
@@ -10,7 +10,7 @@ describe('commom-helpers', () => {
   });
 
   describe('groupBy', () => {
-    test('groups correctly', async () => {
+    it('groups correctly', async () => {
       const items = [
         { id: 1, type: 'type-1' },
         { id: 2, type: 'type-2' },

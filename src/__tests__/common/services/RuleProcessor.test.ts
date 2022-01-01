@@ -37,7 +37,7 @@ describe('RuleProcessor', () => {
       mockGetWorkItems.mockClear();
       mockUpdateWorkItem.mockClear();
     });
-    test('returns true when only child', async () => {
+    it('returns true when only child', async () => {
       jest.spyOn(StorageService.prototype, 'getData').mockResolvedValue([]);
       jest
         .spyOn(WorkItemService.prototype, 'getWorkItemTypes')
@@ -65,7 +65,7 @@ describe('RuleProcessor', () => {
       const res = await ruleProcessor.IsRuleMatch(rule, workItem, parentWorkItem);
       expect(res).toBeTruthy();
     });
-    test('returns true when only children of same type', async () => {
+    it('returns true when only children of same type', async () => {
       jest.spyOn(StorageService.prototype, 'getData').mockResolvedValue([]);
       jest
         .spyOn(WorkItemService.prototype, 'getWorkItemTypes')
@@ -101,7 +101,7 @@ describe('RuleProcessor', () => {
 
       expect(res).toBeTruthy();
     });
-    test('returns false when children of different types and missing rules', async () => {
+    it('returns false when children of different types and missing rules', async () => {
       const rule: Rule = {
         id: uuidV4(),
         childrenLookup: true,
@@ -150,7 +150,7 @@ describe('RuleProcessor', () => {
 
       expect(res).toBeFalsy();
     });
-    test('returns true when children of different types and matching rules', async () => {
+    it('returns true when children of different types and matching rules', async () => {
       const rule: Rule = {
         id: uuidV4(),
         childrenLookup: true,
@@ -213,7 +213,7 @@ describe('RuleProcessor', () => {
 
       expect(res).toBeTruthy();
     });
-    test('returns false when only children of same but rule does not match', async () => {
+    it('returns false when only children of same but rule does not match', async () => {
       jest.spyOn(StorageService.prototype, 'getData').mockResolvedValue([]);
       jest
         .spyOn(WorkItemService.prototype, 'getWorkItemTypes')
@@ -249,7 +249,7 @@ describe('RuleProcessor', () => {
 
       expect(res).toBeFalsy();
     });
-    test('returns false when parent state is already target state', async () => {
+    it('returns false when parent state is already target state', async () => {
       jest.spyOn(StorageService.prototype, 'getData').mockResolvedValue([]);
       jest
         .spyOn(WorkItemService.prototype, 'getWorkItemTypes')
@@ -276,7 +276,7 @@ describe('RuleProcessor', () => {
       const res = await ruleProcessor.IsRuleMatch(rule, workItem, parentWorkItem);
       expect(res).toBeFalsy();
     });
-    test('returns true when matches', async () => {
+    it('returns true when matches', async () => {
       jest.spyOn(StorageService.prototype, 'getData').mockResolvedValue([]);
       jest
         .spyOn(WorkItemService.prototype, 'getWorkItemTypes')
@@ -305,7 +305,7 @@ describe('RuleProcessor', () => {
       const res = await ruleProcessor.IsRuleMatch(rule, workItem, parentWorkItem);
       expect(res).toBeTruthy();
     });
-    test('returns false when not matches', async () => {
+    it('returns false when not matches', async () => {
       jest.spyOn(StorageService.prototype, 'getData').mockResolvedValue([]);
       jest
         .spyOn(WorkItemService.prototype, 'getWorkItemTypes')
@@ -334,7 +334,7 @@ describe('RuleProcessor', () => {
       const res = await ruleProcessor.IsRuleMatch(rule, workItem, parentWorkItem);
       expect(res).toBeFalsy();
     });
-    test('returns false when child type does not match', async () => {
+    it('returns false when child type does not match', async () => {
       jest.spyOn(StorageService.prototype, 'getData').mockResolvedValue([]);
       jest
         .spyOn(WorkItemService.prototype, 'getWorkItemTypes')
@@ -363,7 +363,7 @@ describe('RuleProcessor', () => {
       const res = await ruleProcessor.IsRuleMatch(rule, workItem, parentWorkItem);
       expect(res).toBeFalsy();
     });
-    test('returns false when parent type does not match', async () => {
+    it('returns false when parent type does not match', async () => {
       jest.spyOn(StorageService.prototype, 'getData').mockResolvedValue([]);
       jest
         .spyOn(WorkItemService.prototype, 'getWorkItemTypes')
@@ -392,7 +392,7 @@ describe('RuleProcessor', () => {
       const res = await ruleProcessor.IsRuleMatch(rule, workItem, parentWorkItem);
       expect(res).toBeFalsy();
     });
-    test('returns false when child state does not match', async () => {
+    it('returns false when child state does not match', async () => {
       jest.spyOn(StorageService.prototype, 'getData').mockResolvedValue([]);
       jest
         .spyOn(WorkItemService.prototype, 'getWorkItemTypes')
@@ -421,7 +421,7 @@ describe('RuleProcessor', () => {
       const res = await ruleProcessor.IsRuleMatch(rule, workItem, parentWorkItem);
       expect(res).toBeFalsy();
     });
-    test('returns false when parent states does not match', async () => {
+    it('returns false when parent states does not match', async () => {
       jest.spyOn(StorageService.prototype, 'getData').mockResolvedValue([]);
       jest
         .spyOn(WorkItemService.prototype, 'getWorkItemTypes')
@@ -466,7 +466,7 @@ describe('RuleProcessor', () => {
         .mockResolvedValue(getWorkItemTypes());
     });
 
-    test('returns undefined if no parent is return', async () => {
+    it('should not update if no parent is returned', async () => {
       const workItem = getWorkItem(123, WorkItemNames.Task, 'Active', [
         { id: 122, type: 'parent' }
       ]);
@@ -486,7 +486,7 @@ describe('RuleProcessor', () => {
       expect(res).toBeUndefined();
     });
 
-    test('returns undefined if unknown work item type', async () => {
+    it('should not update if unknown work item type', async () => {
       const parentWorkItem = getWorkItem(122, WorkItemNames.UserStory, 'New', [
         { id: 123, type: 'children' }
       ]);
@@ -508,7 +508,7 @@ describe('RuleProcessor', () => {
       expect(res).toBeUndefined();
     });
 
-    test('returns undefined if no rules for type', async () => {
+    it('should not update if no rules are defined for work item type', async () => {
       const parentWorkItem = getWorkItem(122, WorkItemNames.UserStory, 'New', [
         { id: 123, type: 'children' }
       ]);
@@ -533,7 +533,7 @@ describe('RuleProcessor', () => {
       expect(res).toBeUndefined();
     });
 
-    test('update work item state when rule matches', async () => {
+    it('should update work item state when rule matches', async () => {
       const parentWorkItem = getWorkItem(122, WorkItemNames.UserStory, 'New', [
         { id: 123, type: 'children' }
       ]);
@@ -591,7 +591,7 @@ describe('RuleProcessor', () => {
       expect(res).toBeUndefined();
     });
 
-    test('update work item and parent state when rule matches', async () => {
+    it('should update work item and parent state when rule matches', async () => {
       const workItems = new Map<number, WorkItem>();
       const parentParentWorkItem = getWorkItem(121, WorkItemNames.Feature, 'New', [
         {
@@ -693,7 +693,7 @@ describe('RuleProcessor', () => {
       );
       expect(mockUpdateWorkItem).toHaveBeenCalledTimes(2);
     });
-    test('stops processing at first processParent=false', async () => {
+    it('should stop processing at first processParent=false', async () => {
       const workItems = new Map<number, WorkItem>();
       const epicWorkItem = getWorkItem(120, WorkItemNames.Epic, 'New', [
         {
@@ -801,8 +801,118 @@ describe('RuleProcessor', () => {
       await ruleProcessor.Init();
       await ruleProcessor.Process(workItem.id);
 
-      console.log(mockUpdateWorkItem.mock.calls)
+      console.log(mockUpdateWorkItem.mock.calls);
       expect(mockUpdateWorkItem).toHaveBeenCalledTimes(2);
+    });
+    it('should process all the way to the top', async () => {
+      const workItems = new Map<number, WorkItem>();
+      const epicWorkItem = getWorkItem(120, WorkItemNames.Epic, 'New', [
+        {
+          id: 121,
+          type: 'children'
+        }
+      ]);
+      const featureWorkItem = getWorkItem(121, WorkItemNames.Feature, 'New', [
+        {
+          id: 122,
+          type: 'children'
+        },
+        {
+          id: 120,
+          type: 'parent'
+        }
+      ]);
+      const usWorkItem = getWorkItem(122, WorkItemNames.UserStory, 'New', [
+        {
+          id: 123,
+          type: 'children'
+        },
+        {
+          id: 121,
+          type: 'parent'
+        }
+      ]);
+      const workItem = getWorkItem(123, WorkItemNames.Task, 'Active', [
+        {
+          id: 122,
+          type: 'parent'
+        }
+      ]);
+
+      workItems.set(workItem.id, workItem);
+      workItems.set(usWorkItem.id, usWorkItem);
+      workItems.set(featureWorkItem.id, featureWorkItem);
+      workItems.set(epicWorkItem.id, epicWorkItem);
+
+      getDataSpy.mockResolvedValue([
+        {
+          id: WorkItemReferenceNames.Task,
+          rules: [
+            {
+              id: '1',
+              parentType: WorkItemReferenceNames.UserStory,
+              workItemType: WorkItemReferenceNames.Task,
+              transitionState: 'Active',
+              parentExcludedStates: ['Active', 'Resolved', 'Closed'],
+              parentTargetState: 'Active',
+              childrenLookup: false,
+              processParent: true
+            }
+          ]
+        },
+        {
+          id: WorkItemReferenceNames.UserStory,
+          rules: [
+            {
+              id: '2',
+              parentType: WorkItemReferenceNames.Feature,
+              workItemType: WorkItemReferenceNames.UserStory,
+              transitionState: 'Active',
+              parentExcludedStates: ['Active', 'Resolved', 'Closed'],
+              parentTargetState: 'Active',
+              childrenLookup: false,
+              processParent: true
+            }
+          ]
+        },
+        {
+          id: WorkItemReferenceNames.Feature,
+          rules: [
+            {
+              id: '3',
+              parentType: WorkItemReferenceNames.Epic,
+              workItemType: WorkItemReferenceNames.Feature,
+              transitionState: 'Active',
+              parentExcludedStates: ['Active', 'Resolved', 'Closed'],
+              parentTargetState: 'Active',
+              childrenLookup: false,
+              processParent: true
+            }
+          ]
+        }
+      ]);
+      mockUpdateWorkItem.mockImplementation((document, id) => {
+        const newWi = workItems.get(id);
+
+        if (newWi === undefined) {
+          return Promise.reject('Err');
+        }
+
+        newWi.fields['System.State'] = document[0].value;
+        workItems.set(id, newWi);
+
+        return Promise.resolve(newWi);
+      });
+
+      mockGetWorkItem.mockImplementation(id => {
+        return workItems.get(id);
+      });
+
+      const ruleProcessor = new RuleProcessor();
+      await ruleProcessor.Init();
+      await ruleProcessor.Process(workItem.id);
+
+      expect(mockUpdateWorkItem).toHaveBeenCalledTimes(3);
     });
   });
 });

@@ -11,7 +11,7 @@ describe('RuleService', () => {
     afterEach(() => {
       jest.clearAllMocks();
     });
-    test('should return when storage throws 404', async () => {
+    it('should return when storage throws 404', async () => {
       jest.spyOn(StorageService.prototype, 'getData').mockRejectedValue({
         status: 404
       });
@@ -20,7 +20,7 @@ describe('RuleService', () => {
       const result = await ruleService.load();
       expect(result.success).toBeTruthy();
     });
-    test('should throw if error is not 404', async () => {
+    it('should throw if error is not 404', async () => {
       jest.spyOn(StorageService.prototype, 'getData').mockRejectedValue({
         status: 400
       });
@@ -29,7 +29,7 @@ describe('RuleService', () => {
         await ruleService.load();
       }).rejects.toThrow();
     });
-    test('should only load once', async () => {
+    it('should only load once', async () => {
       const getDataSpy = jest.spyOn(StorageService.prototype, 'getData').mockResolvedValue([]);
       const ruleService = new RuleService();
       await ruleService.load();
