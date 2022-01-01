@@ -1,20 +1,23 @@
 [
   {
     "version": "1.1.0",
-    "publishDate": "2021-12-XX",
+    "publishDate": "2022-01-XX",
     "changes": [
       {
         "description": "Refactor build setup to reduce file sizes",
-        "type": "maint"
+        "type": "maint",
+        "pullRequest": 19
       },
       {
         "description": "Added support for recursive updating of parents",
         "type": "feature",
-        "issue": 1
+        "issue": 1,
+        "pullRequest": 19
       },
       {
         "description": "Updated dependencies",
-        "type": "maint"
+        "type": "maint",
+        "pullRequest": 19
       }
     ],
     "modules": [
@@ -24,15 +27,18 @@
         "changes": [
           {
             "type": "feature",
-            "description": "Replaced modal with panels for better UX"
+            "description": "Replaced modal with panels for better UX",
+            "pullRequest": 19
           },
           {
             "type": "other",
-            "description": "Added helper texts to all fields"
+            "description": "Added helper texts to all fields",
+            "pullRequest": 19
           },
           {
             "type": "fix",
-            "description": "Fixed an issue when updating a rule where it would report it being a duplicated rule"
+            "description": "Fixed an issue when updating a rule where it would report it being a duplicated rule",
+            "pullRequest": 19
           }
         ]
       }

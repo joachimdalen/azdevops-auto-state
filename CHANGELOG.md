@@ -1,16 +1,19 @@
 # Changelog
 
-## 1.1.0 (2021-12-XX)
+## 1.1.0 (2022-01-XX)
 
 ### 🛠️ Maintenance (2)
 
 - Refactor build setup to reduce file sizes
+  - Pull Request: [GH#19 - Add recursive updating and rule improvements](https://github.com/joachimdalen/azdevops-auto-state/pull/19)
 - Updated dependencies
+  - Pull Request: [GH#19 - Add recursive updating and rule improvements](https://github.com/joachimdalen/azdevops-auto-state/pull/19)
 
 ### 🚀 Features (1)
 
 - Added support for recursive updating of parents
   - Issue: [GH#1 - Allow recursive update of parents](https://github.com/joachimdalen/azdevops-auto-state/issues/1)
+  - Pull Request: [GH#19 - Add recursive updating and rule improvements](https://github.com/joachimdalen/azdevops-auto-state/pull/19)
 
 ## 📦 Module changes
 
@@ -19,18 +22,21 @@
 #### `rule-modal@1.1.0`
 
 - Replaced modal with panels for better UX
+  - Pull Request: [GH#19 - Add recursive updating and rule improvements](https://github.com/joachimdalen/azdevops-auto-state/pull/19)
 
 ### 💬 Other (1)
 
 #### `rule-modal@1.1.0`
 
 - Added helper texts to all fields
+  - Pull Request: [GH#19 - Add recursive updating and rule improvements](https://github.com/joachimdalen/azdevops-auto-state/pull/19)
 
 ### 🐛 Fixes (1)
 
 #### `rule-modal@1.1.0`
 
 - Fixed an issue when updating a rule where it would report it being a duplicated rule
+  - Pull Request: [GH#19 - Add recursive updating and rule improvements](https://github.com/joachimdalen/azdevops-auto-state/pull/19)
 
 ---
 
