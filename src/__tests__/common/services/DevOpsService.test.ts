@@ -1,14 +1,14 @@
+import { IProjectInfo, IToast } from 'azure-devops-extension-api';
+import exp from 'constants';
 import { v4 as uuidV4 } from 'uuid';
 
+import { mockAddToast, mockGetProject } from '../../../__mocks__/azure-devops-extension-sdk';
 import { WorkItemNames, WorkItemReferenceNames } from '../../../__test-utils__/WorkItemTestUtils';
 import Rule from '../../../common/models/Rule';
 import RuleDocument from '../../../common/models/WorkItemRules';
+import DevOpsService from '../../../common/services/DevOpsService';
 import RuleService from '../../../common/services/RuleService';
 import { StorageService } from '../../../common/services/StorageService';
-import { IProjectInfo, IToast } from 'azure-devops-extension-api';
-import { mockAddToast, mockGetProject } from '../../../__mocks__/azure-devops-extension-sdk';
-import DevOpsService from '../../../common/services/DevOpsService';
-import exp from 'constants';
 
 describe('DevOpsService', () => {
   describe('getProject', () => {
