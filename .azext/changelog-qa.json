@@ -1,5 +1,44 @@
 [
   {
+    "version": "1.0.2",
+    "publishDate": "2022-01-01",
+    "changes": [
+      {
+        "description": "Refactor build setup to reduce file sizes",
+        "type": "maint"
+      },
+      {
+        "description": "Added support for recursive updating of parents",
+        "type": "feature",
+        "issue": 1
+      },
+      {
+        "description": "Updated dependencies",
+        "type": "maint"
+      }
+    ],
+    "modules": [
+      {
+        "name": "rule-modal",
+        "version": "1.1.0",
+        "changes": [
+          {
+            "type": "feature",
+            "description": "Replaced modal with panels for better UX"
+          },
+          {
+            "type": "other",
+            "description": "Added helper texts to all fields"
+          },
+          {
+            "type": "fix",
+            "description": "Fixed an issue when updating a rule where it would report it being a duplicated rule"
+          }
+        ]
+      }
+    ]
+  },
+  {
     "version": "1.0.1",
     "publishDate": "2021-12-25",
     "modules": [
