@@ -4,7 +4,7 @@ If you are reading this I'm guessing you have considered to contribute to AutoSt
 
 ## 💻 Branching
 
-All development work should be based off `develop` and not `master`. Only `develop` will be merged into `master`
+All development work should be based off `master`.
 
 - `feature/` - Adding a new feature or changing existing features
 - `bugfix/` - Fixing an issue in existing templates
@@ -32,7 +32,7 @@ These are the valid scopes for AutoState:
 
 ## ✏️ Naming strategry
 
-- All filenames should only contain the characters `a-z`, `-` and `.`
+- All filenames should only contain the characters `a-z`, `A-Z`, `-` and `.`
 
 ## 🚀 Pipelines
 
@@ -42,4 +42,4 @@ These are the valid scopes for AutoState:
 
 ## Changelog
 
-- When doing changes - the changelog (`docs/changelog.json`) must be updated
+- When doing changes - the changelog (`docs/changelog-prod.json`) must be updated
