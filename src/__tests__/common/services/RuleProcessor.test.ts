@@ -30,7 +30,7 @@ describe('RuleProcessor', () => {
     mockUpdateWorkItem.mockClear();
   });
 
-  describe('IsRuleMatch', () => {
+  describe('isRuleMatch', () => {
     beforeEach(() => {
       jest.clearAllMocks();
       mockGetWorkItem.mockClear();
@@ -61,8 +61,8 @@ describe('RuleProcessor', () => {
         processParent: false
       };
       const ruleProcessor = new RuleProcessor();
-      await ruleProcessor.Init();
-      const res = await ruleProcessor.IsRuleMatch(rule, workItem, parentWorkItem);
+      await ruleProcessor.init();
+      const res = await ruleProcessor.isRuleMatch(rule, workItem, parentWorkItem);
       expect(res).toBeTruthy();
     });
     it('returns true when only children of same type', async () => {
@@ -96,8 +96,8 @@ describe('RuleProcessor', () => {
       };
 
       const ruleProcessor = new RuleProcessor();
-      await ruleProcessor.Init();
-      const res = await ruleProcessor.IsRuleMatch(rule, workItem, parentWorkItem);
+      await ruleProcessor.init();
+      const res = await ruleProcessor.isRuleMatch(rule, workItem, parentWorkItem);
 
       expect(res).toBeTruthy();
     });
@@ -145,8 +145,8 @@ describe('RuleProcessor', () => {
       ]);
 
       const ruleProcessor = new RuleProcessor();
-      await ruleProcessor.Init();
-      const res = await ruleProcessor.IsRuleMatch(rule, workItem, parentWorkItem);
+      await ruleProcessor.init();
+      const res = await ruleProcessor.isRuleMatch(rule, workItem, parentWorkItem);
 
       expect(res).toBeFalsy();
     });
@@ -208,8 +208,8 @@ describe('RuleProcessor', () => {
       ]);
 
       const ruleProcessor = new RuleProcessor();
-      await ruleProcessor.Init();
-      const res = await ruleProcessor.IsRuleMatch(rule, workItem, parentWorkItem);
+      await ruleProcessor.init();
+      const res = await ruleProcessor.isRuleMatch(rule, workItem, parentWorkItem);
 
       expect(res).toBeTruthy();
     });
@@ -244,8 +244,8 @@ describe('RuleProcessor', () => {
       };
 
       const ruleProcessor = new RuleProcessor();
-      await ruleProcessor.Init();
-      const res = await ruleProcessor.IsRuleMatch(rule, workItem, parentWorkItem);
+      await ruleProcessor.init();
+      const res = await ruleProcessor.isRuleMatch(rule, workItem, parentWorkItem);
 
       expect(res).toBeFalsy();
     });
@@ -272,8 +272,8 @@ describe('RuleProcessor', () => {
         processParent: false
       };
       const ruleProcessor = new RuleProcessor();
-      await ruleProcessor.Init();
-      const res = await ruleProcessor.IsRuleMatch(rule, workItem, parentWorkItem);
+      await ruleProcessor.init();
+      const res = await ruleProcessor.isRuleMatch(rule, workItem, parentWorkItem);
       expect(res).toBeFalsy();
     });
     it('returns true when matches', async () => {
@@ -301,8 +301,8 @@ describe('RuleProcessor', () => {
       };
 
       const ruleProcessor = new RuleProcessor();
-      await ruleProcessor.Init();
-      const res = await ruleProcessor.IsRuleMatch(rule, workItem, parentWorkItem);
+      await ruleProcessor.init();
+      const res = await ruleProcessor.isRuleMatch(rule, workItem, parentWorkItem);
       expect(res).toBeTruthy();
     });
     it('returns false when not matches', async () => {
@@ -330,8 +330,8 @@ describe('RuleProcessor', () => {
       };
 
       const ruleProcessor = new RuleProcessor();
-      await ruleProcessor.Init();
-      const res = await ruleProcessor.IsRuleMatch(rule, workItem, parentWorkItem);
+      await ruleProcessor.init();
+      const res = await ruleProcessor.isRuleMatch(rule, workItem, parentWorkItem);
       expect(res).toBeFalsy();
     });
     it('returns false when child type does not match', async () => {
@@ -359,8 +359,8 @@ describe('RuleProcessor', () => {
       };
 
       const ruleProcessor = new RuleProcessor();
-      await ruleProcessor.Init();
-      const res = await ruleProcessor.IsRuleMatch(rule, workItem, parentWorkItem);
+      await ruleProcessor.init();
+      const res = await ruleProcessor.isRuleMatch(rule, workItem, parentWorkItem);
       expect(res).toBeFalsy();
     });
     it('returns false when parent type does not match', async () => {
@@ -388,8 +388,8 @@ describe('RuleProcessor', () => {
       };
 
       const ruleProcessor = new RuleProcessor();
-      await ruleProcessor.Init();
-      const res = await ruleProcessor.IsRuleMatch(rule, workItem, parentWorkItem);
+      await ruleProcessor.init();
+      const res = await ruleProcessor.isRuleMatch(rule, workItem, parentWorkItem);
       expect(res).toBeFalsy();
     });
     it('returns false when child state does not match', async () => {
@@ -417,8 +417,8 @@ describe('RuleProcessor', () => {
       };
 
       const ruleProcessor = new RuleProcessor();
-      await ruleProcessor.Init();
-      const res = await ruleProcessor.IsRuleMatch(rule, workItem, parentWorkItem);
+      await ruleProcessor.init();
+      const res = await ruleProcessor.isRuleMatch(rule, workItem, parentWorkItem);
       expect(res).toBeFalsy();
     });
     it('returns false when parent states does not match', async () => {
@@ -445,8 +445,8 @@ describe('RuleProcessor', () => {
       };
 
       const ruleProcessor = new RuleProcessor();
-      await ruleProcessor.Init();
-      const res = await ruleProcessor.IsRuleMatch(rule, workItem, parentWorkItem);
+      await ruleProcessor.init();
+      const res = await ruleProcessor.isRuleMatch(rule, workItem, parentWorkItem);
       expect(res).toBeFalsy();
     });
   });
@@ -479,8 +479,8 @@ describe('RuleProcessor', () => {
         }
       });
       const ruleProcessor = new RuleProcessor();
-      await ruleProcessor.Init();
-      const res = await ruleProcessor.Process(workItem.id);
+      await ruleProcessor.init();
+      const res = await ruleProcessor.process(workItem.id);
 
       expect(mockUpdateWorkItem).not.toHaveBeenCalled();
       expect(res).toBeUndefined();
@@ -502,8 +502,8 @@ describe('RuleProcessor', () => {
         }
       });
       const ruleProcessor = new RuleProcessor();
-      await ruleProcessor.Init();
-      const res = await ruleProcessor.Process(workItem.id);
+      await ruleProcessor.init();
+      const res = await ruleProcessor.process(workItem.id);
       expect(mockUpdateWorkItem).not.toHaveBeenCalled();
       expect(res).toBeUndefined();
     });
@@ -527,8 +527,8 @@ describe('RuleProcessor', () => {
         }
       });
       const ruleProcessor = new RuleProcessor();
-      await ruleProcessor.Init();
-      const res = await ruleProcessor.Process(workItem.id);
+      await ruleProcessor.init();
+      const res = await ruleProcessor.process(workItem.id);
       expect(mockUpdateWorkItem).not.toHaveBeenCalled();
       expect(res).toBeUndefined();
     });
@@ -575,8 +575,8 @@ describe('RuleProcessor', () => {
       });
 
       const ruleProcessor = new RuleProcessor();
-      await ruleProcessor.Init();
-      const res = await ruleProcessor.Process(workItem.id);
+      await ruleProcessor.init();
+      const res = await ruleProcessor.process(workItem.id);
 
       expect(mockUpdateWorkItem).toHaveBeenCalledWith(
         [{ op: 'add', path: '/fields/System.State', value: 'Active' }],
@@ -670,8 +670,8 @@ describe('RuleProcessor', () => {
       });
 
       const ruleProcessor = new RuleProcessor();
-      await ruleProcessor.Init();
-      await ruleProcessor.Process(workItem.id);
+      await ruleProcessor.init();
+      await ruleProcessor.process(workItem.id);
 
       expect(mockUpdateWorkItem).toHaveBeenCalledWith(
         [{ op: 'add', path: '/fields/System.State', value: 'Active' }],
@@ -798,8 +798,8 @@ describe('RuleProcessor', () => {
       });
 
       const ruleProcessor = new RuleProcessor();
-      await ruleProcessor.Init();
-      await ruleProcessor.Process(workItem.id);
+      await ruleProcessor.init();
+      await ruleProcessor.process(workItem.id);
 
       console.log(mockUpdateWorkItem.mock.calls);
       expect(mockUpdateWorkItem).toHaveBeenCalledTimes(2);
@@ -909,8 +909,8 @@ describe('RuleProcessor', () => {
       });
 
       const ruleProcessor = new RuleProcessor();
-      await ruleProcessor.Init();
-      await ruleProcessor.Process(workItem.id);
+      await ruleProcessor.init();
+      await ruleProcessor.process(workItem.id);
 
       expect(mockUpdateWorkItem).toHaveBeenCalledTimes(3);
     });
