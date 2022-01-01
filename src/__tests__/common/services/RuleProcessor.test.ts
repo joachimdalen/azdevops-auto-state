@@ -20,7 +20,7 @@ import { StorageService } from '../../../common/services/StorageService';
 import WorkItemService from '../../../common/services/WorkItemService';
 
 jest.mock('azure-devops-extension-api');
-jest.mock('../../../common/webLogger');
+//jest.mock('../../../common/webLogger');
 describe('RuleProcessor', () => {
   beforeEach(() => {
     jest.clearAllMocks();
@@ -691,6 +691,117 @@ describe('RuleProcessor', () => {
         undefined,
         undefined
       );
+      expect(mockUpdateWorkItem).toHaveBeenCalledTimes(2);
+    });
+    test('stops processing at first processParent=false', async () => {
+      const workItems = new Map<number, WorkItem>();
+      const epicWorkItem = getWorkItem(120, WorkItemNames.Epic, 'New', [
+        {
+          id: 121,
+          type: 'children'
+        }
+      ]);
+      const featureWorkItem = getWorkItem(121, WorkItemNames.Feature, 'New', [
+        {
+          id: 122,
+          type: 'children'
+        },
+        {
+          id: 120,
+          type: 'parent'
+        }
+      ]);
+      const usWorkItem = getWorkItem(122, WorkItemNames.UserStory, 'New', [
+        {
+          id: 123,
+          type: 'children'
+        },
+        {
+          id: 121,
+          type: 'parent'
+        }
+      ]);
+      const workItem = getWorkItem(123, WorkItemNames.Task, 'Active', [
+        {
+          id: 122,
+          type: 'parent'
+        }
+      ]);
+
+      workItems.set(workItem.id, workItem);
+      workItems.set(usWorkItem.id, usWorkItem);
+      workItems.set(featureWorkItem.id, featureWorkItem);
+      workItems.set(epicWorkItem.id, epicWorkItem);
+
+      getDataSpy.mockResolvedValue([
+        {
+          id: WorkItemReferenceNames.Task,
+          rules: [
+            {
+              id: '1',
+              parentType: WorkItemReferenceNames.UserStory,
+              workItemType: WorkItemReferenceNames.Task,
+              transitionState: 'Active',
+              parentExcludedStates: ['Active', 'Resolved', 'Closed'],
+              parentTargetState: 'Active',
+              childrenLookup: false,
+              processParent: true
+            }
+          ]
+        },
+        {
+          id: WorkItemReferenceNames.UserStory,
+          rules: [
+            {
+              id: '2',
+              parentType: WorkItemReferenceNames.Feature,
+              workItemType: WorkItemReferenceNames.UserStory,
+              transitionState: 'Active',
+              parentExcludedStates: ['Active', 'Resolved', 'Closed'],
+              parentTargetState: 'Active',
+              childrenLookup: false,
+              processParent: false
+            }
+          ]
+        },
+        {
+          id: WorkItemReferenceNames.Feature,
+          rules: [
+            {
+              id: '3',
+              parentType: WorkItemReferenceNames.Epic,
+              workItemType: WorkItemReferenceNames.Feature,
+              transitionState: 'Active',
+              parentExcludedStates: ['Active', 'Resolved', 'Closed'],
+              parentTargetState: 'Active',
+              childrenLookup: false,
+              processParent: false
+            }
+          ]
+        }
+      ]);
+      mockUpdateWorkItem.mockImplementation((document, id) => {
+        const newWi = workItems.get(id);
+
+        if (newWi === undefined) {
+          return Promise.reject('Err');
+        }
+
+        newWi.fields['System.State'] = document[0].value;
+        workItems.set(id, newWi);
+
+        return Promise.resolve(newWi);
+      });
+
+      mockGetWorkItem.mockImplementation(id => {
+        return workItems.get(id);
+      });
+
+      const ruleProcessor = new RuleProcessor();
+      await ruleProcessor.Init();
+      await ruleProcessor.Process(workItem.id);
+
+      console.log(mockUpdateWorkItem.mock.calls)
       expect(mockUpdateWorkItem).toHaveBeenCalledTimes(2);
     });
   });

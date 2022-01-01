@@ -50,18 +50,20 @@ class RuleProcessor implements IRuleProcessor {
   }
 
   private async ProcessInternal(workItemId: number, processed: number[]) {
+    webLogger.information('processing ', workItemId);
     const procsessedIds: number[] = [...processed];
     const parentToProcess = await this.ProcessWorkItem(workItemId);
-    webLogger.trace(['processedIds', procsessedIds, 'parentToProcess', parentToProcess]);
+    webLogger.information('parentToProcess ', parentToProcess);
+
     if (parentToProcess !== undefined) {
       if (procsessedIds.includes(parentToProcess)) {
-        webLogger.information('Parent ' + parentToProcess + ' already processed');
+        webLogger.warning('Parent ' + parentToProcess + ' already processed');
       } else {
         webLogger.information('Processing work item ' + parentToProcess);
         const nextLevelForWorkItem = await this.ProcessWorkItem(parentToProcess);
         procsessedIds.push(parentToProcess);
+        webLogger.information('Next process', nextLevelForWorkItem);
         if (nextLevelForWorkItem !== undefined) {
-          webLogger.trace('Next level is ', parentToProcess);
           await this.ProcessInternal(nextLevelForWorkItem, procsessedIds);
         }
       }
@@ -79,21 +81,34 @@ class RuleProcessor implements IRuleProcessor {
       workItemId
     );
 
-    if (parentWi === undefined) return;
+    if (parentWi === undefined) {
+      webLogger.information('Parent is undefined');
+      return;
+    }
 
     const workItemType = getWorkItemType(currentWi, this._workItemTypes);
 
-    if (workItemType === undefined) return;
+    if (workItemType === undefined) {
+      webLogger.information('workItemType is undefined');
+      return;
+    }
 
     const ruleDoc: WorkItemRules | undefined = this.getRulesForWorkItemType(workItemType);
 
-    if (ruleDoc === undefined) return;
+    if (ruleDoc === undefined) {
+      webLogger.information('ruleDoc is undefined');
+      return;
+    }
 
+    console.log(currentWi, parentWi);
     const matchingRules = await asyncFilter(ruleDoc.rules, async x => {
       return this.IsRuleMatch(x, currentWi, parentWi);
     });
 
-    if (matchingRules.length === 0) return;
+    if (matchingRules.length === 0) {
+      webLogger.information('No matching rules');
+      return;
+    }
 
     for (const rule of matchingRules) {
       const updated = await this._workItemService.setWorkItemState(
@@ -103,6 +118,9 @@ class RuleProcessor implements IRuleProcessor {
       webLogger.information('Updated ' + parentWi.id + ' to ' + updated.fields['System.State']);
 
       if (rule.processParent) {
+        webLogger.information(
+          'process parent ' + rule.processParent + ' ' + workItemId + ' ' + parentWi.id
+        );
         parentToProcess = parentWi.id;
       }
     }
