@@ -20,7 +20,7 @@ import { StorageService } from '../../../common/services/StorageService';
 import WorkItemService from '../../../common/services/WorkItemService';
 
 jest.mock('azure-devops-extension-api');
-//jest.mock('../../../common/webLogger');
+jest.mock('../../../common/webLogger');
 describe('RuleProcessor', () => {
   beforeEach(() => {
     jest.clearAllMocks();

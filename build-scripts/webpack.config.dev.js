@@ -4,7 +4,6 @@ const common = require('./webpack.common.js');
 const { getOutputName } = require('./webpack.utils');
 
 module.exports = merge(common, {
-  mode: 'production',
   devServer: {
     watchFiles: {
       paths: ['src/**']

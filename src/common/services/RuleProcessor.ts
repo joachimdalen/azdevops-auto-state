@@ -28,7 +28,7 @@ class RuleProcessor implements IRuleProcessor {
   private readonly _workItemService: IWorkItemService;
   private readonly _storageService: IStorageService;
   constructor(workItemService?: IWorkItemService, storageService?: IStorageService) {
-    webLogger.trace('Setting up rule processor');
+    webLogger.debug('Setting up rule processor');
     this._storageService = storageService || new StorageService();
     this._workItemService = workItemService || new WorkItemService();
     this._workItemTypes = [];
@@ -50,19 +50,19 @@ class RuleProcessor implements IRuleProcessor {
   }
 
   private async processInternal(workItemId: number, processed: number[]) {
-    webLogger.information('processing ', workItemId);
+    webLogger.debug('processing ', workItemId);
     const procsessedIds: number[] = [...processed];
     const parentToProcess = await this.processWorkItem(workItemId);
-    webLogger.information('parentToProcess ', parentToProcess);
+    webLogger.debug('parentToProcess ', parentToProcess);
 
     if (parentToProcess !== undefined) {
       if (procsessedIds.includes(parentToProcess)) {
         webLogger.warning('Parent ' + parentToProcess + ' already processed');
       } else {
-        webLogger.information('Processing work item ' + parentToProcess);
+        webLogger.debug('Processing work item ' + parentToProcess);
         const nextLevelForWorkItem = await this.processWorkItem(parentToProcess);
         procsessedIds.push(parentToProcess);
-        webLogger.information('Next process', nextLevelForWorkItem);
+        webLogger.debug('Next process', nextLevelForWorkItem);
         if (nextLevelForWorkItem !== undefined) {
           await this.processInternal(nextLevelForWorkItem, procsessedIds);
         }
@@ -83,21 +83,21 @@ class RuleProcessor implements IRuleProcessor {
     );
 
     if (parentWi === undefined) {
-      webLogger.information('Parent is undefined');
+      webLogger.debug('Parent is undefined');
       return;
     }
 
     const workItemType = getWorkItemType(currentWi, this._workItemTypes);
 
     if (workItemType === undefined) {
-      webLogger.information('workItemType is undefined');
+      webLogger.debug('workItemType is undefined');
       return;
     }
 
     const ruleDoc: WorkItemRules | undefined = this.getRulesForWorkItemType(workItemType);
 
     if (ruleDoc === undefined) {
-      webLogger.information('ruleDoc is undefined');
+      webLogger.debug('ruleDoc is undefined');
       return;
     }
 
@@ -106,7 +106,7 @@ class RuleProcessor implements IRuleProcessor {
     });
 
     if (matchingRules.length === 0) {
-      webLogger.information('No matching rules');
+      webLogger.debug('No matching rules');
       return;
     }
 
@@ -118,7 +118,7 @@ class RuleProcessor implements IRuleProcessor {
       webLogger.information('Updated ' + parentWi.id + ' to ' + updated.fields['System.State']);
 
       if (rule.processParent) {
-        webLogger.information(
+        webLogger.debug(
           'process parent ' + rule.processParent + ' ' + workItemId + ' ' + parentWi.id
         );
         parentToProcess = parentWi.id;
