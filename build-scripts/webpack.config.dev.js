@@ -4,7 +4,6 @@ const common = require('./webpack.common.js');
 const { getOutputName } = require('./webpack.utils');
 
 module.exports = merge(common, {
-  mode: 'production',
   devServer: {
     watchFiles: {
       paths: ['src/**']
@@ -25,9 +24,7 @@ module.exports = merge(common, {
     static: [path.resolve(__dirname, 'dist')],
     historyApiFallback: {
       disableDotRule: true,
-      rewrites: [
-        { from: /\/static\/.+/, to: '/' }
-      ]
+      rewrites: [{ from: /\/static\/.+/, to: '/' }]
     }
   },
   output: {

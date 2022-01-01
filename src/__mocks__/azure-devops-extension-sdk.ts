@@ -57,6 +57,8 @@ export function register(instanceId: string, instance: workItemCallBackType) {
  * Accessors to Mocked getService methods
  */
 export const mockSetFieldValue = jest.fn();
+export const mockGetProject = jest.fn();
+export const mockAddToast = jest.fn();
 
 /**
  * Mocked getService returns mocked methods
@@ -68,5 +70,21 @@ export function getService(contributionId: string) {
         // WorkItemFormService
         setFieldValue: mockSetFieldValue
       };
+    case 'ms.vss-tfs-web.tfs-page-data-service': {
+      return {
+        getProject: mockGetProject
+      };
+    }
+    case 'ms.vss-tfs-web.tfs-global-messages-service': {
+      return {
+        addToast: mockAddToast
+      };
+    }
   }
+}
+
+export const mockResize = jest.fn().mockRejectedValue(new Error('Err'));
+
+export function resize(width?: number, height?: number) {
+  mockResize(width, height);
 }

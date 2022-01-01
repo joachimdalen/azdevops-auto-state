@@ -51,6 +51,11 @@ const webLogger = {
   error: (...params: any[]): void => {
     // eslint-disable-next-line no-console
     console.error(getTemplate('WARN'), 'color: green', 'color: red', ...params);
+  },
+  debug: (...params: any[]): void => {
+    if (process.env.NODE_ENV !== 'production') {
+      console.log(getTemplate('DEBUG'), 'color: green', 'color: pink', ...params);
+    }
   }
 };
 

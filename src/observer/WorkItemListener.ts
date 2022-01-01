@@ -28,7 +28,7 @@ class WorkItemListener implements IWorkItemNotificationListener {
     this._isNewWorkItem = args.isNew;
     this._isReadOnly = args.isReadOnly;
     if (!this._isReadOnly && !this._isNewWorkItem) {
-      await this._ruleProcessor.Init();
+      await this._ruleProcessor.init();
     }
   }
   onFieldChanged(args: IWorkItemFieldChangedArgs): void {
@@ -41,7 +41,7 @@ class WorkItemListener implements IWorkItemNotificationListener {
   async onSaved(args: IWorkItemChangedArgs): Promise<void> {
     if (this._stateWasUpdated && !this._isNewWorkItem && !this._isReadOnly) {
       try {
-        await this._ruleProcessor.ProcessWorkItem(args.id);
+        await this._ruleProcessor.process(args.id);
       } catch (error) {
         webLogger.error(error);
       }

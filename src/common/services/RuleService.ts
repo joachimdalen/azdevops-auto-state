@@ -1,4 +1,4 @@
-import { IDialogOptions, IHostPageLayoutService } from 'azure-devops-extension-api';
+import { IDialogOptions, IHostPageLayoutService, IPanelOptions } from 'azure-devops-extension-api';
 import * as DevOps from 'azure-devops-extension-sdk';
 import { v4 as uuidV4 } from 'uuid';
 
@@ -190,11 +190,13 @@ class RuleService {
   }
 
   private isRuleSame(ruleOne: Rule, ruleTwo: Rule) {
+    if (ruleOne.id && ruleTwo.id) {
+      if (ruleOne.id === ruleTwo.id) return false;
+    }
     if (ruleOne.workItemType !== ruleTwo.workItemType) return false;
     if (ruleOne.parentType !== ruleTwo.parentType) return false;
     if (ruleOne.parentTargetState !== ruleTwo.parentTargetState) return false;
     if (ruleOne.transitionState !== ruleTwo.transitionState) return false;
-    if (ruleOne.childrenLookup !== ruleTwo.childrenLookup) return false;
     if (!ruleOne.parentExcludedStates.every(x => ruleTwo.parentExcludedStates.includes(x)))
       return false;
     return true;
@@ -209,14 +211,13 @@ class RuleService {
       'ms.vss-features.host-page-layout-service'
     );
 
-    const options: IDialogOptions<AddRuleResult> = {
+    const options: IPanelOptions<AddRuleResult> = {
       title: rule === undefined ? 'Add rule' : 'Edit rule',
       onClose: handleDialogResult,
-      lightDismiss: false,
       configuration: { rule: rule, validate: isValid }
     };
 
-    dialogService.openCustomDialog(DevOps.getExtensionContext().id + '.rule-modal', options);
+    dialogService.openPanel(DevOps.getExtensionContext().id + '.rule-modal', options);
   }
 }
 

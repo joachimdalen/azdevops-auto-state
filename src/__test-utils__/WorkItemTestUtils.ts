@@ -4,21 +4,22 @@ import {
   WorkItemType
 } from 'azure-devops-extension-api/WorkItemTracking';
 
+const parentField = 'System.LinkTypes.Hierarchy-Reverse';
+const childField = 'System.LinkTypes.Hierarchy-Forward';
+
 const getWorkItem = (
   id: number,
   type: WorkItemNames,
   state: string,
-  related?: number[],
-  relatedType?: 'parent' | 'children'
+  related?: { id: number; type: 'parent' | 'children' }[]
 ): WorkItem => {
   const relations: WorkItemRelation[] = (related || [])?.map(wi => {
     const rel: WorkItemRelation = {
-      rel:
-        relatedType == 'parent'
-          ? 'System.LinkTypes.Hierarchy-Reverse'
-          : 'System.LinkTypes.Hierarchy-Forward',
-      url: `https://dev.azure.com/demoorg/demoproj/${wi}`,
-      attributes: {}
+      rel: wi.type === 'parent' ? parentField : childField,
+      url: `https://dev.azure.com/demoorg/demoproj/${wi.id}`,
+      attributes: {
+        name: wi.type === 'parent' ? 'Parent' : 'Child'
+      }
     };
     return rel;
   });

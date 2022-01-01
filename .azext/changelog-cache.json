@@ -1,6 +1,13 @@
 {
   "issues": [
     {
+      "id": 1068816069,
+      "number": 1,
+      "submitter": "joachimdalen",
+      "title": "Allow recursive update of parents",
+      "url": "https://github.com/joachimdalen/azdevops-auto-state/issues/1"
+    },
+    {
       "id": 1088645645,
       "number": 13,
       "submitter": "joachimdalen",
@@ -9,6 +16,13 @@
     }
   ],
   "pullRequests": [
+    {
+      "id": 812533162,
+      "number": 19,
+      "submitter": "joachimdalen",
+      "title": "Add recursive updating and rule improvements",
+      "url": "https://github.com/joachimdalen/azdevops-auto-state/pull/19"
+    },
     {
       "id": 809926568,
       "number": 14,

@@ -3,9 +3,10 @@
   "private": true,
   "version": "0.0.1",
   "devDependencies": {
-    "@joachimdalen/azext": "^0.2.0",
+    "@joachimdalen/azext": "^0.3.0",
     "@testing-library/jest-dom": "^5.15.1",
     "@testing-library/react": "^12.1.2",
+    "@testing-library/react-hooks": "^7.0.2",
     "@types/jest": "^27.0.3",
     "@types/node": "^16.11.8",
     "@types/react": "^16.14.14",
@@ -86,7 +87,8 @@
     "testResultsProcessor": "./node_modules/jest-junit-reporter",
     "collectCoverageFrom": [
       "src/**",
-      "!src/__test-utils__/*"
+      "!src/__test-utils__/*",
+      "!src/**/*.json"
     ],
     "coverageReporters": [
       "json",

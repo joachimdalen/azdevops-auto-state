@@ -2,7 +2,6 @@ import { getClient } from 'azure-devops-extension-api/Common';
 import {
   WorkItem,
   WorkItemExpand,
-  WorkItemField,
   WorkItemTrackingRestClient,
   WorkItemType
 } from 'azure-devops-extension-api/WorkItemTracking';
@@ -11,12 +10,11 @@ import { getChildIds, getParentId } from '../workItemUtils';
 import DevOpsService, { IDevOpsService } from './DevOpsService';
 
 export interface IWorkItemService {
-  getParentForWorkItem(id: number): Promise<WorkItem | undefined>;
-  getChildrenForWorkItem(workItemId: number): Promise<WorkItem[] | undefined>;
+  getParentForWorkItem(id: number, workItem?: WorkItem): Promise<WorkItem | undefined>;
+  getChildrenForWorkItem(id: number, workItem?: WorkItem): Promise<WorkItem[] | undefined>;
   getWorkItemTypes(): Promise<WorkItemType[]>;
   getWorkItem(id: number): Promise<WorkItem>;
   getWorkItems(ids: number[]): Promise<WorkItem[]>;
-  getFields(): Promise<WorkItemField[]>;
   setWorkItemState(id: number, state: string): Promise<WorkItem>;
 }
 
@@ -37,8 +35,11 @@ class WorkItemService implements IWorkItemService {
     return parentWi;
   }
 
-  public async getChildrenForWorkItem(workItemId: number): Promise<WorkItem[] | undefined> {
-    const wi = await this.getWorkItem(workItemId);
+  public async getChildrenForWorkItem(
+    id: number,
+    workItem?: WorkItem
+  ): Promise<WorkItem[] | undefined> {
+    const wi = workItem || (await this.getWorkItem(id));
     const childIds = getChildIds(wi);
     if (childIds === undefined) return undefined;
     const wis = await this.getWorkItems(childIds);
@@ -87,12 +88,6 @@ class WorkItemService implements IWorkItemService {
       WorkItemExpand.Relations
     );
     return wit;
-  }
-
-  public async getFields(): Promise<WorkItemField[]> {
-    const client = getClient(WorkItemTrackingRestClient);
-    const fields = await client.getFields();
-    return fields;
   }
 
   public async setWorkItemState(id: number, state: string): Promise<WorkItem> {

@@ -75,7 +75,6 @@ An issue I often face is forgetting to update the state of a parent workitem whe
 
 - This extension does not work when doing mass updates
 - The state **must** be updated from the work item form for the update to trigger
-- The extension only updates state one level up (recursive updating is on the road map)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -146,9 +145,6 @@ See [RULES](./docs/RULES.md) for rule usage.
 <!-- ROADMAP -->
 
 ## Roadmap
-
-- [ ] Recursive update of parent all the way to the root
-- [ ] More advanced rule editor (check more fields)
 
 See the [open issues](https://github.com/joachimdalen/azdevops-auto-state/issues?q=is%3Aopen+is%3Aissue+label%3A%40type%2Ffeature) for a full list of proposed features.
 
