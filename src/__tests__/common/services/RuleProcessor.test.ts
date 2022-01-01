@@ -801,7 +801,6 @@ describe('RuleProcessor', () => {
       await ruleProcessor.init();
       await ruleProcessor.process(workItem.id);
 
-      console.log(mockUpdateWorkItem.mock.calls);
       expect(mockUpdateWorkItem).toHaveBeenCalledTimes(2);
     });
     it('should process all the way to the top', async () => {

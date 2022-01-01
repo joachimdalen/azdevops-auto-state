@@ -3,8 +3,6 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ScriptTags = require('./webpack-script-tags-plugin');
 const { entries, modules } = require('./entry-points');
 
-console.log(entries);
-
 const vendorGroups = modules.reduce(
   (obj, item) => ({
     ...obj,

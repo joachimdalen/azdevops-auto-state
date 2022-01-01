@@ -101,7 +101,6 @@ class RuleProcessor implements IRuleProcessor {
       return;
     }
 
-    console.log(currentWi, parentWi);
     const matchingRules = await asyncFilter(ruleDoc.rules, async x => {
       return this.isRuleMatch(x, currentWi, parentWi);
     });
