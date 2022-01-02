@@ -20,15 +20,11 @@ import WorkItemService from '../common/services/WorkItemService';
 import webLogger from '../common/webLogger';
 import { appTheme } from '../shared-ui/azure-devops-theme';
 import LoadingSection from '../shared-ui/component/LoadingSection';
+import { getStatesForWorkItemType, renderStateCell } from '../shared-ui/helpers';
 import useDropdownMultiSelection from '../shared-ui/hooks/useDropdownMultiSelection';
 import useDropdownSelection from '../shared-ui/hooks/useDropdownSelection';
 import showRootComponent from '../shared-ui/showRootComponent';
-import {
-  getStatesForWorkItemType,
-  getWorkItemTypeItems,
-  renderStateCell,
-  renderWorkItemCell
-} from './helpers';
+import { getWorkItemTypeItems, renderWorkItemCell } from './helpers';
 
 const ModalContent = (): React.ReactElement => {
   const [error, setError] = useState<ActionResult<any> | undefined>(undefined);

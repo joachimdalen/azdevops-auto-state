@@ -83,8 +83,21 @@ export function getService(contributionId: string) {
   }
 }
 
-export const mockResize = jest.fn().mockRejectedValue(new Error('Err'));
+export const mockResize = jest.fn();
+export const mockReady = jest.fn();
+export const mockGetConfiguration = jest.fn();
+export const mockNotifyLoadSucceeded = jest.fn();
 
 export function resize(width?: number, height?: number) {
   mockResize(width, height);
+}
+
+export function ready() {
+  mockReady();
+}
+export function notifyLoadSucceeded() {
+  mockNotifyLoadSucceeded();
+}
+export function getConfiguration() {
+  return mockGetConfiguration();
 }

@@ -1,5 +1,6 @@
 import { WorkItem, WorkItemType } from 'azure-devops-extension-api/WorkItemTracking';
 const stateField = 'System.State';
+const titleField = 'System.Title';
 const parentField = 'System.LinkTypes.Hierarchy-Reverse';
 const childField = 'System.LinkTypes.Hierarchy-Forward';
 const workItemType = 'System.WorkItemType';
@@ -12,6 +13,8 @@ export const isInState = (workItem: WorkItem, states: string[]): boolean => {
   const state = getState(workItem);
   return states.includes(state);
 };
+
+export const getWorkItemTitle = (workItem: WorkItem): string => workItem.fields[titleField];
 
 export const getWorkItemType = (
   workItem: WorkItem,
