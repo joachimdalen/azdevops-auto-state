@@ -1,7 +1,7 @@
 import { WorkItemType } from 'azure-devops-extension-api/WorkItemTracking';
 import { Dropdown, IDropdownProps } from 'azure-devops-ui/Dropdown';
 import { IListBoxItem } from 'azure-devops-ui/ListBox';
-import { useMemo } from 'react';
+import { DependencyList, useMemo } from 'react';
 
 import { getStatesForWorkItemType, renderStateCell } from '../helpers';
 import useDropdownSelection from '../hooks/useDropdownSelection';
@@ -10,20 +10,28 @@ interface WorkItemStateDropdownProps
   extends Omit<IDropdownProps, 'renderItem' | 'items' | 'disabled'> {
   workItemType: string;
   types: WorkItemType[];
-  selected?: string;
+  selected?: string | string[];
+  filter?: string[];
+  include?: boolean;
+  deps?: DependencyList | undefined;
+  multiSelection?: boolean;
 }
 
 const WorkItemStateDropdown = ({
   workItemType,
   types,
   selected,
+  filter,
+  include,
+  multiSelection,
+  deps,
   ...rest
 }: WorkItemStateDropdownProps): JSX.Element => {
   const workItemStates: IListBoxItem[] = useMemo(
-    () => getStatesForWorkItemType(types, workItemType, []),
-    [workItemType]
+    () => getStatesForWorkItemType(types, workItemType, filter || [], include),
+    [workItemType, deps]
   );
-  const selection = useDropdownSelection(workItemStates, selected);
+  const selection = useDropdownSelection(workItemStates, selected, multiSelection);
   return (
     <Dropdown
       placeholder="Select state"
