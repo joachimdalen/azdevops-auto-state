@@ -9,6 +9,7 @@ import {
   WorkItemReferenceNames
 } from '../../../__test-utils__/WorkItemTestUtils';
 import WorkItemDisplay from '../../../rule-tester/components/WorkItemDisplay';
+import { getState, getWorkItemTitle } from '../../../common/workItemUtils';
 
 describe('WorkItemDisplay', () => {
   beforeEach(() => {
@@ -19,7 +20,9 @@ describe('WorkItemDisplay', () => {
     const workItem = getWorkItem(123, WorkItemNames.UserStory, 'Active');
     render(
       <WorkItemDisplay
-        workItem={workItem}
+        id={workItem.id}
+        title={getWorkItemTitle(workItem)}
+        state={getState(workItem)}
         type={getWorkItemType(WorkItemNames.UserStory, WorkItemReferenceNames.UserStory)}
       />
     );
@@ -30,7 +33,9 @@ describe('WorkItemDisplay', () => {
     const workItem = getWorkItem(123, WorkItemNames.UserStory, 'New');
     render(
       <WorkItemDisplay
-        workItem={workItem}
+        id={workItem.id}
+        title={getWorkItemTitle(workItem)}
+        state={getState(workItem)}
         type={getWorkItemType(WorkItemNames.UserStory, WorkItemReferenceNames.UserStory)}
       />
     );
@@ -41,7 +46,9 @@ describe('WorkItemDisplay', () => {
     const workItem = getWorkItem(123, WorkItemNames.UserStory, 'In progress');
     render(
       <WorkItemDisplay
-        workItem={workItem}
+        id={workItem.id}
+        title={getWorkItemTitle(workItem)}
+        state={getState(workItem)}
         type={getWorkItemType(WorkItemNames.UserStory, WorkItemReferenceNames.UserStory)}
       />
     );
@@ -52,7 +59,9 @@ describe('WorkItemDisplay', () => {
     const workItem = getWorkItem(123, WorkItemNames.UserStory, 'New');
     render(
       <WorkItemDisplay
-        workItem={workItem}
+        id={workItem.id}
+        title={getWorkItemTitle(workItem)}
+        state={getState(workItem)}
         type={getWorkItemType(WorkItemNames.UserStory, WorkItemReferenceNames.UserStory)}
       />
     );

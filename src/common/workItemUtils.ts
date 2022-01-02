@@ -1,4 +1,7 @@
 import { WorkItem, WorkItemType } from 'azure-devops-extension-api/WorkItemTracking';
+
+import ProcessedItem from './models/ProcessedItem';
+
 const stateField = 'System.State';
 const titleField = 'System.Title';
 const parentField = 'System.LinkTypes.Hierarchy-Reverse';
@@ -9,8 +12,22 @@ export const getState = (workItem: WorkItem): string => {
   return workItem.fields[stateField];
 };
 
+export const getDryRunState = (workItem: WorkItem, items: ProcessedItem[]): string => {
+  const fromItems = items.find(x => x.id === workItem.id);
+  return fromItems?.updatedState || getState(workItem);
+};
+
 export const isInState = (workItem: WorkItem, states: string[]): boolean => {
   const state = getState(workItem);
+  return states.includes(state);
+};
+
+export const isInDryRunState = (
+  workItem: WorkItem,
+  states: string[],
+  items: ProcessedItem[]
+): boolean => {
+  const state = getDryRunState(workItem, items);
   return states.includes(state);
 };
 

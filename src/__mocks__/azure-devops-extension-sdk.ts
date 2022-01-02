@@ -4,6 +4,7 @@ import {
   IWorkItemLoadedArgs,
   WorkItemTrackingServiceIds
 } from 'azure-devops-extension-api/WorkItemTracking';
+import WorkItemListener from '../observer/WorkItemListener';
 
 /**
  * This is a minimal mock version to test WorkItemFormGroup
@@ -87,6 +88,7 @@ export const mockResize = jest.fn();
 export const mockReady = jest.fn();
 export const mockGetConfiguration = jest.fn();
 export const mockNotifyLoadSucceeded = jest.fn();
+export const mockRegister = jest.fn();
 
 export function resize(width?: number, height?: number) {
   mockResize(width, height);
