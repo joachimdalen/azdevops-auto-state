@@ -27,7 +27,8 @@ const modules = [
     name: 'rule-tester-action',
     entry: './src/rule-tester-action/module',
     root: 'rule-tester-action-container',
-    generate: true
+    generate: true,
+    assets: [{ source: './src/rule-tester-action/icon.png', dest: 'assets/rule-tester-action-icon.png' }]
   }
 ];
 
