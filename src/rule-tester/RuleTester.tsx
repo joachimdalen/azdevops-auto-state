@@ -3,6 +3,7 @@ import * as DevOps from 'azure-devops-extension-sdk';
 import { Button } from 'azure-devops-ui/Button';
 import { ConditionalChildren } from 'azure-devops-ui/ConditionalChildren';
 import { FormItem } from 'azure-devops-ui/FormItem';
+import { Spinner, SpinnerSize } from 'azure-devops-ui/Spinner';
 import React, { useEffect, useMemo, useState } from 'react';
 
 import WorkItemService from '../common/services/WorkItemService';
@@ -11,6 +12,7 @@ import { getWorkItemType, getWorkItemTypeField } from '../common/workItemUtils';
 import WorkItemStateDropdown from '../shared-ui/component/WorkItemStateDropdown';
 import WorkItemDisplay from './components/WorkItemDisplay';
 import WorkItemSearchSection from './components/WorkItemSearchSection';
+import WorkItemStateSection from './components/WorkItemStateSection';
 
 const RuleTester = (): React.ReactElement => {
   const workItemService = useMemo(() => new WorkItemService(), []);
@@ -42,7 +44,7 @@ const RuleTester = (): React.ReactElement => {
     if (workItem === undefined) return undefined;
     return types.find(x => x.name === getWorkItemTypeField(workItem));
   }, [workItem, types]);
-  const [targetState, setTargetState] = useState<string | undefined>();
+  const [isTesting, setIsTesting] = useState(false);
   return (
     <div className="flex-grow">
       <ConditionalChildren renderChildren={workItem === undefined}>
@@ -73,35 +75,22 @@ const RuleTester = (): React.ReactElement => {
         </div>
 
         <div className="flex-column">
-          <div className="flex-row">
-            <FormItem
-              label="Transition state"
-              message="The transitioned state for the rule to trigger on (When work item type changes to this)"
-              className="flex-grow"
-            >
-              <WorkItemStateDropdown
-                types={types}
-                selected={targetState}
-                workItemType={
-                  workItem !== undefined ? getWorkItemType(workItem, types) || 'unknown' : 'unknown'
-                }
-                placeholder="Select a state"
-                onSelect={(_, i) => {
-                  setTargetState(i.id);
-                  console.log(i);
-                }}
-              />
-            </FormItem>
-            <div className="flex-row flex-center margin-left-8">
-              <Button
-                disabled={targetState === undefined}
-                primary
-                text="Test"
-                iconProps={{ iconName: 'TestBeaker' }}
-              />
-            </div>
-          </div>
+          {workItem && (
+            <WorkItemStateSection
+              types={types}
+              workItem={workItem}
+              onTest={(targetState: string) => setIsTesting(true)}
+            />
+          )}
         </div>
+      </ConditionalChildren>
+
+      <ConditionalChildren renderChildren={isTesting}>
+        <Spinner
+          className="margin-top-16"
+          size={SpinnerSize.large}
+          label="Testing rules.. This might take a few seconds. Please wait"
+        />
       </ConditionalChildren>
     </div>
   );

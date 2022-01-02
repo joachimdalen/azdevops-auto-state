@@ -20,7 +20,7 @@ export default {
 
     const options: IPanelOptions<any> = {
       title: 'Rule Tester',
-
+      size: 2,
       configuration: {
         workItemId: context.workItemId
       }

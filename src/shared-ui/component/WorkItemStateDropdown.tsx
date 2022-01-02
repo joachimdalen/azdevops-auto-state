@@ -15,6 +15,7 @@ interface WorkItemStateDropdownProps
   include?: boolean;
   deps?: DependencyList | undefined;
   multiSelection?: boolean;
+  disabled?: boolean;
 }
 
 const WorkItemStateDropdown = ({
@@ -25,6 +26,7 @@ const WorkItemStateDropdown = ({
   include,
   multiSelection,
   deps,
+  disabled,
   ...rest
 }: WorkItemStateDropdownProps): JSX.Element => {
   const workItemStates: IListBoxItem[] = useMemo(
@@ -35,7 +37,7 @@ const WorkItemStateDropdown = ({
   return (
     <Dropdown
       placeholder="Select state"
-      disabled={workItemStates?.length === 0}
+      disabled={workItemStates?.length === 0 || disabled}
       items={workItemStates}
       selection={selection}
       renderItem={renderStateCell}
