@@ -31,7 +31,7 @@ describe('WorkItemStateSection', () => {
     expect(button).toHaveAttribute('aria-disabled', 'true');
   });
 
-  it('should when state is selected', async () => {
+  it('should activate test button when state is selected', async () => {
     render(
       <WorkItemStateSection workItem={workItem} types={getWorkItemTypes()} onTest={mockOnTest} />
     );
