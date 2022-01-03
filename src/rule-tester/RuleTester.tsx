@@ -11,6 +11,7 @@ import WorkItemService from '../common/services/WorkItemService';
 import webLogger from '../common/webLogger';
 import { getState, getWorkItemTitle, getWorkItemTypeField } from '../common/workItemUtils';
 import WorkItemDisplay from './components/WorkItemDisplay';
+import WorkItemResultSection from './components/WorkItemResultSection';
 import WorkItemSearchSection from './components/WorkItemSearchSection';
 import WorkItemStateSection from './components/WorkItemStateSection';
 
@@ -105,6 +106,7 @@ const RuleTester = (): React.ReactElement => {
             <WorkItemStateSection
               types={types}
               workItem={workItem}
+              disabled={isTesting}
               onTest={async (targetState: string) => {
                 if (workItemId) {
                   setIsTesting(true);
@@ -129,24 +131,7 @@ const RuleTester = (): React.ReactElement => {
       <ConditionalChildren
         renderChildren={processedItems !== undefined && processedItems.length > 0}
       >
-        <div className="flex-column">
-          <h2>Result</h2>
-          <div className="flex-column">
-            {processedItems.map(x => {
-              const type = types.find(y => y.name === x.type);
-              return type ? (
-                <WorkItemDisplay
-                  key={x.id}
-                  type={type}
-                  id={x.id}
-                  title={x.title}
-                  state={x.updatedState}
-                  transition={{ from: x.sourceState, to: x.updatedState }}
-                />
-              ) : null;
-            })}
-          </div>
-        </div>
+        <WorkItemResultSection types={types} items={processedItems} />
       </ConditionalChildren>
     </div>
   );
