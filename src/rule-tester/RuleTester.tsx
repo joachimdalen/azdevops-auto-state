@@ -32,6 +32,14 @@ const RuleTester = (): React.ReactElement => {
       await DevOps.ready();
 
       const config = DevOps.getConfiguration();
+
+      if (config.workItemId) {
+        const wi = await workItemService.getWorkItem(config.workItemId);
+        setWorkItem(wi);
+        setWorkItemId(wi.id);
+        setClearable(false);
+      }
+
       const t = await workItemService.getWorkItemTypes();
       setTypes(t);
       console.log(config);
@@ -51,6 +59,7 @@ const RuleTester = (): React.ReactElement => {
     return types.find(x => x.name === getWorkItemTypeField(workItem));
   }, [workItem, types]);
   const [isTesting, setIsTesting] = useState(false);
+  const [clearable, setClearable] = useState(true);
   return (
     <div className="flex-grow">
       <ConditionalChildren renderChildren={workItem === undefined}>
@@ -72,21 +81,23 @@ const RuleTester = (): React.ReactElement => {
             />
           )}
 
-          <div className="flex-row flex-center margin-left-8">
-            <Button
-              disabled={workItemId === undefined}
-              danger
-              text="Clear"
-              iconProps={{
-                iconName: 'Clear'
-              }}
-              onClick={() => {
-                setWorkItem(undefined);
-                setWorkItemId(undefined);
-                setProcessedItems([]);
-              }}
-            />
-          </div>
+          {clearable && (
+            <div className="flex-row flex-center margin-left-8">
+              <Button
+                disabled={workItemId === undefined}
+                danger
+                text="Clear"
+                iconProps={{
+                  iconName: 'Clear'
+                }}
+                onClick={() => {
+                  setWorkItem(undefined);
+                  setWorkItemId(undefined);
+                  setProcessedItems([]);
+                }}
+              />
+            </div>
+          )}
         </div>
 
         <div className="flex-column">
