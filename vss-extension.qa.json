@@ -62,6 +62,9 @@
     },
     {
       "path": "marketplace/docs/images/rule-modal.png"
+    },
+    {
+      "path": "marketplace/docs/images/rule-tester-result.png"
     }
   ],
   "contributions": [
