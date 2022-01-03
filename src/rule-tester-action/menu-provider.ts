@@ -13,7 +13,6 @@ interface WorkItemActionContext {
 
 export default {
   execute: async (context: WorkItemActionContext): Promise<void> => {
-    console.log(context);
     const dialogService = await DevOps.getService<IHostPageLayoutService>(
       'ms.vss-features.host-page-layout-service'
     );

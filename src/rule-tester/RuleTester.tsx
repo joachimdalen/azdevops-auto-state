@@ -43,7 +43,6 @@ const RuleTester = (): React.ReactElement => {
 
       const t = await workItemService.getWorkItemTypes();
       setTypes(t);
-      console.log(config);
       await DevOps.notifyLoadSucceeded();
       DevOps.resize(600, 400);
     }
@@ -112,7 +111,6 @@ const RuleTester = (): React.ReactElement => {
                   setIsTesting(true);
                   const result = await ruleProcessor.process(workItemId, true, targetState);
                   setProcessedItems(result);
-                  console.log(result);
                   setIsTesting(false);
                 }
               }}

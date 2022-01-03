@@ -34,10 +34,7 @@ const WorkItemStateSection = ({
             workItem !== undefined ? getWorkItemType(workItem, types) || 'unknown' : 'unknown'
           }
           placeholder="Select a state"
-          onSelect={(_, i) => {
-            setTargetState(i.id);
-            console.log(i);
-          }}
+          onSelect={(_, i) => setTargetState(i.id)}
           disabled={disabled}
         />
       </FormItem>
