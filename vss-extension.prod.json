@@ -104,7 +104,7 @@
       "type": "ms.vss-web.external-content",
       "targets": [],
       "properties": {
-        "uri": "rule-tester.html"
+        "uri": "dist/rule-tester.html"
       },
       "constraints": [
         {
@@ -123,9 +123,9 @@
       "properties": {
         "text": "Auto State Tester",
         "title": "Auto State Tester",
-        "icon": "extension-icon.png",
+        "icon": "dist/assets/rule-tester-action-icon.png",
         "group": "actions",
-        "uri": "rule-tester-action.html",
+        "uri": "dist/rule-tester-action.html",
         "registeredObjectId": "rule-tester-action"
       },
       "constraints": [

@@ -120,7 +120,7 @@
       "properties": {
         "text": "Auto State Tester",
         "title": "Auto State Tester",
-        "icon": "extension-icon.png",
+        "icon": "assets/rule-tester-action-icon.png",
         "group": "actions",
         "uri": "rule-tester-action.html",
         "registeredObjectId": "rule-tester-action"
