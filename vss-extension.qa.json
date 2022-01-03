@@ -101,6 +101,44 @@
       ]
     },
     {
+      "id": "rule-tester",
+      "type": "ms.vss-web.external-content",
+      "targets": [],
+      "properties": {
+        "uri": "rule-tester.html"
+      },
+      "constraints": [
+        {
+          "name": "Feature",
+          "properties": {
+            "featureId": "joachimdalen.auto-state-qa.auto-state-enabled"
+          }
+        }
+      ]
+    },
+    {
+      "id": "rule-tester-toolbar",
+      "type": "ms.vss-web.action",
+      "description": "Show the Auto State rule tester",
+      "targets": ["ms.vss-work-web.work-item-toolbar-menu"],
+      "properties": {
+        "text": "Auto State Tester",
+        "title": "Auto State Tester",
+        "icon": "extension-icon.png",
+        "group": "actions",
+        "uri": "rule-tester-action.html",
+        "registeredObjectId": "rule-tester-action"
+      },
+      "constraints": [
+        {
+          "name": "Feature",
+          "properties": {
+            "featureId": "joachimdalen.auto-state-qa.auto-state-enabled"
+          }
+        }
+      ]
+    },
+    {
       "id": "admin-hub",
       "type": "ms.vss-web.hub",
       "description": "Configuration hub for Auto State",
