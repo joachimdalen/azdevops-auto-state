@@ -216,9 +216,11 @@ const getListRowContextMenuItem = (
           ev?: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>,
           item?: IContextualMenuItem
         ) => {
-          handleDeleteRule(rule.workItemType, rule.id!).then(r => {
-            return r;
-          });
+          if(rule.id){
+            handleDeleteRule(rule.workItemType, rule.id).then(r => {
+              return r;
+            });
+          }
         }
       }
     ]

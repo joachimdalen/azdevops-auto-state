@@ -8,8 +8,8 @@ import {
   WorkItemNames,
   WorkItemReferenceNames
 } from '../../../__test-utils__/WorkItemTestUtils';
-import WorkItemDisplay from '../../../rule-tester/components/WorkItemDisplay';
 import { getState, getWorkItemTitle } from '../../../common/workItemUtils';
+import WorkItemDisplay from '../../../rule-tester/components/WorkItemDisplay';
 
 describe('WorkItemDisplay', () => {
   beforeEach(() => {

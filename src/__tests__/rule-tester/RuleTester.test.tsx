@@ -9,10 +9,10 @@ import {
   getWorkItemTypes,
   WorkItemNames
 } from '../../__test-utils__/WorkItemTestUtils';
+import RuleProcessor from '../../common/services/RuleProcessor';
 import { StorageService } from '../../common/services/StorageService';
 import WorkItemService from '../../common/services/WorkItemService';
 import RuleTester from '../../rule-tester/RuleTester';
-import RuleProcessor from '../../common/services/RuleProcessor';
 
 jest.mock('azure-devops-extension-api');
 jest.mock('../../common/webLogger');
