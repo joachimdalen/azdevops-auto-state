@@ -119,8 +119,8 @@ describe('RuleTester', () => {
     const selectableItem = screen.getByText('Active');
     fireEvent.click(selectableItem);
 
-    const clearButton = screen.getByRole('button', { name: 'Test' });
-    fireEvent.click(clearButton);
+    const testButton = screen.getByRole('button', { name: 'Test' });
+    fireEvent.click(testButton);
 
     await waitFor(() =>
       screen.getAllByText(/Testing rules.. This might take a few seconds. Please wait/)
@@ -157,13 +157,36 @@ describe('RuleTester', () => {
     const selectableItem = screen.getByText('Active');
     fireEvent.click(selectableItem);
 
-    const clearButton = screen.getByRole('button', { name: 'Test' });
-    fireEvent.click(clearButton);
+    const testButton = screen.getByRole('button', { name: 'Test' });
+    fireEvent.click(testButton);
 
     await waitFor(() =>
       screen.getAllByText(/Testing rules.. This might take a few seconds. Please wait/)
     );
 
     await waitFor(() => screen.getAllByText(/This would update/));
+  });
+
+  it('should show error when failing', async () => {
+    mockGetConfiguration.mockReturnValue({ workItemId: 123 });
+    mockGetWorkItem.mockResolvedValue(getWorkItem(123, WorkItemNames.Task, 'New'));
+    jest.spyOn(RuleProcessor.prototype, 'process').mockRejectedValue(new Error('Failed'));
+
+    render(<RuleTester />);
+
+    await waitFor(() => screen.getAllByText(/Work item title for Task/));
+
+    const dropdown = screen.getByRole('button', { name: 'Transition state' });
+    fireEvent.click(dropdown);
+    await waitFor(() => screen.getAllByText(/Active/));
+    const selectableItem = screen.getByText('Active');
+    fireEvent.click(selectableItem);
+
+    const testButton = screen.getByRole('button', { name: 'Test' });
+    fireEvent.click(testButton);
+
+    await waitFor(() =>
+      screen.getAllByText(/n error occurred while testing the work item:/)
+    );
   });
 });

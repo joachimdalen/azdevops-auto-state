@@ -2,6 +2,7 @@ import { WorkItem, WorkItemType } from 'azure-devops-extension-api/WorkItemTrack
 import * as DevOps from 'azure-devops-extension-sdk';
 import { Button } from 'azure-devops-ui/Button';
 import { ConditionalChildren } from 'azure-devops-ui/ConditionalChildren';
+import { MessageCard, MessageCardSeverity } from 'azure-devops-ui/MessageCard';
 import { Spinner, SpinnerSize } from 'azure-devops-ui/Spinner';
 import React, { useEffect, useMemo, useState } from 'react';
 
@@ -60,8 +61,17 @@ const RuleTester = (): React.ReactElement => {
   }, [workItem, types]);
   const [isTesting, setIsTesting] = useState(false);
   const [clearable, setClearable] = useState(true);
+  const [error, setError] = useState<any>(undefined);
   return (
     <div className="flex-grow">
+      <ConditionalChildren renderChildren={error !== undefined}>
+        <MessageCard className="margin-bottom-8" severity={MessageCardSeverity.Error}>
+          <div className="flex-column flex-grow">
+            <p className="margin-4">An error occurred while testing the work item:</p>
+            <p className="margin-4">{error?.message || 'Unknown error'}</p>
+          </div>
+        </MessageCard>
+      </ConditionalChildren>
       <ConditionalChildren renderChildren={workItem === undefined}>
         <WorkItemSearchSection
           workItemId={workItemId}
@@ -107,11 +117,17 @@ const RuleTester = (): React.ReactElement => {
               workItem={workItem}
               disabled={isTesting}
               onTest={async (targetState: string) => {
-                if (workItemId) {
-                  setIsTesting(true);
-                  const result = await ruleProcessor.process(workItemId, true, targetState);
-                  setProcessedItems(result);
+                try {
+                  if (workItemId) {
+                    setIsTesting(true);
+                    const result = await ruleProcessor.process(workItemId, true, targetState);
+                    setProcessedItems(result);
+                    setIsTesting(false);
+                  }
+                } catch (error) {
+                  setError(error);
                   setIsTesting(false);
+                  setProcessedItems([]);
                 }
               }}
             />
