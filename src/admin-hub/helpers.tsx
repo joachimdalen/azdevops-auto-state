@@ -216,7 +216,7 @@ const getListRowContextMenuItem = (
           ev?: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>,
           item?: IContextualMenuItem
         ) => {
-          if(rule.id){
+          if (rule.id) {
             handleDeleteRule(rule.workItemType, rule.id).then(r => {
               return r;
             });
@@ -245,6 +245,7 @@ export const getCommandBarItems = (
     text: 'Add Rule',
     isPrimary: true,
     iconProps: { iconName: 'Add' },
+    important: true,
     onActivate: () => {
       showEdit();
     }
