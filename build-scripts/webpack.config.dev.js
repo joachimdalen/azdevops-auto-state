@@ -24,10 +24,7 @@ module.exports = merge(common, {
     static: [path.resolve(__dirname, 'dist')],
     historyApiFallback: {
       disableDotRule: true,
-      rewrites: [
-        { from: /\/static\/.+/, to: '/' },
-        { from: 'extension-icon.png', to: '/assets/rule-tester-action-icon.png' }
-      ]
+      rewrites: [{ from: /\/static\/.+/, to: '/' }]
     }
   },
   output: {
