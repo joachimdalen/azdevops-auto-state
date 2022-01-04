@@ -67,7 +67,6 @@ jobs:
             mkdir $(Build.ArtifactStagingDirectory)/changelog/
             mv $(Build.SourcesDirectory)/*.vsix $(Build.ArtifactStagingDirectory)/extension/
             cp $(Build.SourcesDirectory)/marketplace/docs/CHANGELOG.md $(Build.ArtifactStagingDirectory)/changelog/
-            mv $(Build.SourcesDirectory)/marketplace/docs/CHANGELOG-RELEASE.md $(Build.ArtifactStagingDirectory)/changelog/
       - task: Bash@3
         displayName: 'Move version changelog'
         condition: eq(${{ parameters.generateVersionChangelog }}, true)
