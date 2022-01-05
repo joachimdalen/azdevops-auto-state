@@ -22,6 +22,8 @@ These are the valid scopes for AutoState:
 - `ci`: Changes to build files and scripts
 - `admin-hub`: Changes to the admin hub
 - `rule-modal`: Changes to the rule editor/modal
+- `rule-tester`: Changes to the rule tester
+- `rule-tester-action`: Changes to the rule tester action
 - `observer`: Changes to the work item observer
 - `styles`: Changes to only styling
 

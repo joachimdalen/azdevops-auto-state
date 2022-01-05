@@ -28,7 +28,8 @@ const getWorkItem = (
     id: id,
     fields: {
       'System.State': state,
-      'System.WorkItemType': type
+      'System.WorkItemType': type,
+      'System.Title': 'Work item title for ' + type
     },
     relations: relations,
     _links: {},
@@ -56,7 +57,28 @@ const getWorkItemType = (
 ): WorkItemType => {
   const p: Partial<WorkItemType> = {
     name: name,
-    referenceName: referenceName
+    referenceName: referenceName,
+    icon: {
+      id: 'id_string',
+      url: 'https://localhost/icon.png'
+    },
+    states: [
+      {
+        category: 'Propsed',
+        name: 'New',
+        color: 'FFF'
+      },
+      {
+        category: 'In Progress',
+        name: 'Active',
+        color: 'FFF'
+      },
+      {
+        category: 'Resolved',
+        name: 'Closed',
+        color: 'FFF'
+      }
+    ]
   };
   return p as WorkItemType;
 };
@@ -76,4 +98,4 @@ enum WorkItemNames {
   Documentation = 'Documentation'
 }
 
-export { getWorkItem, getWorkItemTypes, WorkItemReferenceNames, WorkItemNames };
+export { getWorkItem, getWorkItemType, getWorkItemTypes, WorkItemReferenceNames, WorkItemNames };

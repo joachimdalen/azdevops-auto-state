@@ -1,6 +1,13 @@
 {
   "issues": [
     {
+      "id": 1091521520,
+      "number": 18,
+      "submitter": "joachimdalen",
+      "title": "Add the ability to run 'What if' tests on rules",
+      "url": "https://github.com/joachimdalen/azdevops-auto-state/issues/18"
+    },
+    {
       "id": 1068816069,
       "number": 1,
       "submitter": "joachimdalen",
@@ -16,6 +23,13 @@
     }
   ],
   "pullRequests": [
+    {
+      "id": 813353187,
+      "number": 20,
+      "submitter": "joachimdalen",
+      "title": "Add rule tester to perform dry run of rules",
+      "url": "https://github.com/joachimdalen/azdevops-auto-state/pull/20"
+    },
     {
       "id": 812533162,
       "number": 19,

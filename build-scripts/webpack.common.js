@@ -2,6 +2,7 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ScriptTags = require('./webpack-script-tags-plugin');
 const { entries, modules } = require('./entry-points');
+const CopyPlugin = require('copy-webpack-plugin');
 
 const vendorGroups = modules.reduce(
   (obj, item) => ({
@@ -48,9 +49,9 @@ module.exports = {
       {
         test: /\.scss$/,
         use: [
+          'azure-devops-ui/buildScripts/css-variables-loader',
           'style-loader',
           'css-loader',
-          'azure-devops-ui/buildScripts/css-variables-loader',
           'sass-loader'
         ]
       },
@@ -67,20 +68,30 @@ module.exports = {
       }
     ]
   },
-  plugins: [new ScriptTags()].concat(
-    modules
-      .filter(x => x.generate)
-      .map(entry => {
-        return new HtmlWebpackPlugin({
-          meta: {
-            charset: 'UTF-8'
-          },
-          filename: entry.name + '.html',
-          inject: false,
-          templateContent: ({ htmlWebpackPlugin }) =>
-            `<html><head>${htmlWebpackPlugin.tags.headTags}</head><body><div id="${entry.root}"></div>${htmlWebpackPlugin.tags.bodyTags}</body></html>`,
-          chunks: [entry.name]
-        });
-      })
-  )
+  plugins: [new ScriptTags()]
+    .concat(
+      modules
+        .filter(x => x.generate)
+        .map(entry => {
+          return new HtmlWebpackPlugin({
+            meta: {
+              charset: 'UTF-8'
+            },
+            filename: entry.name + '.html',
+            inject: false,
+            templateContent: ({ htmlWebpackPlugin }) =>
+              `<html><head>${htmlWebpackPlugin.tags.headTags}</head><body><div id="${entry.root}"></div>${htmlWebpackPlugin.tags.bodyTags}</body></html>`,
+            chunks: [entry.name]
+          });
+        })
+    )
+    .concat(
+      modules
+        .filter(x => x.assets !== undefined)
+        .map(entry => {
+          return new CopyPlugin({
+            patterns: entry.assets.map(asset => ({ from: asset.source, to: asset.dest }))
+          });
+        })
+    )
 };

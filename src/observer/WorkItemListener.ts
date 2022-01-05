@@ -41,7 +41,7 @@ class WorkItemListener implements IWorkItemNotificationListener {
   async onSaved(args: IWorkItemChangedArgs): Promise<void> {
     if (this._stateWasUpdated && !this._isNewWorkItem && !this._isReadOnly) {
       try {
-        await this._ruleProcessor.process(args.id);
+        await this._ruleProcessor.process(args.id, false);
       } catch (error) {
         webLogger.error(error);
       }

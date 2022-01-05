@@ -1,7 +1,7 @@
 [
   {
     "version": "1.1.0",
-    "publishDate": "2022-01-XX",
+    "publishDate": "2022-01-05",
     "changes": [
       {
         "description": "Refactor build setup to reduce file sizes",
@@ -18,6 +18,12 @@
         "description": "Updated dependencies",
         "type": "maint",
         "pullRequest": 19
+      },
+      {
+        "type": "feature",
+        "description": "Added `Rule tester` to perform a dry run of rules. See [rule tester docs](https://github.com/joachimdalen/azdevops-auto-state/blob/master/docs/index.md#testing-rules) for more information on usage.",
+        "issue": 18,
+        "pullRequest": 20
       }
     ],
     "modules": [

@@ -9,12 +9,18 @@ import {
   IGroup,
   mergeStyles
 } from '@fluentui/react';
-import { IHostNavigationService } from 'azure-devops-extension-api';
+import {
+  IHostNavigationService,
+  IHostPageLayoutService,
+  IPanelOptions
+} from 'azure-devops-extension-api';
 import { WorkItemStateColor, WorkItemType } from 'azure-devops-extension-api/WorkItemTracking';
 import * as DevOps from 'azure-devops-extension-sdk';
 import { IHeaderCommandBarItem } from 'azure-devops-ui/HeaderCommandBar';
+import { MenuItemType } from 'azure-devops-ui/Menu';
 
 import Rule from '../common/models/Rule';
+import webLogger from '../common/webLogger';
 import StateTag from '../shared-ui/component/StateTag';
 import WorkItemTypeTag from '../shared-ui/component/WorkItemTypeTag';
 
@@ -210,9 +216,11 @@ const getListRowContextMenuItem = (
           ev?: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>,
           item?: IContextualMenuItem
         ) => {
-          handleDeleteRule(rule.workItemType, rule.id!).then(r => {
-            return r;
-          });
+          if (rule.id) {
+            handleDeleteRule(rule.workItemType, rule.id).then(r => {
+              return r;
+            });
+          }
         }
       }
     ]
@@ -223,24 +231,13 @@ export const getCommandBarItems = (
   refreshData: (force: boolean) => Promise<void>
 ): IHeaderCommandBarItem[] => [
   {
-    id: 'open-docs',
-    text: 'Open docs',
-    iconProps: { iconName: 'Help' },
-    onActivate: () => {
-      DevOps.getService<IHostNavigationService>('ms.vss-features.host-navigation-service').then(
-        value => {
-          value.openNewWindow('https://github.com/joachimdalen/azdevops-auto-state', '');
-        }
-      );
-    }
-  },
-  {
     id: 'refresh-date',
     text: 'Refresh Data',
-    isPrimary: true,
     iconProps: { iconName: 'Refresh' },
-    onActivate: async () => {
-      await refreshData(true);
+    onActivate: () => {
+      refreshData(true).then(() => {
+        webLogger.information('Refreshed rules');
+      });
     }
   },
   {
@@ -248,8 +245,43 @@ export const getCommandBarItems = (
     text: 'Add Rule',
     isPrimary: true,
     iconProps: { iconName: 'Add' },
+    important: true,
     onActivate: () => {
       showEdit();
+    }
+  },
+  {
+    iconProps: { iconName: 'TestBeaker' },
+    id: 'rule-tester',
+    text: 'Rule Tester',
+    important: false,
+    onActivate: () => {
+      DevOps.getService<IHostPageLayoutService>('ms.vss-features.host-page-layout-service').then(
+        dialogService => {
+          const options: IPanelOptions<any> = {
+            title: 'Rule Tester',
+            size: 2
+          };
+          dialogService.openPanel(DevOps.getExtensionContext().id + '.rule-tester', options);
+        }
+      );
+    }
+  },
+  {
+    id: 'splitter-one',
+    itemType: MenuItemType.Divider
+  },
+  {
+    id: 'open-docs',
+    text: 'Open docs',
+    iconProps: { iconName: 'Help' },
+    important: false,
+    onActivate: () => {
+      DevOps.getService<IHostNavigationService>('ms.vss-features.host-navigation-service').then(
+        value => {
+          value.openNewWindow('https://github.com/joachimdalen/azdevops-auto-state', '');
+        }
+      );
     }
   }
 ];

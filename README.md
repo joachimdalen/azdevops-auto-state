@@ -11,7 +11,7 @@
   <p align="center">
     An extension to automatically update states between parents and children
     <br />
-    <a href="https://github.com/joachimdalen/azdevops-auto-state/blob/master/docs/RULES.md"><strong>Explore the docs »</strong></a>
+    <a href="https://github.com/joachimdalen/azdevops-auto-state/blob/master/docs/index.md"><strong>Explore the docs »</strong></a>
     <br />
     <br />
     <a href="https://marketplace.visualstudio.com/items?itemName=joachimdalen.auto-state">View Extension</a>
@@ -138,7 +138,7 @@ Auto State is hidden behind a feature flag for several reasons. After installing
 
 ## Usage
 
-See [RULES](./docs/RULES.md) for rule usage.
+See [documenation](./docs/index.md) for rule usage.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 

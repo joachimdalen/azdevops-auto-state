@@ -4,7 +4,10 @@ import {
   IWorkItemLoadedArgs,
   WorkItemTrackingServiceIds
 } from 'azure-devops-extension-api/WorkItemTracking';
-
+import WorkItemListener from '../observer/WorkItemListener';
+import { IExtensionContext } from 'azure-devops-extension-sdk';
+export const mockInit = jest.fn();
+export const mockRegister = jest.fn();
 /**
  * This is a minimal mock version to test WorkItemFormGroup
  * for additional mocks please look here:
@@ -15,7 +18,7 @@ import {
  * Mocked Init Function to return resolve
  */
 export function init(): Promise<void> {
-  return new Promise((resolve, reject) => resolve());
+  return new Promise((resolve, reject) => resolve(mockInit()));
 }
 
 /**
@@ -49,8 +52,13 @@ export let spyWorkItemCallBackAccessor: workItemCallBackType;
 /**
  * Mocked register returns empty data structure
  */
-export function register(instanceId: string, instance: workItemCallBackType) {
-  spyWorkItemCallBackAccessor = instance;
+export function register(instanceId: string, instance: any) {
+  if (typeof instance === typeof WorkItemListener) {
+    console.log('wuk');
+    spyWorkItemCallBackAccessor = instance;
+  }
+
+  mockRegister(instanceId, instance);
 }
 
 /**
@@ -59,6 +67,7 @@ export function register(instanceId: string, instance: workItemCallBackType) {
 export const mockSetFieldValue = jest.fn();
 export const mockGetProject = jest.fn();
 export const mockAddToast = jest.fn();
+export const mockOpenPanel = jest.fn();
 
 /**
  * Mocked getService returns mocked methods
@@ -80,11 +89,38 @@ export function getService(contributionId: string) {
         addToast: mockAddToast
       };
     }
+    case 'ms.vss-features.host-page-layout-service': {
+      return {
+        openPanel: mockOpenPanel
+      };
+    }
   }
 }
 
-export const mockResize = jest.fn().mockRejectedValue(new Error('Err'));
+export const mockResize = jest.fn();
+export const mockReady = jest.fn();
+export const mockGetConfiguration = jest.fn();
+export const mockNotifyLoadSucceeded = jest.fn();
+export const mockGetExtensionContext = jest.fn().mockReturnValue({
+  id: 'as-pub.auto-state',
+  publisherId: 'as-pub',
+  extensionId: 'auto-state',
+  version: '0.1.1'
+});
 
 export function resize(width?: number, height?: number) {
   mockResize(width, height);
+}
+
+export function ready() {
+  return new Promise(resolve => resolve(mockReady()));
+}
+export function notifyLoadSucceeded() {
+  mockNotifyLoadSucceeded();
+}
+export function getConfiguration() {
+  return mockGetConfiguration();
+}
+export function getExtensionContext(): IExtensionContext {
+  return mockGetExtensionContext();
 }

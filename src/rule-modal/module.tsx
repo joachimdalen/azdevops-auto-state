@@ -6,12 +6,10 @@ import * as DevOps from 'azure-devops-extension-sdk';
 import { Button } from 'azure-devops-ui/Button';
 import { ButtonGroup } from 'azure-devops-ui/ButtonGroup';
 import { ConditionalChildren } from 'azure-devops-ui/ConditionalChildren';
-import { Dropdown } from 'azure-devops-ui/Dropdown';
 import { FormItem } from 'azure-devops-ui/FormItem';
-import { IListBoxItem } from 'azure-devops-ui/ListBox';
 import { MessageCard, MessageCardSeverity } from 'azure-devops-ui/MessageCard';
 import { Toggle } from 'azure-devops-ui/Toggle';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { ActionResult } from '../common/models/ActionResult';
 import AddRuleResult from '../common/models/AddRuleResult';
@@ -20,15 +18,9 @@ import WorkItemService from '../common/services/WorkItemService';
 import webLogger from '../common/webLogger';
 import { appTheme } from '../shared-ui/azure-devops-theme';
 import LoadingSection from '../shared-ui/component/LoadingSection';
-import useDropdownMultiSelection from '../shared-ui/hooks/useDropdownMultiSelection';
-import useDropdownSelection from '../shared-ui/hooks/useDropdownSelection';
+import WorkItemStateDropdown from '../shared-ui/component/WorkItemStateDropdown';
+import WorkItemTypeDropdown from '../shared-ui/component/WorkItemTypeDropdown';
 import showRootComponent from '../shared-ui/showRootComponent';
-import {
-  getStatesForWorkItemType,
-  getWorkItemTypeItems,
-  renderStateCell,
-  renderWorkItemCell
-} from './helpers';
 
 const ModalContent = (): React.ReactElement => {
   const [error, setError] = useState<ActionResult<any> | undefined>(undefined);
@@ -77,34 +69,6 @@ const ModalContent = (): React.ReactElement => {
       });
   }, []);
 
-  const workItemTypes: IListBoxItem[] = useMemo(() => getWorkItemTypeItems(types, []), [types]);
-  const parentTypes: IListBoxItem[] = useMemo(
-    () => getWorkItemTypeItems(types, [workItemType]),
-    [types, workItemType]
-  );
-  const workItemStates: IListBoxItem[] = useMemo(
-    () => getStatesForWorkItemType(types, workItemType, []),
-    [workItemType]
-  );
-  const parentStates: IListBoxItem[] = useMemo(
-    () => getStatesForWorkItemType(types, parentType, []),
-    [types, parentType]
-  );
-  const parentTargetStates: IListBoxItem[] = useMemo(
-    () => getStatesForWorkItemType(types, parentType, parentExcludedStates, true),
-    [types, parentType, parentExcludedStates]
-  );
-  const workItemTypeSelection = useDropdownSelection(workItemTypes, rule?.workItemType);
-  const parentTypeSelection = useDropdownSelection(parentTypes, rule?.parentType);
-  const transitionStateSelection = useDropdownSelection(workItemStates, rule?.transitionState);
-  const parentExcludedStatesSelection = useDropdownMultiSelection(
-    parentStates,
-    rule?.parentExcludedStates
-  );
-  const parentTargetStateSelection = useDropdownSelection(
-    parentTargetStates,
-    rule?.parentTargetState
-  );
 
   const dismiss = () => {
     const config = DevOps.getConfiguration();
@@ -169,12 +133,10 @@ const ModalContent = (): React.ReactElement => {
               label="Work item type"
               message="This is the work item type for this rule to trigger on"
             >
-              <Dropdown
-                placeholder="Select a work item type"
-                items={workItemTypes}
-                selection={workItemTypeSelection}
+              <WorkItemTypeDropdown
+                types={types}
+                selected={workItemType}
                 onSelect={(_, i) => setWorkItemType(i.id)}
-                renderItem={renderWorkItemCell}
               />
             </FormItem>
             <FormItem
@@ -182,12 +144,12 @@ const ModalContent = (): React.ReactElement => {
               label="Parent type"
               message="This is the work item type of the parent relation. E.g the work item type that should be updated."
             >
-              <Dropdown
-                placeholder="Select a work item type"
-                items={parentTypes}
-                selection={parentTypeSelection}
+              <WorkItemTypeDropdown
+                types={types}
+                selected={parentType}
+                filter={[workItemType]}
+                deps={[workItemType]}
                 onSelect={(_, i) => setParentType(i.id)}
-                renderItem={renderWorkItemCell}
               />
             </FormItem>
 
@@ -195,39 +157,38 @@ const ModalContent = (): React.ReactElement => {
               label="Transition state"
               message="The transitioned state for the rule to trigger on (When work item type changes to this)"
             >
-              <Dropdown
-                disabled={workItemStates?.length === 0}
-                placeholder="Select a state"
-                items={workItemStates}
-                selection={transitionStateSelection}
+              <WorkItemStateDropdown
+                types={types}
+                workItemType={workItemType}
+                selected={rule?.transitionState}
                 onSelect={(_, i) => setTransitionState(i.id)}
-                renderItem={renderStateCell}
               />
             </FormItem>
             <FormItem
               label="Parent not in state"
               message="Do not trigger the rule if the parent work item is in this state"
             >
-              <Dropdown
-                disabled={parentStates?.length === 0}
-                placeholder="Select states"
-                items={parentStates}
-                selection={parentExcludedStatesSelection}
+              <WorkItemStateDropdown
+                types={types}
+                workItemType={parentType}
+                selected={rule?.parentExcludedStates}
                 onSelect={(_, i) => addOrRemove(i.id)}
-                renderItem={renderStateCell}
+                multiSelection
+                deps={[parentType]}
               />
             </FormItem>
             <FormItem
               label="Parent target state"
               message="This is the state that the parent work item should transition to"
             >
-              <Dropdown
-                disabled={parentTargetStates?.length === 0}
-                placeholder="Select a state"
-                items={parentTargetStates}
-                selection={parentTargetStateSelection}
+              <WorkItemStateDropdown
+                types={types}
+                workItemType={parentType}
+                selected={rule?.parentTargetState}
                 onSelect={(_, i) => setParentTargetState(i.id)}
-                renderItem={renderStateCell}
+                filter={parentExcludedStates}
+                include={true}
+                deps={[parentType, parentExcludedStates]}
               />
             </FormItem>
             <FormItem

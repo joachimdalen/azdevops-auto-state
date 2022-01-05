@@ -16,6 +16,19 @@ const modules = [
     entry: './src/rule-modal/module',
     root: 'modal-container',
     generate: true
+  },
+  {
+    name: 'rule-tester',
+    entry: './src/rule-tester/module',
+    root: 'rule-tester-container',
+    generate: true
+  },
+  {
+    name: 'rule-tester-action',
+    entry: './src/rule-tester-action/module',
+    root: 'rule-tester-action-container',
+    generate: true,
+    assets: [{ source: './src/rule-tester-action/icon.png', dest: 'assets/rule-tester-action-icon.png' }]
   }
 ];
 

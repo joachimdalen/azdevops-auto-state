@@ -47,6 +47,7 @@ stages:
         parameters:
           extensionEnv: dev
           taskVersion: ${{ parameters.taskVersion }}
+          generateVersionChangelog: false
 
   - stage: publish_dev
     displayName: '[DEV] Publish'
@@ -71,6 +72,7 @@ stages:
         parameters:
           extensionEnv: qa
           taskVersion: ${{ parameters.taskVersion }}
+          generateVersionChangelog: false
 
   - stage: publish_qa
     displayName: '[QA] Publish'

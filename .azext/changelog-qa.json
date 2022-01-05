@@ -1,5 +1,17 @@
 [
   {
+    "version": "1.0.5",
+    "publishDate": "2022-01-03",
+    "changes": [
+      {
+        "type": "feature",
+        "description": "Added `Rule tester` to perform a dry run of rules. See [rule tester docs](https://github.com/joachimdalen/azdevops-auto-state/blob/master/docs/index.md#testing-rules) for more information on usage.",
+        "issue": 18,
+        "pullRequest": 20
+      }
+    ]
+  },
+  {
     "version": "1.0.2",
     "publishDate": "2022-01-01",
     "changes": [

@@ -1,0 +1,7 @@
+@import 'azure-devops-ui/Core/override.css';
+@import '../styles/mixins.scss';
+@include extension-container('rule-tester-container');
+
+.container-border {
+  border: 1px solid rgba(var(--palette-neutral-30, 234, 234, 234), 1);
+}

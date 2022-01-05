@@ -37,7 +37,7 @@
     "uri": "https://github.com/joachimdalen/azdevops-auto-state"
   },
   "branding": {
-    "color": "#215564",
+    "color": "#198695",
     "theme": "dark"
   },
   "targets": [
@@ -61,6 +61,9 @@
     },
     {
       "path": "marketplace/docs/images/rule-modal.png"
+    },
+    {
+      "path": "marketplace/docs/images/rule-tester-result.png"
     }
   ],
   "contributions": [
@@ -86,6 +89,44 @@
       "targets": [],
       "properties": {
         "uri": "dist/rule-modal.html"
+      },
+      "constraints": [
+        {
+          "name": "Feature",
+          "properties": {
+            "featureId": "joachimdalen.auto-state.auto-state-enabled"
+          }
+        }
+      ]
+    },
+    {
+      "id": "rule-tester",
+      "type": "ms.vss-web.external-content",
+      "targets": [],
+      "properties": {
+        "uri": "dist/rule-tester.html"
+      },
+      "constraints": [
+        {
+          "name": "Feature",
+          "properties": {
+            "featureId": "joachimdalen.auto-state.auto-state-enabled"
+          }
+        }
+      ]
+    },
+    {
+      "id": "rule-tester-toolbar",
+      "type": "ms.vss-web.action",
+      "description": "Show the Auto State rule tester",
+      "targets": ["ms.vss-work-web.work-item-toolbar-menu"],
+      "properties": {
+        "text": "Auto State Tester",
+        "title": "Auto State Tester",
+        "icon": "dist/assets/rule-tester-action-icon.png",
+        "group": "actions",
+        "uri": "dist/rule-tester-action.html",
+        "registeredObjectId": "rule-tester-action"
       },
       "constraints": [
         {

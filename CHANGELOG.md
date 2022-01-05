@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.1.0 (2022-01-XX)
+## 1.1.0 (2022-01-05)
 
 ### 🛠️ Maintenance (2)
 
@@ -9,11 +9,14 @@
 - Updated dependencies
   - Pull Request: [GH#19 - Add recursive updating and rule improvements](https://github.com/joachimdalen/azdevops-auto-state/pull/19)
 
-### 🚀 Features (1)
+### 🚀 Features (2)
 
 - Added support for recursive updating of parents
   - Issue: [GH#1 - Allow recursive update of parents](https://github.com/joachimdalen/azdevops-auto-state/issues/1)
   - Pull Request: [GH#19 - Add recursive updating and rule improvements](https://github.com/joachimdalen/azdevops-auto-state/pull/19)
+- Added `Rule tester` to perform a dry run of rules. See [rule tester docs](https://github.com/joachimdalen/azdevops-auto-state/blob/master/docs/index.md#testing-rules) for more information on usage.
+  - Issue: [GH#18 - Add the ability to run 'What if' tests on rules](https://github.com/joachimdalen/azdevops-auto-state/issues/18)
+  - Pull Request: [GH#20 - Add rule tester to perform dry run of rules](https://github.com/joachimdalen/azdevops-auto-state/pull/20)
 
 ## 📦 Module changes
 

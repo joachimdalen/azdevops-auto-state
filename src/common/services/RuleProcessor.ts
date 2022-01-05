@@ -1,15 +1,19 @@
 import { WorkItem, WorkItemType } from 'azure-devops-extension-api/WorkItemTracking';
 
 import { asyncFilter, groupBy } from '../helpers';
+import ProcessedItem from '../models/ProcessedItem';
 import Rule from '../models/Rule';
 import RuleDocument from '../models/WorkItemRules';
 import WorkItemRules from '../models/WorkItemRules';
 import webLogger from '../webLogger';
 import {
+  getDryRunState,
   getState,
+  getWorkItemTitle,
   getWorkItemType,
   getWorkItemTypeField,
   getWorkItemTypeFromName,
+  isInDryRunState,
   isInState
 } from '../workItemUtils';
 import { IStorageService, StorageService } from './StorageService';
@@ -17,9 +21,15 @@ import WorkItemService, { IWorkItemService } from './WorkItemService';
 
 export interface IRuleProcessor {
   init(): Promise<void>;
-  process(workItemId: number): Promise<void>;
-  processWorkItem(workItemId: number): Promise<number | undefined>;
-  isRuleMatch(rule: Rule, workItem: WorkItem, parent: WorkItem): Promise<boolean>;
+  process(workItemId: number, dryRun: boolean, initialState?: string): Promise<ProcessedItem[]>;
+  isRuleMatch(
+    rule: Rule,
+    workItem: WorkItem,
+    parent: WorkItem,
+    checkChildren: boolean,
+    dryRun: boolean,
+    processedItems: ProcessedItem[]
+  ): Promise<boolean>;
 }
 
 class RuleProcessor implements IRuleProcessor {
@@ -49,10 +59,15 @@ class RuleProcessor implements IRuleProcessor {
     return this._ruleDocs.find(x => x.id === workItemType);
   }
 
-  private async processInternal(workItemId: number, processed: number[]) {
+  private async processInternal(
+    workItemId: number,
+    processed: number[],
+    dryRun: boolean,
+    processedItems: ProcessedItem[]
+  ) {
     webLogger.debug('processing ', workItemId);
     const procsessedIds: number[] = [...processed];
-    const parentToProcess = await this.processWorkItem(workItemId);
+    const parentToProcess = await this.processWorkItem(workItemId, dryRun, processedItems);
     webLogger.debug('parentToProcess ', parentToProcess);
 
     if (parentToProcess !== undefined) {
@@ -60,21 +75,39 @@ class RuleProcessor implements IRuleProcessor {
         webLogger.warning('Parent ' + parentToProcess + ' already processed');
       } else {
         webLogger.debug('Processing work item ' + parentToProcess);
-        const nextLevelForWorkItem = await this.processWorkItem(parentToProcess);
+        const nextLevelForWorkItem = await this.processWorkItem(
+          parentToProcess,
+          dryRun,
+          processedItems
+        );
         procsessedIds.push(parentToProcess);
         webLogger.debug('Next process', nextLevelForWorkItem);
         if (nextLevelForWorkItem !== undefined) {
-          await this.processInternal(nextLevelForWorkItem, procsessedIds);
+          await this.processInternal(nextLevelForWorkItem, procsessedIds, dryRun, processedItems);
         }
       }
     }
   }
 
-  public async process(workItemId: number): Promise<void> {
-    await this.processInternal(workItemId, []);
+  public async process(
+    workItemId: number,
+    dryRun: boolean,
+    initialState?: string
+  ): Promise<ProcessedItem[]> {
+    const processLog: ProcessedItem[] = [
+      ...(dryRun && initialState
+        ? [{ id: workItemId, sourceState: '', updatedState: initialState, title: '', type: '' }]
+        : [])
+    ];
+    await this.processInternal(workItemId, [], dryRun, processLog);
+    return processLog;
   }
 
-  public async processWorkItem(workItemId: number): Promise<number | undefined> {
+  private async processWorkItem(
+    workItemId: number,
+    dryRun: boolean,
+    processedItems: ProcessedItem[]
+  ): Promise<number | undefined> {
     let parentToProcess: number | undefined = undefined;
     const currentWi: WorkItem = await this._workItemService.getWorkItem(workItemId);
     const parentWi: WorkItem | undefined = await this._workItemService.getParentForWorkItem(
@@ -102,7 +135,7 @@ class RuleProcessor implements IRuleProcessor {
     }
 
     const matchingRules = await asyncFilter(ruleDoc.rules, async x => {
-      return this.isRuleMatch(x, currentWi, parentWi);
+      return this.isRuleMatch(x, currentWi, parentWi, true, dryRun, processedItems);
     });
 
     if (matchingRules.length === 0) {
@@ -111,11 +144,21 @@ class RuleProcessor implements IRuleProcessor {
     }
 
     for (const rule of matchingRules) {
-      const updated = await this._workItemService.setWorkItemState(
-        parentWi.id,
-        rule.parentTargetState
-      );
-      webLogger.information('Updated ' + parentWi.id + ' to ' + updated.fields['System.State']);
+      if (dryRun) {
+        processedItems.push({
+          id: parentWi.id,
+          title: getWorkItemTitle(parentWi),
+          type: getWorkItemTypeField(parentWi),
+          sourceState: getDryRunState(parentWi, processedItems),
+          updatedState: rule.parentTargetState
+        });
+      } else {
+        const updated = await this._workItemService.setWorkItemState(
+          parentWi.id,
+          rule.parentTargetState
+        );
+        webLogger.information('Updated ' + parentWi.id + ' to ' + updated.fields['System.State']);
+      }
 
       if (rule.processParent) {
         webLogger.debug(
@@ -132,25 +175,43 @@ class RuleProcessor implements IRuleProcessor {
     rule: Rule,
     workItem: WorkItem,
     parent: WorkItem,
-    checkChildren = true
+    checkChildren = true,
+    dryRun: boolean,
+    processedItems: ProcessedItem[]
   ): Promise<boolean> {
     const childType = getWorkItemType(workItem, this._workItemTypes);
     if (rule.workItemType !== childType) return false;
 
     const parentType = getWorkItemType(parent, this._workItemTypes);
     if (rule.parentType !== parentType) return false;
-    const transitionState = getState(workItem);
+    const transitionState = dryRun ? getDryRunState(workItem, processedItems) : getState(workItem);
     if (rule.transitionState !== transitionState) return false;
-    if (isInState(parent, rule.parentExcludedStates)) return false;
-    if (isInState(parent, [rule.parentTargetState])) return false;
+    if (
+      dryRun
+        ? isInDryRunState(parent, rule.parentExcludedStates, processedItems)
+        : isInState(parent, rule.parentExcludedStates)
+    )
+      return false;
+    if (
+      dryRun
+        ? isInDryRunState(parent, [rule.parentTargetState], processedItems)
+        : isInState(parent, [rule.parentTargetState])
+    )
+      return false;
 
     if (rule.childrenLookup && checkChildren) {
-      return await this.isChildrenRuleMatch(rule, childType, parent);
+      return await this.isChildrenRuleMatch(rule, childType, parent, dryRun, processedItems);
     }
 
     return true;
   }
-  private async isChildrenRuleMatch(rule: Rule, childType: string, parentWorkItem: WorkItem) {
+  private async isChildrenRuleMatch(
+    rule: Rule,
+    childType: string,
+    parentWorkItem: WorkItem,
+    dryRun: boolean,
+    processedItems: ProcessedItem[]
+  ) {
     const children = await this._workItemService.getChildrenForWorkItem(
       parentWorkItem.id,
       parentWorkItem
@@ -158,7 +219,11 @@ class RuleProcessor implements IRuleProcessor {
     if (children === undefined) return true;
 
     if (children.every(wi => getWorkItemType(wi, this._workItemTypes) === childType)) {
-      const match = children?.every(wi => isInState(wi, [rule.transitionState]));
+      const match = children?.every(wi =>
+        dryRun
+          ? isInDryRunState(wi, [rule.transitionState], processedItems)
+          : isInState(wi, [rule.transitionState])
+      );
       return match;
     }
 
@@ -172,7 +237,14 @@ class RuleProcessor implements IRuleProcessor {
       } else {
         for (const workItem of workItems) {
           for (const typeRule of rulesForType) {
-            const isMatch = await this.isRuleMatch(typeRule, workItem, parentWorkItem, false);
+            const isMatch = await this.isRuleMatch(
+              typeRule,
+              workItem,
+              parentWorkItem,
+              false,
+              dryRun,
+              processedItems
+            );
             results.push(isMatch);
           }
         }

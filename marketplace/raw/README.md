@@ -23,6 +23,12 @@
 
 ![rule-editor](marketplace/docs/images/rule-editor.png)
 
+## Features
+
+- Rule based editor for defining when states should update
+- Recursive updating of parent work items
+- Rule tester to see how rules work and what work items will be updated
+
 ## Activating the extension
 
 For this extension to work properly there are a few steps that needs to be taken after installing:
@@ -34,13 +40,12 @@ For this extension to work properly there are a few steps that needs to be taken
 
 ### Usage
 
-Documentation on rule usage can be found on [GitHub](https://github.com/joachimdalen/azdevops-auto-state/blob/master/docs/RULES.md)
+Documentation on rule usage can be found on [GitHub](https://github.com/joachimdalen/azdevops-auto-state/blob/master/docs/index.md)
 
 ### Limitations
 
 - This extension does not work when doing mass updates
 - The state **must** be updated from the work item form for the update to trigger
-- The extension only updates state one level up (recursive updating is on the road map)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
