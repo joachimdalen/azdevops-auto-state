@@ -40,7 +40,7 @@ For this extension to work properly there are a few steps that needs to be taken
 
 ### Usage
 
-Documentation on rule usage can be found on [GitHub](https://github.com/joachimdalen/azdevops-auto-state/blob/master/docs/RULES.md)
+Documentation on rule usage can be found on [GitHub](https://github.com/joachimdalen/azdevops-auto-state/blob/master/docs/index.md)
 
 ### Limitations
 
