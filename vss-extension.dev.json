@@ -67,7 +67,7 @@
     {
       "id": "work-item-observer",
       "type": "ms.vss-work-web.work-item-notifications",
-      "targets": ["ms.vss-work-web.work-item-form"],
+      "targets": ["ms.vss-work-web.work-item-form", "ms.vss-work-web.new-work-item-form"],
       "properties": {
         "uri": "observer.html"
       },
