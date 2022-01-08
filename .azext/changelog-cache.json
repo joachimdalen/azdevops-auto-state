@@ -24,6 +24,13 @@
   ],
   "pullRequests": [
     {
+      "id": 816841293,
+      "number": 21,
+      "submitter": "joachimdalen",
+      "title": "Update azext",
+      "url": "https://github.com/joachimdalen/azdevops-auto-state/pull/21"
+    },
+    {
       "id": 813353187,
       "number": 20,
       "submitter": "joachimdalen",

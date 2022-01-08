@@ -1,5 +1,16 @@
 [
   {
+    "version": "1.1.1",
+    "publishDate": "2022-01-XX",
+    "changes": [
+      {
+        "description": "Update azext and implement new changes",
+        "type": "maint",
+        "pullRequest": 21
+      }
+    ]
+  },
+  {
     "version": "1.1.0",
     "publishDate": "2022-01-05",
     "changes": [
