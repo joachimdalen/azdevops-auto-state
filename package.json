@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.1",
   "devDependencies": {
-    "@joachimdalen/azext": "^0.3.0",
+    "@joachimdalen/azext": "^0.4.0",
     "@testing-library/jest-dom": "^5.15.1",
     "@testing-library/react": "^12.1.2",
     "@testing-library/react-hooks": "^7.0.2",

@@ -24,7 +24,28 @@
     "tests": ":test_tube: Tests ({{changeCount}})",
     "other": ":speech_balloon: Other ({{changeCount}})",
     "docs": ":memo: Documentation ({{changeCount}})",
-    "maint": ":hammer_and_wrench: Maintenance ({{changeCount}})"
+    "maint": ":hammer_and_wrench: Maintenance ({{changeCount}})",
+    "enhancement": ":mega: Enhancements ({{changeCount}})"
+  },
+  "typeResourcePrefixMapping": {
+    "feature": {
+      "issue": "Suggested in",
+      "pullRequest": "Added in"
+    },
+    "fix": {
+      "issue": "Reported in",
+      "pullRequest": "Fixed in"
+    },
+    "docs": {
+      "pullRequest": "Changed in"
+    },
+    "maint": {
+      "pullRequest": "Changed in"
+    },
+    "enhancement": {
+      "issue": "Suggested in",
+      "pullRequest": "Improved in"
+    }
   },
   "attributionTitleFormat": {
     "size": "h2",
