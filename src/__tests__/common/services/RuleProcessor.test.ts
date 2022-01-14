@@ -153,6 +153,41 @@ describe('RuleProcessor', () => {
 
       expect(res).toBeFalsy();
     });
+    it('returns false when disabled', async () => {
+      const rule: Rule = {
+        id: uuidV4(),
+        childrenLookup: true,
+        transitionState: 'Closed',
+        parentExcludedStates: ['Resolved', 'Closed'],
+        parentTargetState: 'Resolved',
+        parentType: WorkItemReferenceNames.UserStory,
+        workItemType: WorkItemReferenceNames.Task,
+        processParent: false,
+        disabled: true
+      };
+      jest.spyOn(StorageService.prototype, 'getData').mockResolvedValue([
+        {
+          id: WorkItemReferenceNames.Task,
+          rules: [rule]
+        }
+      ]);
+      jest
+        .spyOn(WorkItemService.prototype, 'getWorkItemTypes')
+        .mockResolvedValue(getWorkItemTypes());
+
+      const parentWorkItem = getWorkItem(9, WorkItemNames.UserStory, 'Active', [
+        { id: 11, type: 'children' }
+      ]);
+      const workItem = getWorkItem(11, WorkItemNames.Task, 'Closed', [{ id: 9, type: 'parent' }]);
+
+      mockGetWorkItem.mockResolvedValueOnce(parentWorkItem);
+
+      const ruleProcessor = new RuleProcessor();
+      await ruleProcessor.init();
+      const res = await ruleProcessor.isRuleMatch(rule, workItem, parentWorkItem, true, false, []);
+
+      expect(res).toBeFalsy();
+    });
     it('returns true when children of different types and matching rules', async () => {
       const rule: Rule = {
         id: uuidV4(),
@@ -601,6 +636,55 @@ describe('RuleProcessor', () => {
       expect(mockUpdateWorkItem).toHaveBeenCalledTimes(1);
     });
 
+    it('should not update work item state when rule is diabled', async () => {
+      const parentWorkItem = getWorkItem(122, WorkItemNames.UserStory, 'New', [
+        { id: 123, type: 'children' }
+      ]);
+      const workItem = getWorkItem(123, WorkItemNames.Task, 'Active', [
+        { id: 122, type: 'parent' }
+      ]);
+      getDataSpy.mockResolvedValue([
+        {
+          id: WorkItemReferenceNames.Task,
+          rules: [
+            {
+              id: '1',
+              parentType: WorkItemReferenceNames.UserStory,
+              workItemType: WorkItemReferenceNames.Task,
+              transitionState: 'Active',
+              parentExcludedStates: ['Active', 'Resolved', 'Closed'],
+              parentTargetState: 'Active',
+              childrenLookup: false,
+              processParent: false,
+              disabled: true
+            }
+          ]
+        }
+      ]);
+      mockUpdateWorkItem.mockImplementation((document, id) => {
+        const newWi = { ...workItem };
+        newWi.fields['System.State'] = document[0].value;
+        return Promise.resolve(newWi);
+      });
+
+      mockGetWorkItem.mockImplementation(id => {
+        switch (id) {
+          case 123:
+            return Promise.resolve(workItem);
+          case 122:
+            return Promise.resolve(parentWorkItem);
+          default:
+            return Promise.reject('No such item');
+        }
+      });
+
+      const ruleProcessor = new RuleProcessor();
+      await ruleProcessor.init();
+      await ruleProcessor.process(workItem.id, false);
+
+      expect(mockUpdateWorkItem).not.toHaveBeenCalled();
+    });
+
     it('should update work item and parent state when rule matches', async () => {
       const workItems = new Map<number, WorkItem>();
       const parentParentWorkItem = getWorkItem(121, WorkItemNames.Feature, 'New', [
@@ -930,6 +1014,119 @@ describe('RuleProcessor', () => {
       await ruleProcessor.process(workItem.id, false);
 
       expect(mockUpdateWorkItem).toHaveBeenCalledTimes(3);
+    });
+    it('should stop processing when hitting disabled rule', async () => {
+      const workItems = new Map<number, WorkItem>();
+      const epicWorkItem = getWorkItem(120, WorkItemNames.Epic, 'New', [
+        {
+          id: 121,
+          type: 'children'
+        }
+      ]);
+      const featureWorkItem = getWorkItem(121, WorkItemNames.Feature, 'New', [
+        {
+          id: 122,
+          type: 'children'
+        },
+        {
+          id: 120,
+          type: 'parent'
+        }
+      ]);
+      const usWorkItem = getWorkItem(122, WorkItemNames.UserStory, 'New', [
+        {
+          id: 123,
+          type: 'children'
+        },
+        {
+          id: 121,
+          type: 'parent'
+        }
+      ]);
+      const workItem = getWorkItem(123, WorkItemNames.Task, 'Active', [
+        {
+          id: 122,
+          type: 'parent'
+        }
+      ]);
+
+      workItems.set(workItem.id, workItem);
+      workItems.set(usWorkItem.id, usWorkItem);
+      workItems.set(featureWorkItem.id, featureWorkItem);
+      workItems.set(epicWorkItem.id, epicWorkItem);
+
+      getDataSpy.mockResolvedValue([
+        {
+          id: WorkItemReferenceNames.Task,
+          rules: [
+            {
+              id: '1',
+              parentType: WorkItemReferenceNames.UserStory,
+              workItemType: WorkItemReferenceNames.Task,
+              transitionState: 'Active',
+              parentExcludedStates: ['Active', 'Resolved', 'Closed'],
+              parentTargetState: 'Active',
+              childrenLookup: false,
+              processParent: true,
+              disabled: false
+            }
+          ]
+        },
+        {
+          id: WorkItemReferenceNames.UserStory,
+          rules: [
+            {
+              id: '2',
+              parentType: WorkItemReferenceNames.Feature,
+              workItemType: WorkItemReferenceNames.UserStory,
+              transitionState: 'Active',
+              parentExcludedStates: ['Active', 'Resolved', 'Closed'],
+              parentTargetState: 'Active',
+              childrenLookup: false,
+              processParent: true,
+              disabled: false
+            }
+          ]
+        },
+        {
+          id: WorkItemReferenceNames.Feature,
+          rules: [
+            {
+              id: '3',
+              parentType: WorkItemReferenceNames.Epic,
+              workItemType: WorkItemReferenceNames.Feature,
+              transitionState: 'Active',
+              parentExcludedStates: ['Active', 'Resolved', 'Closed'],
+              parentTargetState: 'Active',
+              childrenLookup: false,
+              processParent: true,
+              disabled: true
+            }
+          ]
+        }
+      ]);
+      mockUpdateWorkItem.mockImplementation((document, id) => {
+        const newWi = workItems.get(id);
+
+        if (newWi === undefined) {
+          return Promise.reject('Err');
+        }
+
+        newWi.fields['System.State'] = document[0].value;
+        workItems.set(id, newWi);
+
+        return Promise.resolve(newWi);
+      });
+
+      mockGetWorkItem.mockImplementation(id => {
+        return workItems.get(id);
+      });
+
+      const ruleProcessor = new RuleProcessor();
+      await ruleProcessor.init();
+      await ruleProcessor.process(workItem.id, false);
+
+      expect(mockUpdateWorkItem).toHaveBeenCalledTimes(2);
     });
   });
 
