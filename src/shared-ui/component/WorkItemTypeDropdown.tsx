@@ -13,6 +13,7 @@ interface WorkItemTypeDropdownProps
   filter?: string[];
   include?: boolean;
   deps?: DependencyList | undefined;
+  disabled?: boolean;
 }
 
 const WorkItemTypeDropdown = ({
@@ -21,6 +22,7 @@ const WorkItemTypeDropdown = ({
   filter,
   include,
   deps,
+  disabled,
   ...rest
 }: WorkItemTypeDropdownProps): JSX.Element => {
   const workItemTypes: IListBoxItem[] = useMemo(
@@ -31,7 +33,7 @@ const WorkItemTypeDropdown = ({
   return (
     <Dropdown
       placeholder="Select type"
-      disabled={workItemTypes?.length === 0}
+      disabled={workItemTypes?.length === 0 || disabled}
       items={workItemTypes}
       selection={selection}
       renderItem={renderWorkItemCell}

@@ -58,7 +58,8 @@ describe('RuleProcessor', () => {
         parentTargetState: 'Resolved',
         parentType: WorkItemReferenceNames.UserStory,
         workItemType: WorkItemReferenceNames.Task,
-        processParent: false
+        processParent: false,
+        disabled: false
       };
       const ruleProcessor = new RuleProcessor();
       await ruleProcessor.init();
@@ -92,7 +93,8 @@ describe('RuleProcessor', () => {
         parentTargetState: 'Resolved',
         parentType: WorkItemReferenceNames.UserStory,
         workItemType: WorkItemReferenceNames.Task,
-        processParent: false
+        processParent: false,
+        disabled: false
       };
 
       const ruleProcessor = new RuleProcessor();
@@ -110,7 +112,8 @@ describe('RuleProcessor', () => {
         parentTargetState: 'Resolved',
         parentType: WorkItemReferenceNames.UserStory,
         workItemType: WorkItemReferenceNames.Task,
-        processParent: false
+        processParent: false,
+        disabled: false
       };
       jest.spyOn(StorageService.prototype, 'getData').mockResolvedValue([
         {
@@ -159,7 +162,8 @@ describe('RuleProcessor', () => {
         parentTargetState: 'Resolved',
         parentType: WorkItemReferenceNames.UserStory,
         workItemType: WorkItemReferenceNames.Task,
-        processParent: false
+        processParent: false,
+        disabled: false
       };
       const ruleTwo: Rule = {
         id: uuidV4(),
@@ -169,7 +173,8 @@ describe('RuleProcessor', () => {
         parentTargetState: 'Resolved',
         parentType: WorkItemReferenceNames.UserStory,
         workItemType: WorkItemReferenceNames.Documentation,
-        processParent: false
+        processParent: false,
+        disabled: false
       };
       jest.spyOn(StorageService.prototype, 'getData').mockResolvedValue([
         {
@@ -240,7 +245,8 @@ describe('RuleProcessor', () => {
         parentTargetState: 'Resolved',
         parentType: WorkItemReferenceNames.UserStory,
         workItemType: WorkItemReferenceNames.Task,
-        processParent: false
+        processParent: false,
+        disabled: false
       };
 
       const ruleProcessor = new RuleProcessor();
@@ -269,7 +275,8 @@ describe('RuleProcessor', () => {
         parentTargetState: 'Active',
         parentType: WorkItemReferenceNames.UserStory,
         workItemType: WorkItemReferenceNames.Task,
-        processParent: false
+        processParent: false,
+        disabled: false
       };
       const ruleProcessor = new RuleProcessor();
       await ruleProcessor.init();
@@ -297,7 +304,8 @@ describe('RuleProcessor', () => {
         parentTargetState: 'Active',
         parentType: WorkItemReferenceNames.UserStory,
         workItemType: WorkItemReferenceNames.Task,
-        processParent: false
+        processParent: false,
+        disabled: false
       };
 
       const ruleProcessor = new RuleProcessor();
@@ -326,7 +334,8 @@ describe('RuleProcessor', () => {
         parentTargetState: 'Active',
         parentType: WorkItemReferenceNames.UserStory,
         workItemType: WorkItemReferenceNames.Task,
-        processParent: false
+        processParent: false,
+        disabled: false
       };
 
       const ruleProcessor = new RuleProcessor();
@@ -355,7 +364,8 @@ describe('RuleProcessor', () => {
         parentTargetState: 'Active',
         parentType: WorkItemReferenceNames.Epic,
         workItemType: WorkItemReferenceNames.Feature,
-        processParent: false
+        processParent: false,
+        disabled: false
       };
 
       const ruleProcessor = new RuleProcessor();
@@ -384,7 +394,8 @@ describe('RuleProcessor', () => {
         parentTargetState: 'Active',
         parentType: WorkItemReferenceNames.Feature,
         workItemType: WorkItemReferenceNames.Task,
-        processParent: false
+        processParent: false,
+        disabled: false
       };
 
       const ruleProcessor = new RuleProcessor();
@@ -413,7 +424,8 @@ describe('RuleProcessor', () => {
         parentTargetState: 'Active',
         parentType: WorkItemReferenceNames.UserStory,
         workItemType: WorkItemReferenceNames.Task,
-        processParent: false
+        processParent: false,
+        disabled: false
       };
 
       const ruleProcessor = new RuleProcessor();
@@ -441,7 +453,8 @@ describe('RuleProcessor', () => {
         parentTargetState: 'Active',
         parentType: WorkItemReferenceNames.UserStory,
         workItemType: WorkItemReferenceNames.Task,
-        processParent: false
+        processParent: false,
+        disabled: false
       };
 
       const ruleProcessor = new RuleProcessor();
@@ -549,7 +562,8 @@ describe('RuleProcessor', () => {
               parentExcludedStates: ['Active', 'Resolved', 'Closed'],
               parentTargetState: 'Active',
               childrenLookup: false,
-              processParent: false
+              processParent: false,
+              disabled: false
             }
           ]
         }
@@ -628,7 +642,8 @@ describe('RuleProcessor', () => {
               parentExcludedStates: ['Active', 'Resolved', 'Closed'],
               parentTargetState: 'Active',
               childrenLookup: false,
-              processParent: true
+              processParent: true,
+              disabled: false
             }
           ]
         },
@@ -643,7 +658,8 @@ describe('RuleProcessor', () => {
               parentExcludedStates: ['Active', 'Resolved', 'Closed'],
               parentTargetState: 'Active',
               childrenLookup: false,
-              processParent: false
+              processParent: false,
+              disabled: false
             }
           ]
         }
@@ -741,7 +757,8 @@ describe('RuleProcessor', () => {
               parentExcludedStates: ['Active', 'Resolved', 'Closed'],
               parentTargetState: 'Active',
               childrenLookup: false,
-              processParent: true
+              processParent: true,
+              disabled: false
             }
           ]
         },
@@ -756,7 +773,8 @@ describe('RuleProcessor', () => {
               parentExcludedStates: ['Active', 'Resolved', 'Closed'],
               parentTargetState: 'Active',
               childrenLookup: false,
-              processParent: false
+              processParent: false,
+              disabled: false
             }
           ]
         },
@@ -771,7 +789,8 @@ describe('RuleProcessor', () => {
               parentExcludedStates: ['Active', 'Resolved', 'Closed'],
               parentTargetState: 'Active',
               childrenLookup: false,
-              processParent: false
+              processParent: false,
+              disabled: false
             }
           ]
         }
@@ -851,7 +870,8 @@ describe('RuleProcessor', () => {
               parentExcludedStates: ['Active', 'Resolved', 'Closed'],
               parentTargetState: 'Active',
               childrenLookup: false,
-              processParent: true
+              processParent: true,
+              disabled: false
             }
           ]
         },
@@ -866,7 +886,8 @@ describe('RuleProcessor', () => {
               parentExcludedStates: ['Active', 'Resolved', 'Closed'],
               parentTargetState: 'Active',
               childrenLookup: false,
-              processParent: true
+              processParent: true,
+              disabled: false
             }
           ]
         },
@@ -881,7 +902,8 @@ describe('RuleProcessor', () => {
               parentExcludedStates: ['Active', 'Resolved', 'Closed'],
               parentTargetState: 'Active',
               childrenLookup: false,
-              processParent: true
+              processParent: true,
+              disabled: false
             }
           ]
         }
@@ -945,7 +967,8 @@ describe('RuleProcessor', () => {
               parentExcludedStates: ['Active', 'Resolved', 'Closed'],
               parentTargetState: 'Active',
               childrenLookup: false,
-              processParent: false
+              processParent: false,
+              disabled: false
             }
           ]
         }
@@ -1019,7 +1042,8 @@ describe('RuleProcessor', () => {
               parentExcludedStates: ['Active', 'Resolved', 'Closed'],
               parentTargetState: 'Active',
               childrenLookup: false,
-              processParent: true
+              processParent: true,
+              disabled: false
             }
           ]
         },
@@ -1034,7 +1058,8 @@ describe('RuleProcessor', () => {
               parentExcludedStates: ['Active', 'Resolved', 'Closed'],
               parentTargetState: 'Active',
               childrenLookup: false,
-              processParent: false
+              processParent: false,
+              disabled: false
             }
           ]
         }

@@ -1,12 +1,24 @@
 [
   {
-    "version": "1.1.1",
+    "version": "1.2.0",
     "publishDate": "2022-01-XX",
     "changes": [
       {
         "description": "Update azext and implement new changes",
         "type": "maint",
         "pullRequest": 21
+      }
+    ],
+    "modules": [
+      {
+        "name": "rule-modal",
+        "version": "1.2.0",
+        "changes": [
+          {
+            "type": "fix",
+            "description": "Fixed UI showing/flashing before loading was completed"
+          }
+        ]
       }
     ]
   },
