@@ -7,6 +7,12 @@
         "description": "Update azext and implement new changes",
         "type": "maint",
         "pullRequest": 21
+      },
+      {
+        "type": "feature",
+        "description": "Added the ability to disable rules",
+        "issue": 22,
+        "pullRequest": 26
       }
     ],
     "modules": [
