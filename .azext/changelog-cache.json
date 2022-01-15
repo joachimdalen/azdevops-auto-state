@@ -38,6 +38,13 @@
   ],
   "pullRequests": [
     {
+      "id": 823687136,
+      "number": 27,
+      "submitter": "joachimdalen",
+      "title": "Add settings module",
+      "url": "https://github.com/joachimdalen/azdevops-auto-state/pull/27"
+    },
+    {
       "id": 823048624,
       "number": 26,
       "submitter": "joachimdalen",

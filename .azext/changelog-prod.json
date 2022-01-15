@@ -17,7 +17,12 @@
       {
         "type": "feature",
         "description": "Add setting to be able to scope work item types to current process",
-        "issue": 23
+        "issue": 23,
+        "pullRequest": 27
+      },
+      {
+        "description": "Update dependencies",
+        "type": "maint"
       }
     ],
     "modules": [
@@ -31,7 +36,8 @@
           },
           {
             "type": "enhancement",
-            "description": "Added labels to toggle states to indicate the current state"
+            "description": "Added labels to toggle states to indicate the current state",
+            "pullRequest": 27
           }
         ]
       }

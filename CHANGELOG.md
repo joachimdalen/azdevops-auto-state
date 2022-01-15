@@ -2,10 +2,13 @@
 
 ## 1.2.0 (2022-01-XX)
 
-### 🛠️ Maintenance (1)
+### 🛠️ Maintenance (2)
 
 - Update azext and implement new changes
+
   - Changed in [PR#21 - Update azext](https://github.com/joachimdalen/azdevops-auto-state/pull/21)
+
+- Update dependencies
 
 ### 🚀 Features (2)
 
@@ -16,6 +19,7 @@
 
 - Add setting to be able to scope work item types to current process
   - Suggested in [GH#23 - Add setting to be able to limit work item types to current process](https://github.com/joachimdalen/azdevops-auto-state/issues/23)
+  - Added in [PR#27 - Add settings module](https://github.com/joachimdalen/azdevops-auto-state/pull/27)
 
 ## 📦 Module changes
 
@@ -30,6 +34,7 @@
 #### `rule-modal@1.2.0`
 
 - Added labels to toggle states to indicate the current state
+  - Improved in [PR#27 - Add settings module](https://github.com/joachimdalen/azdevops-auto-state/pull/27)
 
 ---
 
