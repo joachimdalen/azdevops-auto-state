@@ -3,6 +3,8 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ScriptTags = require('./webpack-script-tags-plugin');
 const { entries, modules } = require('./entry-points');
 const CopyPlugin = require('copy-webpack-plugin');
+const { EnvironmentPlugin } = require('webpack');
+const { getModuleVersions, getExtensionVersion } = require('./webpack.utils');
 
 const vendorGroups = modules.reduce(
   (obj, item) => ({
@@ -68,7 +70,13 @@ module.exports = {
       }
     ]
   },
-  plugins: [new ScriptTags()]
+  plugins: [
+    new ScriptTags(),
+    new EnvironmentPlugin({
+      ...getModuleVersions(modules),
+      ...getExtensionVersion()
+    })
+  ]
     .concat(
       modules
         .filter(x => x.generate)

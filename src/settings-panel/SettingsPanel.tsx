@@ -9,6 +9,7 @@ import { useEffect, useMemo, useState } from 'react';
 import SettingDocument from '../common/models/SettingDocument';
 import { StorageService } from '../common/services/StorageService';
 import webLogger from '../common/webLogger';
+import VersionDisplay from '../shared-ui/component/VersionDisplay';
 import SettingContainer from './components/SettingContainer';
 const SettingsPanel = (): React.ReactElement => {
   const [error, setError] = useState<any | undefined>(undefined);
@@ -85,8 +86,12 @@ const SettingsPanel = (): React.ReactElement => {
           </SettingContainer>
         </div>
       </div>
-      <ButtonGroup className="justify-space-between margin-bottom-16">
+      <ButtonGroup className="justify-space-between flex-center margin-bottom-16">
         <Button text="Close" onClick={() => dismiss()} />
+        <VersionDisplay
+          showExtensionVersion={false}
+          moduleVersion={process.env.SETTINGS_PANEL_VERSION}
+        />
         <Button text="Save" primary iconProps={{ iconName: 'Save' }} onClick={save} />
       </ButtonGroup>
     </div>

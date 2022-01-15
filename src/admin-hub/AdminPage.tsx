@@ -25,6 +25,7 @@ import RuleService from '../common/services/RuleService';
 import WorkItemService from '../common/services/WorkItemService';
 import webLogger from '../common/webLogger';
 import LoadingSection from '../shared-ui/component/LoadingSection';
+import VersionDisplay from '../shared-ui/component/VersionDisplay';
 import WorkItemTypeTag from '../shared-ui/component/WorkItemTypeTag';
 import { getCommandBarItems, getListColumns, isGroup } from './helpers';
 
@@ -128,7 +129,14 @@ const AdminPage = (): React.ReactElement => {
   return (
     <Surface background={SurfaceBackground.neutral}>
       <Page className="flex-grow">
-        <Header commandBarItems={commandBarItems} titleSize={TitleSize.Large} title="Auto State" />
+        <Header
+          commandBarItems={commandBarItems}
+          titleSize={TitleSize.Large}
+          title="Auto State"
+          description={
+            <VersionDisplay moduleVersion={process.env.ADMIN_HUB_VERSION}/>
+          }
+        />
         <div className="page-content padding-16">
           <LoadingSection isLoading={loading} text="Loading rules.." />
           <ConditionalChildren renderChildren={!loading && ruleItems.length === 0}>

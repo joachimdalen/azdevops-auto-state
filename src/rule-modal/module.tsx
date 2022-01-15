@@ -19,6 +19,7 @@ import WorkItemService from '../common/services/WorkItemService';
 import webLogger from '../common/webLogger';
 import { appTheme } from '../shared-ui/azure-devops-theme';
 import LoadingSection from '../shared-ui/component/LoadingSection';
+import VersionDisplay from '../shared-ui/component/VersionDisplay';
 import WorkItemStateDropdown from '../shared-ui/component/WorkItemStateDropdown';
 import WorkItemTypeDropdown from '../shared-ui/component/WorkItemTypeDropdown';
 import showRootComponent from '../shared-ui/showRootComponent';
@@ -257,8 +258,12 @@ const ModalContent = (): React.ReactElement => {
           </div>
         </ConditionalChildren>
       </div>
-      <ButtonGroup className="justify-space-between margin-bottom-16">
+      <ButtonGroup className="justify-space-between flex-center margin-bottom-16">
         <Button text="Close" onClick={() => dismiss()} />
+        <VersionDisplay
+          showExtensionVersion={false}
+          moduleVersion={process.env.RULE_MODAL_VERSION}
+        />
         <Button text="Save" primary iconProps={{ iconName: 'Save' }} onClick={save} />
       </ButtonGroup>
     </div>
