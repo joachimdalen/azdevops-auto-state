@@ -1,7 +1,7 @@
 import { IExtensionDataService } from 'azure-devops-extension-api';
 import * as DevOps from 'azure-devops-extension-sdk';
-import SettingDocument from '../models/SettingDocument';
 
+import SettingDocument from '../models/SettingDocument';
 import RuleDocument from '../models/WorkItemRules';
 import DevOpsService, { IDevOpsService } from './DevOpsService';
 

@@ -3,7 +3,8 @@ import { ProjectProperty } from 'azure-devops-extension-api/Core';
 
 export const mockGetProjectProperties = jest.fn().mockRejectedValue(new Error('Not implemented'));
 
-export class CoreClient {
+export class CoreRestClient {
+  public TYPE = 'CoreRestClient';
   constructor(options: IVssRestClientOptions) {}
 
   getProjectProperties(projectId: string, keys?: string[]): Promise<ProjectProperty[]> {

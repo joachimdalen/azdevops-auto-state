@@ -2,7 +2,7 @@ import '@testing-library/jest-dom/extend-expect';
 
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 
-import { mockGetWorkItem } from '../../__mocks__/azure-devops-extension-api/Wit';
+import { mockGetWorkItem } from '../../__mocks__/azure-devops-extension-api/WorkItemTracking';
 import { mockGetConfiguration } from '../../__mocks__/azure-devops-extension-sdk';
 import {
   getWorkItem,
@@ -185,8 +185,6 @@ describe('RuleTester', () => {
     const testButton = screen.getByRole('button', { name: 'Test' });
     fireEvent.click(testButton);
 
-    await waitFor(() =>
-      screen.getAllByText(/n error occurred while testing the work item:/)
-    );
+    await waitFor(() => screen.getAllByText(/n error occurred while testing the work item:/));
   });
 });

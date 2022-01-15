@@ -68,11 +68,9 @@ class WorkItemService implements IWorkItemService {
       const types = await client.getWorkItemTypes(project.name);
       if (fromProcess) {
         const coreClient = getClient(CoreRestClient);
-        console.log(coreClient);
         const processClient = getClient(WorkItemTrackingProcessRestClient);
         const props = await coreClient.getProjectProperties(project.id);
         const processId = props.find(x => x.name === 'System.ProcessTemplateType')?.value;
-
         if (processId === undefined) {
           return types.sort(this.sortWorkItemTypes);
         }

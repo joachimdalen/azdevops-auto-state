@@ -7,7 +7,8 @@ import {
 export const mockGetProcessWorkItemTypes = jest
   .fn()
   .mockRejectedValue(new Error('Not implemented'));
-export class WorkItemTrackingProcessClient {
+export class WorkItemTrackingProcessRestClient {
+  public TYPE = 'WorkItemTrackingProcessRestClient';
   constructor(options: IVssRestClientOptions) {}
 
   getProcessWorkItemTypes(

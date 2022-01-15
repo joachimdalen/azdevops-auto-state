@@ -1,7 +1,7 @@
 import { IProjectInfo } from 'azure-devops-extension-api';
 
 import { mockGetProjectProperties } from '../../../__mocks__/azure-devops-extension-api/Core';
-import { mockGetWorkItemTypes } from '../../../__mocks__/azure-devops-extension-api/Wit';
+import { mockGetWorkItemTypes } from '../../../__mocks__/azure-devops-extension-api/WorkItemTracking';
 import { mockGetProcessWorkItemTypes } from '../../../__mocks__/azure-devops-extension-api/WorkItemTrackingProcess';
 import { mockGetProject } from '../../../__mocks__/azure-devops-extension-sdk';
 import {
@@ -72,7 +72,7 @@ describe('WorkItemService', () => {
       mockGetProcessWorkItemTypes.mockResolvedValue(getProcessWorkItemTypes());
 
       const wiService = new WorkItemService();
-      const wiTypes = await wiService.getWorkItemTypes();
+      const wiTypes = await wiService.getWorkItemTypes(true);
 
       expect(wiTypes.every(x => processItems.includes(x.referenceName))).toBeTruthy();
     });

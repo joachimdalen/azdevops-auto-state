@@ -7,7 +7,7 @@ import {
   mockGetWorkItem,
   mockGetWorkItems,
   mockUpdateWorkItem
-} from '../../../__mocks__/azure-devops-extension-api/Wit';
+} from '../../../__mocks__/azure-devops-extension-api/WorkItemTracking';
 import {
   getWorkItem,
   getWorkItemTypes,
