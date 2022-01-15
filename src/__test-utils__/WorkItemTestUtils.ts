@@ -3,6 +3,7 @@ import {
   WorkItemRelation,
   WorkItemType
 } from 'azure-devops-extension-api/WorkItemTracking';
+import { ProcessWorkItemType } from 'azure-devops-extension-api/WorkItemTrackingProcess';
 
 const parentField = 'System.LinkTypes.Hierarchy-Reverse';
 const childField = 'System.LinkTypes.Hierarchy-Forward';
@@ -49,6 +50,25 @@ const getWorkItemTypes = (): WorkItemType[] => {
     getWorkItemType(WorkItemNames.Task, WorkItemReferenceNames.Task),
     getWorkItemType(WorkItemNames.Documentation, WorkItemReferenceNames.Documentation)
   ];
+};
+
+const getProcessWorkItemTypes = (): ProcessWorkItemType[] => {
+  return [
+    getProcessWorkItemType(WorkItemNames.Epic, WorkItemReferenceNames.Epic),
+    getProcessWorkItemType(WorkItemNames.Feature, WorkItemReferenceNames.Feature),
+    getProcessWorkItemType(WorkItemNames.UserStory, WorkItemReferenceNames.UserStory)
+  ];
+};
+
+const getProcessWorkItemType = (
+  name: WorkItemNames,
+  referenceName: WorkItemReferenceNames
+): ProcessWorkItemType => {
+  const p: Partial<ProcessWorkItemType> = {
+    name: name,
+    referenceName: referenceName
+  };
+  return p as ProcessWorkItemType;
 };
 
 const getWorkItemType = (
@@ -98,4 +118,12 @@ enum WorkItemNames {
   Documentation = 'Documentation'
 }
 
-export { getWorkItem, getWorkItemType, getWorkItemTypes, WorkItemReferenceNames, WorkItemNames };
+export {
+  getWorkItem,
+  getWorkItemType,
+  getWorkItemTypes,
+  getProcessWorkItemType,
+  getProcessWorkItemTypes,
+  WorkItemReferenceNames,
+  WorkItemNames
+};

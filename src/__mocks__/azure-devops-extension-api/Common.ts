@@ -1,14 +1,17 @@
 import { RestClientFactory, IVssRestClientOptions } from 'azure-devops-extension-api';
-import { WorkItemTrackingRestClient } from 'azure-devops-extension-api/WorkItemTracking';
-import { WitRestClient } from './Wit';
+import { CoreRestClient } from './Core';
+import { WorkItemTrackingRestClient } from './WorkItemTracking';
+import { WorkItemTrackingProcessRestClient } from './WorkItemTrackingProcess';
 
-export const getClient = <T>(
-  clientClass: RestClientFactory<T>,
-  clientOptions?: IVssRestClientOptions
-): T => {
-  if (typeof clientClass === typeof WorkItemTrackingRestClient) {
-    return new WitRestClient({}) as any;
+export function getClient(clientClass: any) {
+  switch (new clientClass().TYPE) {
+    case 'WorkItemTrackingRestClient':
+      return new WorkItemTrackingRestClient({}) as any;
+    case 'CoreRestClient':
+      return new CoreRestClient({}) as any;
+    case 'WorkItemTrackingProcessRestClient':
+      return new WorkItemTrackingProcessRestClient({}) as any;
+    default:
+      throw new Error('Failed to get mock client');
   }
-
-  return {} as any;
-};
+}

@@ -1,10 +1,15 @@
 import { getClient } from 'azure-devops-extension-api/Common';
+import { CoreRestClient } from 'azure-devops-extension-api/Core';
 import {
   WorkItem,
   WorkItemExpand,
   WorkItemTrackingRestClient,
   WorkItemType
 } from 'azure-devops-extension-api/WorkItemTracking';
+import {
+  GetWorkItemTypeExpand,
+  WorkItemTrackingProcessRestClient
+} from 'azure-devops-extension-api/WorkItemTrackingProcess';
 
 import { getChildIds, getParentId } from '../workItemUtils';
 import DevOpsService, { IDevOpsService } from './DevOpsService';
@@ -12,7 +17,7 @@ import DevOpsService, { IDevOpsService } from './DevOpsService';
 export interface IWorkItemService {
   getParentForWorkItem(id: number, workItem?: WorkItem): Promise<WorkItem | undefined>;
   getChildrenForWorkItem(id: number, workItem?: WorkItem): Promise<WorkItem[] | undefined>;
-  getWorkItemTypes(): Promise<WorkItemType[]>;
+  getWorkItemTypes(fromProcess?: boolean): Promise<WorkItemType[]>;
   getWorkItem(id: number): Promise<WorkItem>;
   getWorkItems(ids: number[]): Promise<WorkItem[]>;
   setWorkItemState(id: number, state: string): Promise<WorkItem>;
@@ -56,12 +61,28 @@ class WorkItemService implements IWorkItemService {
     return 0;
   }
 
-  public async getWorkItemTypes(): Promise<WorkItemType[]> {
+  public async getWorkItemTypes(fromProcess?: boolean): Promise<WorkItemType[]> {
     const project = await this._devOpsService.getProject();
     if (project) {
       const client = getClient(WorkItemTrackingRestClient);
       const types = await client.getWorkItemTypes(project.name);
-      return types.sort(this.sortWorkItemTypes);
+      if (fromProcess) {
+        const coreClient = getClient(CoreRestClient);
+        const processClient = getClient(WorkItemTrackingProcessRestClient);
+        const props = await coreClient.getProjectProperties(project.id);
+        const processId = props.find(x => x.name === 'System.ProcessTemplateType')?.value;
+        if (processId === undefined) {
+          return types.sort(this.sortWorkItemTypes);
+        }
+
+        const wits = await processClient.getProcessWorkItemTypes(processId);
+
+        return types
+          .filter(x => wits.some(y => y.referenceName === x.referenceName))
+          .sort(this.sortWorkItemTypes);
+      } else {
+        return types.sort(this.sortWorkItemTypes);
+      }
     }
     return [];
   }

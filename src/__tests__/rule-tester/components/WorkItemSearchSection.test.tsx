@@ -3,7 +3,7 @@ import '@testing-library/jest-dom/extend-expect';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { WorkItem } from 'azure-devops-extension-api/WorkItemTracking';
 
-import { mockGetWorkItem } from '../../../__mocks__/azure-devops-extension-api/Wit';
+import { mockGetWorkItem } from '../../../__mocks__/azure-devops-extension-api/WorkItemTracking';
 import WorkItemSearchSection from '../../../rule-tester/components/WorkItemSearchSection';
 
 describe('WorkItemSearchSection', () => {

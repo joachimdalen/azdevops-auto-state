@@ -17,10 +17,6 @@ parameters:
 jobs:
   - job:
     steps:
-      - template: install.template.yml
-      - template: build.template.yml
-        parameters:
-          extensionEnv: ${{ parameters.extensionEnv }}
       - task: TfxInstaller@3
         displayName: 'Install Tfx'
         inputs:
@@ -34,6 +30,10 @@ jobs:
           extensionId: '$(ExtensionID)'
           versionAction: 'Patch'
           outputVariable: 'Task.Extension.Version'
+      - template: install.template.yml
+      - template: build.template.yml
+        parameters:
+          extensionEnv: ${{ parameters.extensionEnv }}
       - task: Npm@1
         displayName: 'Build changelog'
         inputs:

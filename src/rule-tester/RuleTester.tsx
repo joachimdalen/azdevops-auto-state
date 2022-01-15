@@ -11,6 +11,7 @@ import RuleProcessor from '../common/services/RuleProcessor';
 import WorkItemService from '../common/services/WorkItemService';
 import webLogger from '../common/webLogger';
 import { getState, getWorkItemTitle, getWorkItemTypeField } from '../common/workItemUtils';
+import VersionDisplay from '../shared-ui/component/VersionDisplay';
 import WorkItemDisplay from './components/WorkItemDisplay';
 import WorkItemResultSection from './components/WorkItemResultSection';
 import WorkItemSearchSection from './components/WorkItemSearchSection';
@@ -63,90 +64,98 @@ const RuleTester = (): React.ReactElement => {
   const [clearable, setClearable] = useState(true);
   const [error, setError] = useState<any>(undefined);
   return (
-    <div className="flex-grow">
-      <ConditionalChildren renderChildren={error !== undefined}>
-        <MessageCard className="margin-bottom-8" severity={MessageCardSeverity.Error}>
-          <div className="flex-column flex-grow">
-            <p className="margin-4">An error occurred while testing the work item:</p>
-            <p className="margin-4">{error?.message || 'Unknown error'}</p>
+    <div className="flex-column flex-grow">
+      <div className="flex-grow">
+        <ConditionalChildren renderChildren={error !== undefined}>
+          <MessageCard className="margin-bottom-8" severity={MessageCardSeverity.Error}>
+            <div className="flex-column flex-grow">
+              <p className="margin-4">An error occurred while testing the work item:</p>
+              <p className="margin-4">{error?.message || 'Unknown error'}</p>
+            </div>
+          </MessageCard>
+        </ConditionalChildren>
+        <ConditionalChildren renderChildren={workItem === undefined}>
+          <WorkItemSearchSection
+            workItemId={workItemId}
+            setWorkItem={setWorkItem}
+            setWorkItemId={setWorkItemId}
+          />
+        </ConditionalChildren>
+
+        <ConditionalChildren renderChildren={workItem !== undefined}>
+          <div className="flex-row margin-bottom-16">
+            {workItem && type && (
+              <WorkItemDisplay
+                id={workItem.id}
+                state={getState(workItem)}
+                title={getWorkItemTitle(workItem)}
+                type={type}
+              />
+            )}
+
+            {clearable && (
+              <div className="flex-row flex-center margin-left-8">
+                <Button
+                  disabled={workItemId === undefined}
+                  danger
+                  text="Clear"
+                  iconProps={{
+                    iconName: 'Clear'
+                  }}
+                  onClick={() => {
+                    setWorkItem(undefined);
+                    setWorkItemId(undefined);
+                    setProcessedItems([]);
+                  }}
+                />
+              </div>
+            )}
           </div>
-        </MessageCard>
-      </ConditionalChildren>
-      <ConditionalChildren renderChildren={workItem === undefined}>
-        <WorkItemSearchSection
-          workItemId={workItemId}
-          setWorkItem={setWorkItem}
-          setWorkItemId={setWorkItemId}
-        />
-      </ConditionalChildren>
 
-      <ConditionalChildren renderChildren={workItem !== undefined}>
-        <div className="flex-row margin-bottom-16">
-          {workItem && type && (
-            <WorkItemDisplay
-              id={workItem.id}
-              state={getState(workItem)}
-              title={getWorkItemTitle(workItem)}
-              type={type}
-            />
-          )}
-
-          {clearable && (
-            <div className="flex-row flex-center margin-left-8">
-              <Button
-                disabled={workItemId === undefined}
-                danger
-                text="Clear"
-                iconProps={{
-                  iconName: 'Clear'
-                }}
-                onClick={() => {
-                  setWorkItem(undefined);
-                  setWorkItemId(undefined);
-                  setProcessedItems([]);
+          <div className="flex-column">
+            {workItem && (
+              <WorkItemStateSection
+                types={types}
+                workItem={workItem}
+                disabled={isTesting}
+                onTest={async (targetState: string) => {
+                  try {
+                    if (workItemId) {
+                      setIsTesting(true);
+                      const result = await ruleProcessor.process(workItemId, true, targetState);
+                      setProcessedItems(result);
+                      setIsTesting(false);
+                    }
+                  } catch (error) {
+                    setError(error);
+                    setIsTesting(false);
+                    setProcessedItems([]);
+                  }
                 }}
               />
-            </div>
-          )}
-        </div>
+            )}
+          </div>
+        </ConditionalChildren>
 
-        <div className="flex-column">
-          {workItem && (
-            <WorkItemStateSection
-              types={types}
-              workItem={workItem}
-              disabled={isTesting}
-              onTest={async (targetState: string) => {
-                try {
-                  if (workItemId) {
-                    setIsTesting(true);
-                    const result = await ruleProcessor.process(workItemId, true, targetState);
-                    setProcessedItems(result);
-                    setIsTesting(false);
-                  }
-                } catch (error) {
-                  setError(error);
-                  setIsTesting(false);
-                  setProcessedItems([]);
-                }
-              }}
-            />
-          )}
-        </div>
-      </ConditionalChildren>
-
-      <ConditionalChildren renderChildren={isTesting}>
-        <Spinner
-          className="margin-top-16"
-          size={SpinnerSize.large}
-          label="Testing rules.. This might take a few seconds. Please wait"
+        <ConditionalChildren renderChildren={isTesting}>
+          <Spinner
+            className="margin-top-16"
+            size={SpinnerSize.large}
+            label="Testing rules.. This might take a few seconds. Please wait"
+          />
+        </ConditionalChildren>
+        <ConditionalChildren
+          renderChildren={processedItems !== undefined && processedItems.length > 0}
+        >
+          <WorkItemResultSection types={types} items={processedItems} />
+        </ConditionalChildren>
+      </div>
+      <div className="flex-row rhythm-horizontal-8 justify-center flex-center margin-bottom-16">
+        <VersionDisplay
+          showExtensionVersion={false}
+          moduleVersion={process.env.RULE_TESTER_VERSION}
         />
-      </ConditionalChildren>
-      <ConditionalChildren
-        renderChildren={processedItems !== undefined && processedItems.length > 0}
-      >
-        <WorkItemResultSection types={types} items={processedItems} />
-      </ConditionalChildren>
+      </div>
     </div>
   );
 };

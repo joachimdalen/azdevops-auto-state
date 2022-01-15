@@ -68,6 +68,7 @@ export const mockSetFieldValue = jest.fn();
 export const mockGetProject = jest.fn();
 export const mockAddToast = jest.fn();
 export const mockOpenPanel = jest.fn();
+export const mockOpenNewWindow = jest.fn();
 
 /**
  * Mocked getService returns mocked methods
@@ -92,6 +93,11 @@ export function getService(contributionId: string) {
     case 'ms.vss-features.host-page-layout-service': {
       return {
         openPanel: mockOpenPanel
+      };
+    }
+    case 'ms.vss-features.host-navigation-service': {
+      return {
+        openNewWindow: mockOpenNewWindow
       };
     }
   }

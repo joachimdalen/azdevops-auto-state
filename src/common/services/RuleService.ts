@@ -1,27 +1,28 @@
-import { IDialogOptions, IHostPageLayoutService, IPanelOptions } from 'azure-devops-extension-api';
-import * as DevOps from 'azure-devops-extension-sdk';
 import { v4 as uuidV4 } from 'uuid';
 
 import { ActionResult } from '../models/ActionResult';
 import AddRuleResult from '../models/AddRuleResult';
 import Rule from '../models/Rule';
 import RuleDocument from '../models/WorkItemRules';
+import DevOpsService, { IDevOpsService, PanelIds } from './DevOpsService';
 import { IStorageService, StorageService } from './StorageService';
 
 class RuleService {
   private readonly _dataStore: IStorageService;
+  private readonly _devOpsService: IDevOpsService;
   private _isInitialized = false;
   private _data: RuleDocument[];
 
   constructor(dataStore?: IStorageService) {
     this._dataStore = dataStore || new StorageService();
+    this._devOpsService = new DevOpsService();
     this._data = [];
   }
 
   public async load(force = false): Promise<ActionResult<RuleDocument[]>> {
     if (this._isInitialized && !force) return { success: true, data: this._data };
     try {
-      const data = await this._dataStore.getData();
+      const data = await this._dataStore.getRuleDocuments();
       this._data = data;
     } catch (error: any) {
       if (error?.status !== 404) {
@@ -46,7 +47,7 @@ class RuleService {
       const document = { ...this._data[documentIndex] };
       const newRules = document.rules.filter(z => z.id !== ruleId);
       document.rules = newRules;
-      const updatedDocument = await this._dataStore.setData(document);
+      const updatedDocument = await this._dataStore.setRuleDocument(document);
       const newDocs = [...this._data];
       newDocs[documentIndex] = updatedDocument;
       this._data = newDocs;
@@ -119,7 +120,7 @@ class RuleService {
       id: rule.workItemType,
       rules: [{ ...rule, id: uuidV4() }]
     };
-    const created = await this._dataStore.setData(newDocument);
+    const created = await this._dataStore.setRuleDocument(newDocument);
 
     return {
       success: true,
@@ -150,7 +151,7 @@ class RuleService {
       }
       rootDoc.rules = [...rootDoc.rules, { id: uuidV4(), ...rule }];
     }
-    const updatedDocument = await this._dataStore.setData(rootDoc);
+    const updatedDocument = await this._dataStore.setRuleDocument(rootDoc);
 
     return {
       success: true,
@@ -207,17 +208,11 @@ class RuleService {
     isValid: (result: AddRuleResult | undefined) => ActionResult<boolean>,
     rule?: Rule
   ): Promise<void> {
-    const dialogService = await DevOps.getService<IHostPageLayoutService>(
-      'ms.vss-features.host-page-layout-service'
-    );
-
-    const options: IPanelOptions<AddRuleResult> = {
+    this._devOpsService.showPanel(PanelIds.RulePanel, {
       title: rule === undefined ? 'Add rule' : 'Edit rule',
       onClose: handleDialogResult,
       configuration: { rule: rule, validate: isValid }
-    };
-
-    dialogService.openPanel(DevOps.getExtensionContext().id + '.rule-modal', options);
+    });
   }
 }
 

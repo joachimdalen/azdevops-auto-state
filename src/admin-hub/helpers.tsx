@@ -20,6 +20,7 @@ import { IHeaderCommandBarItem } from 'azure-devops-ui/HeaderCommandBar';
 import { MenuItemType } from 'azure-devops-ui/Menu';
 
 import Rule from '../common/models/Rule';
+import { IDevOpsService, PanelIds } from '../common/services/DevOpsService';
 import webLogger from '../common/webLogger';
 import StateTag from '../shared-ui/component/StateTag';
 import WorkItemTypeTag from '../shared-ui/component/WorkItemTypeTag';
@@ -247,6 +248,7 @@ const getListRowContextMenuItem = (
   };
 };
 export const getCommandBarItems = (
+  devOpsService: IDevOpsService,
   showEdit: (rule?: Rule) => Promise<void>,
   refreshData: (force: boolean) => Promise<void>
 ): IHeaderCommandBarItem[] => [
@@ -271,20 +273,30 @@ export const getCommandBarItems = (
     }
   },
   {
+    id: 'settings',
+    text: 'Settings',
+    iconProps: { iconName: 'Settings' },
+    important: true,
+    isPrimary: true,
+    onActivate: () => {
+      const options: IPanelOptions<any> = {
+        title: 'Settings',
+        size: 2
+      };
+      devOpsService.showPanel(PanelIds.Settings, options);
+    }
+  },
+  {
     iconProps: { iconName: 'TestBeaker' },
     id: 'rule-tester',
     text: 'Rule Tester',
     important: false,
     onActivate: () => {
-      DevOps.getService<IHostPageLayoutService>('ms.vss-features.host-page-layout-service').then(
-        dialogService => {
-          const options: IPanelOptions<any> = {
-            title: 'Rule Tester',
-            size: 2
-          };
-          dialogService.openPanel(DevOps.getExtensionContext().id + '.rule-tester', options);
-        }
-      );
+      const options: IPanelOptions<any> = {
+        title: 'Rule Tester',
+        size: 2
+      };
+      devOpsService.showPanel(PanelIds.RuleTesterPanel, options);
     }
   },
   {
@@ -297,11 +309,7 @@ export const getCommandBarItems = (
     iconProps: { iconName: 'Help' },
     important: false,
     onActivate: () => {
-      DevOps.getService<IHostNavigationService>('ms.vss-features.host-navigation-service').then(
-        value => {
-          value.openNewWindow('https://github.com/joachimdalen/azdevops-auto-state', '');
-        }
-      );
+      devOpsService.openLink('https://github.com/joachimdalen/azdevops-auto-state');
     }
   }
 ];

@@ -12,7 +12,7 @@ describe('RuleService', () => {
       jest.clearAllMocks();
     });
     it('should return when storage throws 404', async () => {
-      jest.spyOn(StorageService.prototype, 'getData').mockRejectedValue({
+      jest.spyOn(StorageService.prototype, 'getRuleDocuments').mockRejectedValue({
         status: 404
       });
 
@@ -21,7 +21,7 @@ describe('RuleService', () => {
       expect(result.success).toBeTruthy();
     });
     it('should throw if error is not 404', async () => {
-      jest.spyOn(StorageService.prototype, 'getData').mockRejectedValue({
+      jest.spyOn(StorageService.prototype, 'getRuleDocuments').mockRejectedValue({
         status: 400
       });
       const ruleService = new RuleService();
@@ -30,12 +30,12 @@ describe('RuleService', () => {
       }).rejects.toThrow();
     });
     it('should only load once', async () => {
-      const getDataSpy = jest.spyOn(StorageService.prototype, 'getData').mockResolvedValue([]);
+      const getRuleDocumentsSpy = jest.spyOn(StorageService.prototype, 'getRuleDocuments').mockResolvedValue([]);
       const ruleService = new RuleService();
       await ruleService.load();
       await ruleService.load();
 
-      expect(getDataSpy).toHaveBeenCalledTimes(1);
+      expect(getRuleDocumentsSpy).toHaveBeenCalledTimes(1);
     });
   });
   describe('updateRule', () => {
@@ -64,9 +64,9 @@ describe('RuleService', () => {
         processParent: false,
         disabled: false
       };
-      jest.spyOn(StorageService.prototype, 'getData').mockResolvedValue([]);
-      const setDataSpy = jest.spyOn(StorageService.prototype, 'setData');
-      setDataSpy.mockImplementation(data => Promise.resolve(data));
+      jest.spyOn(StorageService.prototype, 'getRuleDocuments').mockResolvedValue([]);
+      const setRuleDocumentSpy = jest.spyOn(StorageService.prototype, 'setRuleDocument');
+      setRuleDocumentSpy.mockImplementation(data => Promise.resolve(data));
 
       const ruleService = new RuleService();
       await ruleService.load();
@@ -82,9 +82,9 @@ describe('RuleService', () => {
       jest.clearAllMocks();
     });
     it('should return if no items loaded', async () => {
-      jest.spyOn(StorageService.prototype, 'getData').mockResolvedValue([]);
-      const setDataSpy = jest
-        .spyOn(StorageService.prototype, 'setData')
+      jest.spyOn(StorageService.prototype, 'getRuleDocuments').mockResolvedValue([]);
+      const setRuleDocumentSpy = jest
+        .spyOn(StorageService.prototype, 'setRuleDocument')
         .mockRejectedValue(undefined);
 
       const ruleId = uuidV4();
@@ -104,7 +104,7 @@ describe('RuleService', () => {
       await ruleService.load();
       const result = await ruleService.deleteRule(rule.workItemType, ruleId);
 
-      expect(setDataSpy).not.toHaveBeenCalled();
+      expect(setRuleDocumentSpy).not.toHaveBeenCalled();
       expect(result.success).toBeTruthy();
     });
     it('should delete rule when only rule', async () => {
@@ -124,9 +124,9 @@ describe('RuleService', () => {
         id: WorkItemReferenceNames.Task,
         rules: [rule]
       };
-      jest.spyOn(StorageService.prototype, 'getData').mockResolvedValue([ruleDoc]);
-      const setDataSpy = jest
-        .spyOn(StorageService.prototype, 'setData')
+      jest.spyOn(StorageService.prototype, 'getRuleDocuments').mockResolvedValue([ruleDoc]);
+      const setRuleDocumentSpy = jest
+        .spyOn(StorageService.prototype, 'setRuleDocument')
         .mockImplementation(data => {
           return Promise.resolve(data);
         });
@@ -135,7 +135,7 @@ describe('RuleService', () => {
       await ruleService.load();
       const result = await ruleService.deleteRule(rule.workItemType, ruleId);
 
-      expect(setDataSpy).toHaveBeenCalledTimes(1);
+      expect(setRuleDocumentSpy).toHaveBeenCalledTimes(1);
       expect(result.success).toBeTruthy();
     });
     it('should delete correct rule when multiple', async () => {
@@ -167,12 +167,12 @@ describe('RuleService', () => {
         id: WorkItemReferenceNames.Task,
         rules: [rule, ruleTwo]
       };
-      jest.spyOn(StorageService.prototype, 'getData').mockResolvedValue([ruleDoc]);
-      let setData: RuleDocument | undefined;
-      const setDataSpy = jest
-        .spyOn(StorageService.prototype, 'setData')
+      jest.spyOn(StorageService.prototype, 'getRuleDocuments').mockResolvedValue([ruleDoc]);
+      let setRuleDocument: RuleDocument | undefined;
+      const setRuleDocumentSpy = jest
+        .spyOn(StorageService.prototype, 'setRuleDocument')
         .mockImplementation(data => {
-          setData = data;
+          setRuleDocument = data;
           return Promise.resolve(data);
         });
 
@@ -180,10 +180,10 @@ describe('RuleService', () => {
       await ruleService.load();
       const result = await ruleService.deleteRule(rule.workItemType, ruleId);
 
-      expect(setDataSpy).toHaveBeenCalledTimes(1);
+      expect(setRuleDocumentSpy).toHaveBeenCalledTimes(1);
       expect(result.success).toBeTruthy();
-      expect(setData?.rules?.filter(x => x.id === ruleId).length).toEqual(0);
-      expect(setData?.rules?.length).toEqual(1);
+      expect(setRuleDocument?.rules?.filter(x => x.id === ruleId).length).toEqual(0);
+      expect(setRuleDocument?.rules?.length).toEqual(1);
     });
   });
 });

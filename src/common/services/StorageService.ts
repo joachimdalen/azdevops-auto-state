@@ -1,6 +1,7 @@
 import { IExtensionDataService } from 'azure-devops-extension-api';
 import * as DevOps from 'azure-devops-extension-sdk';
 
+import SettingDocument from '../models/SettingDocument';
 import RuleDocument from '../models/WorkItemRules';
 import DevOpsService, { IDevOpsService } from './DevOpsService';
 
@@ -9,8 +10,8 @@ export interface IStorageService {
     workItemType: string,
     projectId: string
   ): Promise<RuleDocument | undefined>;
-  getData(): Promise<RuleDocument[]>;
-  setData(data: RuleDocument): Promise<RuleDocument>;
+  getRuleDocuments(): Promise<RuleDocument[]>;
+  setRuleDocument(data: RuleDocument): Promise<RuleDocument>;
 }
 
 enum ScopeType {
@@ -19,7 +20,8 @@ enum ScopeType {
 }
 
 enum CollectionNames {
-  WorkItemRules = 'WorkItemRules'
+  WorkItemRules = 'WorkItemRules',
+  Settings = 'Settings'
 }
 
 class StorageService implements IStorageService {
@@ -27,6 +29,7 @@ class StorageService implements IStorageService {
   private scopeType: ScopeType;
   private dataService?: IExtensionDataService;
   private _collectionName?: string;
+  private _projectId?: string;
 
   public constructor() {
     this._devOpsService = new DevOpsService();
@@ -48,6 +51,7 @@ class StorageService implements IStorageService {
       }
 
       this._collectionName = `${project.id}-${CollectionNames.WorkItemRules}`;
+      this._projectId = project.id;
     }
 
     return this.dataService;
@@ -75,8 +79,7 @@ class StorageService implements IStorageService {
 
     return document;
   }
-
-  public async getData(): Promise<RuleDocument[]> {
+  public async getRuleDocuments(): Promise<RuleDocument[]> {
     const dataService = await this.getDataService();
     if (this._collectionName === undefined) {
       throw new Error('Failed to initialize ');
@@ -90,7 +93,7 @@ class StorageService implements IStorageService {
     });
   }
 
-  public async setData(data: RuleDocument): Promise<RuleDocument> {
+  public async setRuleDocument(data: RuleDocument): Promise<RuleDocument> {
     const dataService = await this.getDataService();
     if (this._collectionName === undefined) {
       throw new Error('Failed to initialize ');
@@ -101,6 +104,49 @@ class StorageService implements IStorageService {
     );
     return dataManager.setDocument(this._collectionName, data, {
       scopeType: ScopeType.Default
+    });
+  }
+
+  public async getSettings(): Promise<SettingDocument> {
+    const defaultDocument: SettingDocument = {
+      id: '',
+      __etag: '-1',
+      useScopedWorkItemTypes: false
+    };
+    try {
+      const dataService = await this.getDataService();
+      if (!this._projectId) {
+        return defaultDocument;
+      }
+      const dataManager = await dataService.getExtensionDataManager(
+        DevOps.getExtensionContext().id,
+        await DevOps.getAccessToken()
+      );
+
+      const document = await dataManager.getDocument(CollectionNames.Settings, this._projectId, {
+        defaultValue: defaultDocument
+      });
+
+      return document;
+    } catch (error: any) {
+      if (error?.status !== 404) {
+        throw new Error(error);
+      } else {
+        return defaultDocument;
+      }
+    }
+  }
+
+  public async setSettings(data: SettingDocument): Promise<SettingDocument> {
+    const dataService = await this.getDataService();
+
+    const dataManager = await dataService.getExtensionDataManager(
+      DevOps.getExtensionContext().id,
+      await DevOps.getAccessToken()
+    );
+    return dataManager.setDocument(CollectionNames.Settings, {
+      ...data,
+      id: this._projectId
     });
   }
 }

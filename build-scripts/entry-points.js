@@ -28,7 +28,15 @@ const modules = [
     entry: './src/rule-tester-action/module',
     root: 'rule-tester-action-container',
     generate: true,
-    assets: [{ source: './src/rule-tester-action/icon.png', dest: 'assets/rule-tester-action-icon.png' }]
+    assets: [
+      { source: './src/rule-tester-action/icon.png', dest: 'assets/rule-tester-action-icon.png' }
+    ]
+  },
+  {
+    name: 'settings-panel',
+    entry: './src/settings-panel/module',
+    root: 'settings-panel-container',
+    generate: true
   }
 ];
 
