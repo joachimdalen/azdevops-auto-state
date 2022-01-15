@@ -30,7 +30,6 @@ const SettingsPanel = (): React.ReactElement => {
         .getSettings()
         .then(retSettings => {
           setSettings(retSettings);
-          console.log(retSettings);
           setUseScopedWorkItemTypes(retSettings.useScopedWorkItemTypes);
           setLoading(false);
         })
