@@ -1,0 +1,3 @@
+@import 'azure-devops-ui/Core/override.css';
+@import '../styles/mixins.scss';
+@include extension-container('presets-panel-container');
