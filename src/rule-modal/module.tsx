@@ -9,11 +9,12 @@ import { ConditionalChildren } from 'azure-devops-ui/ConditionalChildren';
 import { FormItem } from 'azure-devops-ui/FormItem';
 import { MessageCard, MessageCardSeverity } from 'azure-devops-ui/MessageCard';
 import { Toggle } from 'azure-devops-ui/Toggle';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { ActionResult } from '../common/models/ActionResult';
 import AddRuleResult from '../common/models/AddRuleResult';
 import Rule from '../common/models/Rule';
+import { StorageService } from '../common/services/StorageService';
 import WorkItemService from '../common/services/WorkItemService';
 import webLogger from '../common/webLogger';
 import { appTheme } from '../shared-ui/azure-devops-theme';
@@ -24,6 +25,10 @@ import showRootComponent from '../shared-ui/showRootComponent';
 
 const ModalContent = (): React.ReactElement => {
   const [error, setError] = useState<ActionResult<any> | undefined>(undefined);
+  const [storageService, workItemService] = useMemo(
+    () => [new StorageService(), new WorkItemService()],
+    []
+  );
   const [rule, setRule] = useState<Rule>();
   const [types, setTypes] = useState<WorkItemType[]>([]);
   const [workItemType, setWorkItemType] = useState('');
@@ -37,6 +42,7 @@ const ModalContent = (): React.ReactElement => {
   const [loading, setLoading] = useState(true);
 
   const isDisabled = !enabled && rule !== undefined;
+
   useEffect(() => {
     loadTheme(createTheme(appTheme));
     DevOps.init({
@@ -47,24 +53,27 @@ const ModalContent = (): React.ReactElement => {
     });
     DevOps.ready().then(() => {
       const config = DevOps.getConfiguration();
-      const service = new WorkItemService();
-      service.getWorkItemTypes().then(x => {
-        setTypes(x);
-        if (config.rule) {
-          const rle: Rule = config.rule;
-          setRule(rle);
-          setWorkItemType(rle.workItemType);
-          setParentType(rle.parentType);
-          setTransitionState(rle.transitionState);
-          setParentExcludedStates(rle.parentExcludedStates);
-          setParentTargetState(rle.parentTargetState);
-          setChildrenLookup(rle.childrenLookup);
-          setProcessParent(rle.processParent);
-          setEnabled(!rle.disabled || true);
+
+      storageService.getSettings().then(settings => {
+        workItemService.getWorkItemTypes(settings.useScopedWorkItemTypes).then(x => {
+          setTypes(x);
+          if (config.rule) {
+            const rle: Rule = config.rule;
+            setRule(rle);
+            setWorkItemType(rle.workItemType);
+            setParentType(rle.parentType);
+            setTransitionState(rle.transitionState);
+            setParentExcludedStates(rle.parentExcludedStates);
+            setParentTargetState(rle.parentTargetState);
+            setChildrenLookup(rle.childrenLookup);
+            setProcessParent(rle.processParent);
+            setEnabled(!rle.disabled || true);
+            setLoading(false);
+          }
           setLoading(false);
-        }
-        setLoading(false);
+        });
       });
+
       DevOps.notifyLoadSucceeded().then(() => {
         DevOps.resize();
       });
@@ -138,7 +147,12 @@ const ModalContent = (): React.ReactElement => {
           </ConditionalChildren>
           <div className="rhythm-vertical-16 flex-grow">
             <FormItem label="Rule enabled">
-              <Toggle checked={enabled} onChange={(_, c) => setEnabled(c)} />
+              <Toggle
+                checked={enabled}
+                onChange={(_, c) => setEnabled(c)}
+                offText={'Disabled'}
+                onText={'Enabled'}
+              />
             </FormItem>
             <FormItem
               className="flex-grow"
@@ -224,6 +238,8 @@ const ModalContent = (): React.ReactElement => {
                 disabled={isDisabled}
                 checked={childrenLookup}
                 onChange={(_, c) => setChildrenLookup(c)}
+                offText={'Off'}
+                onText={'On'}
               />
             </FormItem>
             <FormItem
@@ -234,6 +250,8 @@ const ModalContent = (): React.ReactElement => {
                 disabled={isDisabled}
                 checked={processParent}
                 onChange={(_, c) => setProcessParent(c)}
+                offText={'Off'}
+                onText={'On'}
               />
             </FormItem>
           </div>

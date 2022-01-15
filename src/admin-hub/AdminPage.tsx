@@ -89,7 +89,7 @@ const AdminPage = (): React.ReactElement => {
   };
 
   const commandBarItems: IHeaderCommandBarItem[] = useMemo(
-    () => getCommandBarItems(showEditRule, refreshData),
+    () => getCommandBarItems(devOpsService, showEditRule, refreshData),
     [showEditRule, refreshData]
   );
   const columns: IColumn[] = useMemo(

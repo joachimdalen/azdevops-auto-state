@@ -51,7 +51,7 @@ class RuleProcessor implements IRuleProcessor {
     }
 
     if (this._ruleDocs.length === 0) {
-      this._ruleDocs = await this._storageService.getData();
+      this._ruleDocs = await this._storageService.getRuleDocuments();
     }
   }
 

@@ -21,7 +21,7 @@ describe('RuleTester', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     jest.spyOn(WorkItemService.prototype, 'getWorkItemTypes').mockResolvedValue(getWorkItemTypes());
-    jest.spyOn(StorageService.prototype, 'getData').mockResolvedValue([]);
+    jest.spyOn(StorageService.prototype, 'getRuleDocuments').mockResolvedValue([]);
   });
 
   it('should render default', async () => {

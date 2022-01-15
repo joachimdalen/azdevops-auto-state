@@ -38,7 +38,7 @@ describe('RuleProcessor', () => {
       mockUpdateWorkItem.mockClear();
     });
     it('returns true when only child', async () => {
-      jest.spyOn(StorageService.prototype, 'getData').mockResolvedValue([]);
+      jest.spyOn(StorageService.prototype, 'getRuleDocuments').mockResolvedValue([]);
       jest
         .spyOn(WorkItemService.prototype, 'getWorkItemTypes')
         .mockResolvedValue(getWorkItemTypes());
@@ -67,7 +67,7 @@ describe('RuleProcessor', () => {
       expect(res).toBeTruthy();
     });
     it('returns true when only children of same type', async () => {
-      jest.spyOn(StorageService.prototype, 'getData').mockResolvedValue([]);
+      jest.spyOn(StorageService.prototype, 'getRuleDocuments').mockResolvedValue([]);
       jest
         .spyOn(WorkItemService.prototype, 'getWorkItemTypes')
         .mockResolvedValue(getWorkItemTypes());
@@ -115,7 +115,7 @@ describe('RuleProcessor', () => {
         processParent: false,
         disabled: false
       };
-      jest.spyOn(StorageService.prototype, 'getData').mockResolvedValue([
+      jest.spyOn(StorageService.prototype, 'getRuleDocuments').mockResolvedValue([
         {
           id: WorkItemReferenceNames.Task,
           rules: [rule]
@@ -165,7 +165,7 @@ describe('RuleProcessor', () => {
         processParent: false,
         disabled: true
       };
-      jest.spyOn(StorageService.prototype, 'getData').mockResolvedValue([
+      jest.spyOn(StorageService.prototype, 'getRuleDocuments').mockResolvedValue([
         {
           id: WorkItemReferenceNames.Task,
           rules: [rule]
@@ -211,7 +211,7 @@ describe('RuleProcessor', () => {
         processParent: false,
         disabled: false
       };
-      jest.spyOn(StorageService.prototype, 'getData').mockResolvedValue([
+      jest.spyOn(StorageService.prototype, 'getRuleDocuments').mockResolvedValue([
         {
           id: WorkItemReferenceNames.Task,
           rules: [rule]
@@ -254,7 +254,7 @@ describe('RuleProcessor', () => {
       expect(res).toBeTruthy();
     });
     it('returns false when only children of same but rule does not match', async () => {
-      jest.spyOn(StorageService.prototype, 'getData').mockResolvedValue([]);
+      jest.spyOn(StorageService.prototype, 'getRuleDocuments').mockResolvedValue([]);
       jest
         .spyOn(WorkItemService.prototype, 'getWorkItemTypes')
         .mockResolvedValue(getWorkItemTypes());
@@ -291,7 +291,7 @@ describe('RuleProcessor', () => {
       expect(res).toBeFalsy();
     });
     it('returns false when parent state is already target state', async () => {
-      jest.spyOn(StorageService.prototype, 'getData').mockResolvedValue([]);
+      jest.spyOn(StorageService.prototype, 'getRuleDocuments').mockResolvedValue([]);
       jest
         .spyOn(WorkItemService.prototype, 'getWorkItemTypes')
         .mockResolvedValue(getWorkItemTypes());
@@ -319,7 +319,7 @@ describe('RuleProcessor', () => {
       expect(res).toBeFalsy();
     });
     it('returns true when matches', async () => {
-      jest.spyOn(StorageService.prototype, 'getData').mockResolvedValue([]);
+      jest.spyOn(StorageService.prototype, 'getRuleDocuments').mockResolvedValue([]);
       jest
         .spyOn(WorkItemService.prototype, 'getWorkItemTypes')
         .mockResolvedValue(getWorkItemTypes());
@@ -349,7 +349,7 @@ describe('RuleProcessor', () => {
       expect(res).toBeTruthy();
     });
     it('returns false when not matches', async () => {
-      jest.spyOn(StorageService.prototype, 'getData').mockResolvedValue([]);
+      jest.spyOn(StorageService.prototype, 'getRuleDocuments').mockResolvedValue([]);
       jest
         .spyOn(WorkItemService.prototype, 'getWorkItemTypes')
         .mockResolvedValue(getWorkItemTypes());
@@ -379,7 +379,7 @@ describe('RuleProcessor', () => {
       expect(res).toBeFalsy();
     });
     it('returns false when child type does not match', async () => {
-      jest.spyOn(StorageService.prototype, 'getData').mockResolvedValue([]);
+      jest.spyOn(StorageService.prototype, 'getRuleDocuments').mockResolvedValue([]);
       jest
         .spyOn(WorkItemService.prototype, 'getWorkItemTypes')
         .mockResolvedValue(getWorkItemTypes());
@@ -409,7 +409,7 @@ describe('RuleProcessor', () => {
       expect(res).toBeFalsy();
     });
     it('returns false when parent type does not match', async () => {
-      jest.spyOn(StorageService.prototype, 'getData').mockResolvedValue([]);
+      jest.spyOn(StorageService.prototype, 'getRuleDocuments').mockResolvedValue([]);
       jest
         .spyOn(WorkItemService.prototype, 'getWorkItemTypes')
         .mockResolvedValue(getWorkItemTypes());
@@ -439,7 +439,7 @@ describe('RuleProcessor', () => {
       expect(res).toBeFalsy();
     });
     it('returns false when child state does not match', async () => {
-      jest.spyOn(StorageService.prototype, 'getData').mockResolvedValue([]);
+      jest.spyOn(StorageService.prototype, 'getRuleDocuments').mockResolvedValue([]);
       jest
         .spyOn(WorkItemService.prototype, 'getWorkItemTypes')
         .mockResolvedValue(getWorkItemTypes());
@@ -469,7 +469,7 @@ describe('RuleProcessor', () => {
       expect(res).toBeFalsy();
     });
     it('returns false when parent states does not match', async () => {
-      jest.spyOn(StorageService.prototype, 'getData').mockResolvedValue([]);
+      jest.spyOn(StorageService.prototype, 'getRuleDocuments').mockResolvedValue([]);
       jest
         .spyOn(WorkItemService.prototype, 'getWorkItemTypes')
         .mockResolvedValue(getWorkItemTypes());
@@ -500,7 +500,7 @@ describe('RuleProcessor', () => {
   });
 
   describe('Process', () => {
-    const getDataSpy = jest.spyOn(StorageService.prototype, 'getData');
+    const getRuleDocumentsSpy = jest.spyOn(StorageService.prototype, 'getRuleDocuments');
 
     beforeEach(() => {
       jest.clearAllMocks();
@@ -508,7 +508,7 @@ describe('RuleProcessor', () => {
       mockGetWorkItem.mockClear();
       mockGetWorkItems.mockClear();
       mockUpdateWorkItem.mockClear();
-      getDataSpy.mockResolvedValue([]);
+      getRuleDocumentsSpy.mockResolvedValue([]);
       jest
         .spyOn(WorkItemService.prototype, 'getWorkItemTypes')
         .mockResolvedValue(getWorkItemTypes());
@@ -561,7 +561,7 @@ describe('RuleProcessor', () => {
       const workItem = getWorkItem(123, WorkItemNames.Task, 'Active', [
         { id: 122, type: 'parent' }
       ]);
-      getDataSpy.mockResolvedValue([{ id: WorkItemReferenceNames.UserStory, rules: [] }]);
+      getRuleDocumentsSpy.mockResolvedValue([{ id: WorkItemReferenceNames.UserStory, rules: [] }]);
       mockGetWorkItem.mockImplementation(id => {
         switch (id) {
           case 123:
@@ -585,7 +585,7 @@ describe('RuleProcessor', () => {
       const workItem = getWorkItem(123, WorkItemNames.Task, 'Active', [
         { id: 122, type: 'parent' }
       ]);
-      getDataSpy.mockResolvedValue([
+      getRuleDocumentsSpy.mockResolvedValue([
         {
           id: WorkItemReferenceNames.Task,
           rules: [
@@ -643,7 +643,7 @@ describe('RuleProcessor', () => {
       const workItem = getWorkItem(123, WorkItemNames.Task, 'Active', [
         { id: 122, type: 'parent' }
       ]);
-      getDataSpy.mockResolvedValue([
+      getRuleDocumentsSpy.mockResolvedValue([
         {
           id: WorkItemReferenceNames.Task,
           rules: [
@@ -714,7 +714,7 @@ describe('RuleProcessor', () => {
       workItems.set(parentWorkItem.id, parentWorkItem);
       workItems.set(parentParentWorkItem.id, parentParentWorkItem);
 
-      getDataSpy.mockResolvedValue([
+      getRuleDocumentsSpy.mockResolvedValue([
         {
           id: WorkItemReferenceNames.Task,
           rules: [
@@ -829,7 +829,7 @@ describe('RuleProcessor', () => {
       workItems.set(featureWorkItem.id, featureWorkItem);
       workItems.set(epicWorkItem.id, epicWorkItem);
 
-      getDataSpy.mockResolvedValue([
+      getRuleDocumentsSpy.mockResolvedValue([
         {
           id: WorkItemReferenceNames.Task,
           rules: [
@@ -942,7 +942,7 @@ describe('RuleProcessor', () => {
       workItems.set(featureWorkItem.id, featureWorkItem);
       workItems.set(epicWorkItem.id, epicWorkItem);
 
-      getDataSpy.mockResolvedValue([
+      getRuleDocumentsSpy.mockResolvedValue([
         {
           id: WorkItemReferenceNames.Task,
           rules: [
@@ -1055,7 +1055,7 @@ describe('RuleProcessor', () => {
       workItems.set(featureWorkItem.id, featureWorkItem);
       workItems.set(epicWorkItem.id, epicWorkItem);
 
-      getDataSpy.mockResolvedValue([
+      getRuleDocumentsSpy.mockResolvedValue([
         {
           id: WorkItemReferenceNames.Task,
           rules: [
@@ -1131,7 +1131,7 @@ describe('RuleProcessor', () => {
   });
 
   describe('Process - Dry Run', () => {
-    const getDataSpy = jest.spyOn(StorageService.prototype, 'getData');
+    const getRuleDocumentsSpy = jest.spyOn(StorageService.prototype, 'getRuleDocuments');
 
     beforeEach(() => {
       jest.clearAllMocks();
@@ -1139,7 +1139,7 @@ describe('RuleProcessor', () => {
       mockGetWorkItem.mockClear();
       mockGetWorkItems.mockClear();
       mockUpdateWorkItem.mockClear();
-      getDataSpy.mockResolvedValue([]);
+      getRuleDocumentsSpy.mockResolvedValue([]);
       jest
         .spyOn(WorkItemService.prototype, 'getWorkItemTypes')
         .mockResolvedValue(getWorkItemTypes());
@@ -1152,7 +1152,7 @@ describe('RuleProcessor', () => {
       const workItem = getWorkItem(123, WorkItemNames.Task, 'Active', [
         { id: 122, type: 'parent' }
       ]);
-      getDataSpy.mockResolvedValue([
+      getRuleDocumentsSpy.mockResolvedValue([
         {
           id: WorkItemReferenceNames.Task,
           rules: [
@@ -1227,7 +1227,7 @@ describe('RuleProcessor', () => {
       workItems.set(parentWorkItem.id, parentWorkItem);
       workItems.set(parentParentWorkItem.id, parentParentWorkItem);
 
-      getDataSpy.mockResolvedValue([
+      getRuleDocumentsSpy.mockResolvedValue([
         {
           id: WorkItemReferenceNames.Task,
           rules: [

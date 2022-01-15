@@ -21,7 +21,7 @@ class RuleService {
   public async load(force = false): Promise<ActionResult<RuleDocument[]>> {
     if (this._isInitialized && !force) return { success: true, data: this._data };
     try {
-      const data = await this._dataStore.getData();
+      const data = await this._dataStore.getRuleDocuments();
       this._data = data;
     } catch (error: any) {
       if (error?.status !== 404) {
@@ -46,7 +46,7 @@ class RuleService {
       const document = { ...this._data[documentIndex] };
       const newRules = document.rules.filter(z => z.id !== ruleId);
       document.rules = newRules;
-      const updatedDocument = await this._dataStore.setData(document);
+      const updatedDocument = await this._dataStore.setRuleDocument(document);
       const newDocs = [...this._data];
       newDocs[documentIndex] = updatedDocument;
       this._data = newDocs;
@@ -119,7 +119,7 @@ class RuleService {
       id: rule.workItemType,
       rules: [{ ...rule, id: uuidV4() }]
     };
-    const created = await this._dataStore.setData(newDocument);
+    const created = await this._dataStore.setRuleDocument(newDocument);
 
     return {
       success: true,
@@ -150,7 +150,7 @@ class RuleService {
       }
       rootDoc.rules = [...rootDoc.rules, { id: uuidV4(), ...rule }];
     }
-    const updatedDocument = await this._dataStore.setData(rootDoc);
+    const updatedDocument = await this._dataStore.setRuleDocument(rootDoc);
 
     return {
       success: true,
