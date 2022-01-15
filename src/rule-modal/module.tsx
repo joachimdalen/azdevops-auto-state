@@ -35,6 +35,8 @@ const ModalContent = (): React.ReactElement => {
   const [processParent, setProcessParent] = useState(false);
   const [enabled, setEnabled] = useState(true);
   const [loading, setLoading] = useState(true);
+
+  const isDisabled = !enabled && rule !== undefined;
   useEffect(() => {
     loadTheme(createTheme(appTheme));
     DevOps.init({
@@ -147,7 +149,7 @@ const ModalContent = (): React.ReactElement => {
                 types={types}
                 selected={workItemType}
                 onSelect={(_, i) => setWorkItemType(i.id)}
-                disabled={!enabled}
+                disabled={isDisabled}
               />
             </FormItem>
             <FormItem
@@ -161,7 +163,7 @@ const ModalContent = (): React.ReactElement => {
                 filter={[workItemType]}
                 deps={[workItemType]}
                 onSelect={(_, i) => setParentType(i.id)}
-                disabled={!enabled}
+                disabled={isDisabled}
               />
             </FormItem>
 
@@ -174,7 +176,7 @@ const ModalContent = (): React.ReactElement => {
                 workItemType={workItemType}
                 selected={rule?.transitionState}
                 onSelect={(_, i) => setTransitionState(i.id)}
-                disabled={!enabled}
+                disabled={isDisabled}
               />
             </FormItem>
             <FormItem
@@ -188,7 +190,7 @@ const ModalContent = (): React.ReactElement => {
                 onSelect={(_, i) => addOrRemove(i.id)}
                 multiSelection
                 deps={[parentType]}
-                disabled={!enabled}
+                disabled={isDisabled}
               />
             </FormItem>
             <FormItem
@@ -203,7 +205,7 @@ const ModalContent = (): React.ReactElement => {
                 filter={parentExcludedStates}
                 include={true}
                 deps={[parentType, parentExcludedStates]}
-                disabled={!enabled}
+                disabled={isDisabled}
               />
             </FormItem>
             <FormItem
@@ -219,7 +221,7 @@ const ModalContent = (): React.ReactElement => {
               }
             >
               <Toggle
-                disabled={!enabled}
+                disabled={isDisabled}
                 checked={childrenLookup}
                 onChange={(_, c) => setChildrenLookup(c)}
               />
@@ -229,7 +231,7 @@ const ModalContent = (): React.ReactElement => {
               message="Process rules for parent when prosessing this rule"
             >
               <Toggle
-                disabled={!enabled}
+                disabled={isDisabled}
                 checked={processParent}
                 onChange={(_, c) => setProcessParent(c)}
               />
