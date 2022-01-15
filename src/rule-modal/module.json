@@ -2,8 +2,7 @@
   "id": "rule-modal",
   "version": {
     "Major": 1,
-    "Minor": 0,
-    "Patch": 1
-  },
-  "contributions": []
+    "Minor": 2,
+    "Patch": 0
+  }
 }
