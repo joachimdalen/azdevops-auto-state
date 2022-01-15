@@ -32,6 +32,15 @@ describe('WorkItemService', () => {
       jest.clearAllMocks();
     });
 
+    it('should return empty when failing to load project', async () => {
+      mockGetProject.mockResolvedValue(undefined);
+      mockGetWorkItemTypes.mockResolvedValue(getWorkItemTypes());
+
+      const wiService = new WorkItemService();
+      const wiTypes = await wiService.getWorkItemTypes();
+
+      expect(wiTypes).toEqual([]);
+    });
     it('should load all types when setting is false', async () => {
       const project: IProjectInfo = {
         id: '5395360b-3cb4-456c-acb8-b2107d72395e',
