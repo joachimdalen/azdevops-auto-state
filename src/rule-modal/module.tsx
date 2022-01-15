@@ -55,25 +55,31 @@ const ModalContent = (): React.ReactElement => {
     DevOps.ready().then(() => {
       const config = DevOps.getConfiguration();
 
-      storageService.getSettings().then(settings => {
-        workItemService.getWorkItemTypes(settings.useScopedWorkItemTypes).then(x => {
-          setTypes(x);
-          if (config.rule) {
-            const rle: Rule = config.rule;
-            setRule(rle);
-            setWorkItemType(rle.workItemType);
-            setParentType(rle.parentType);
-            setTransitionState(rle.transitionState);
-            setParentExcludedStates(rle.parentExcludedStates);
-            setParentTargetState(rle.parentTargetState);
-            setChildrenLookup(rle.childrenLookup);
-            setProcessParent(rle.processParent);
-            setEnabled(!rle.disabled || true);
+      storageService
+        .getSettings()
+        .then(settings => {
+          workItemService.getWorkItemTypes(settings.useScopedWorkItemTypes).then(x => {
+            setTypes(x);
+            if (config.rule) {
+              const rle: Rule = config.rule;
+              setRule(rle);
+              setWorkItemType(rle.workItemType);
+              setParentType(rle.parentType);
+              setTransitionState(rle.transitionState);
+              setParentExcludedStates(rle.parentExcludedStates);
+              setParentTargetState(rle.parentTargetState);
+              setChildrenLookup(rle.childrenLookup);
+              setProcessParent(rle.processParent);
+              setEnabled(!rle.disabled || true);
+              setLoading(false);
+            }
             setLoading(false);
-          }
+          });
+        })
+        .catch(err => {
+          console.error(err);
           setLoading(false);
         });
-      });
 
       DevOps.notifyLoadSucceeded().then(() => {
         DevOps.resize();

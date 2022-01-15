@@ -9,6 +9,7 @@ import { useEffect, useMemo, useState } from 'react';
 import SettingDocument from '../common/models/SettingDocument';
 import { StorageService } from '../common/services/StorageService';
 import webLogger from '../common/webLogger';
+import LoadingSection from '../shared-ui/component/LoadingSection';
 import VersionDisplay from '../shared-ui/component/VersionDisplay';
 import SettingContainer from './components/SettingContainer';
 const SettingsPanel = (): React.ReactElement => {
@@ -62,12 +63,20 @@ const SettingsPanel = (): React.ReactElement => {
     dismiss();
   };
 
+  if (loading) {
+    return (
+      <div className="flex-grow flex-center">
+        <LoadingSection isLoading={loading} text="Loading..." />
+      </div>
+    );
+  }
+
   return (
     <div className="flex-column flex-grow">
       <div className="flex-grow">
         <ConditionalChildren renderChildren={error !== undefined}>
           <MessageCard className="margin-bottom-8" severity={MessageCardSeverity.Warning}>
-            {error?.message || 'Unknown error'}
+            {error?.message || error?.toString() || 'Unknown error'}
           </MessageCard>
         </ConditionalChildren>
         <div className="rhythm-vertical-16 flex-grow settings-list">
