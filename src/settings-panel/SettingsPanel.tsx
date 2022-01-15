@@ -24,7 +24,7 @@ const SettingsPanel = (): React.ReactElement => {
       loaded: false,
       applyTheme: true
     }).then(async () => {
-      webLogger.information('Loading rule modal...');
+      webLogger.information('Loading settings panel...');
     });
     DevOps.ready().then(() => {
       storageService

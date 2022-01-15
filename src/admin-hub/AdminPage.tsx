@@ -8,19 +8,21 @@ import {
   IGroup
 } from '@fluentui/react';
 import { WorkItemType } from 'azure-devops-extension-api/WorkItemTracking';
+import { Button } from 'azure-devops-ui/Button';
+import { ButtonGroup } from 'azure-devops-ui/ButtonGroup';
 import { ConditionalChildren } from 'azure-devops-ui/ConditionalChildren';
 import { Header, TitleSize } from 'azure-devops-ui/Header';
 import { IHeaderCommandBarItem } from 'azure-devops-ui/HeaderCommandBar';
+import { Icon } from 'azure-devops-ui/Icon';
 import { Page } from 'azure-devops-ui/Page';
 import { Surface, SurfaceBackground } from 'azure-devops-ui/Surface';
-import { ZeroData, ZeroDataActionType } from 'azure-devops-ui/ZeroData';
 import React, { useEffect, useMemo, useState } from 'react';
 
 import { groupBy } from '../common/helpers';
 import AddRuleResult from '../common/models/AddRuleResult';
 import Rule from '../common/models/Rule';
 import RuleDocument from '../common/models/WorkItemRules';
-import DevOpsService from '../common/services/DevOpsService';
+import DevOpsService, { PanelIds } from '../common/services/DevOpsService';
 import RuleService from '../common/services/RuleService';
 import WorkItemService from '../common/services/WorkItemService';
 import webLogger from '../common/webLogger';
@@ -133,23 +135,33 @@ const AdminPage = (): React.ReactElement => {
           commandBarItems={commandBarItems}
           titleSize={TitleSize.Large}
           title="Auto State"
-          description={
-            <VersionDisplay moduleVersion={process.env.ADMIN_HUB_VERSION}/>
-          }
+          description={<VersionDisplay moduleVersion={process.env.ADMIN_HUB_VERSION} />}
         />
         <div className="page-content padding-16">
           <LoadingSection isLoading={loading} text="Loading rules.." />
           <ConditionalChildren renderChildren={!loading && ruleItems.length === 0}>
-            <ZeroData
-              imageAltText=""
-              primaryText="No rules added"
-              actionText="Add rule"
-              onActionClick={() => {
-                showEditRule();
-              }}
-              actionType={ZeroDataActionType.ctaButton}
-              iconProps={{ iconName: 'Work' }}
-            />
+            <div className="flex-column flex-center margin-vertical-16">
+              <Icon iconName="Work" className="custom-zero-data-icon" />
+              <div className="margin-horizontal-16 title-l">No rules added</div>
+              <ButtonGroup className="margin-top-16">
+                <Button
+                  primary
+                  text="Add rule"
+                  onClick={() => {
+                    showEditRule();
+                  }}
+                />
+                <Button
+                  text="Show default rule wizard"
+                  onClick={async () => {
+                    await devOpsService.showPanel(PanelIds.PresetsPanel, {
+                      size: 2,
+                      title: 'Preset rules'
+                    });
+                  }}
+                />
+              </ButtonGroup>
+            </div>
           </ConditionalChildren>
           <ConditionalChildren renderChildren={!loading && ruleItems.length > 0}>
             <DetailsList

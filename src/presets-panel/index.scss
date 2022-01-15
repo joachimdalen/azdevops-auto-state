@@ -1,3 +1,13 @@
 @import 'azure-devops-ui/Core/override.css';
 @import '../styles/mixins.scss';
 @include extension-container('presets-panel-container');
+.rule-preset {
+  padding: 10px 0;
+  border-bottom: solid 1px;
+  border-bottom-color: rgba(200, 200, 200, 1);
+  border-bottom-color: rgba(var(--palette-neutral-20, 200, 200, 200), 1);
+  white-space: normal;
+  &:last-child {
+    border-bottom: none;
+  }
+}

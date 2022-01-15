@@ -19,7 +19,8 @@ export interface IDevOpsService {
 export enum PanelIds {
   RulePanel = 'rule-modal',
   RuleTesterPanel = 'rule-tester',
-  Settings = 'settings-panel'
+  Settings = 'settings-panel',
+  PresetsPanel = 'presets-panel'
 }
 
 export default class DevOpsService implements IDevOpsService {
@@ -58,6 +59,8 @@ export default class DevOpsService implements IDevOpsService {
         return 'rule-tester';
       case PanelIds.Settings:
         return 'settings-panel';
+      case PanelIds.PresetsPanel:
+        return 'presets-panel';
     }
   }
 
