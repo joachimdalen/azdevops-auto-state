@@ -1,20 +1,21 @@
-import { IDialogOptions, IHostPageLayoutService, IPanelOptions } from 'azure-devops-extension-api';
-import * as DevOps from 'azure-devops-extension-sdk';
 import { v4 as uuidV4 } from 'uuid';
 
 import { ActionResult } from '../models/ActionResult';
 import AddRuleResult from '../models/AddRuleResult';
 import Rule from '../models/Rule';
 import RuleDocument from '../models/WorkItemRules';
+import DevOpsService, { IDevOpsService, PanelIds } from './DevOpsService';
 import { IStorageService, StorageService } from './StorageService';
 
 class RuleService {
   private readonly _dataStore: IStorageService;
+  private readonly _devOpsService: IDevOpsService;
   private _isInitialized = false;
   private _data: RuleDocument[];
 
   constructor(dataStore?: IStorageService) {
     this._dataStore = dataStore || new StorageService();
+    this._devOpsService = new DevOpsService();
     this._data = [];
   }
 
@@ -207,17 +208,11 @@ class RuleService {
     isValid: (result: AddRuleResult | undefined) => ActionResult<boolean>,
     rule?: Rule
   ): Promise<void> {
-    const dialogService = await DevOps.getService<IHostPageLayoutService>(
-      'ms.vss-features.host-page-layout-service'
-    );
-
-    const options: IPanelOptions<AddRuleResult> = {
+    this._devOpsService.showPanel(PanelIds.RulePanel, {
       title: rule === undefined ? 'Add rule' : 'Edit rule',
       onClose: handleDialogResult,
       configuration: { rule: rule, validate: isValid }
-    };
-
-    dialogService.openPanel(DevOps.getExtensionContext().id + '.rule-modal', options);
+    });
   }
 }
 

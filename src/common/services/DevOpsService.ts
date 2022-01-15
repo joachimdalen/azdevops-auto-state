@@ -53,7 +53,7 @@ export default class DevOpsService implements IDevOpsService {
   public getPanelId(id: PanelIds): string | undefined {
     switch (id) {
       case PanelIds.RulePanel:
-        return 'rule-panel';
+        return 'rule-modal';
       case PanelIds.RuleTesterPanel:
         return 'rule-tester';
       case PanelIds.Settings:

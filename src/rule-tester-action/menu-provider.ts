@@ -1,5 +1,4 @@
-import { IHostPageLayoutService, IPanelOptions } from 'azure-devops-extension-api';
-import * as DevOps from 'azure-devops-extension-sdk';
+import DevOpsService, { PanelIds } from '../common/services/DevOpsService';
 
 interface WorkItemActionContext {
   workItemId: number;
@@ -13,18 +12,14 @@ interface WorkItemActionContext {
 
 export default {
   execute: async (context: WorkItemActionContext): Promise<void> => {
-    const dialogService = await DevOps.getService<IHostPageLayoutService>(
-      'ms.vss-features.host-page-layout-service'
-    );
+    const devOpsService = new DevOpsService();
 
-    const options: IPanelOptions<any> = {
+    await devOpsService.showPanel(PanelIds.RuleTesterPanel, {
       title: 'Rule Tester',
       size: 2,
       configuration: {
         workItemId: context.workItemId
       }
-    };
-
-    dialogService.openPanel(DevOps.getExtensionContext().id + '.rule-tester', options);
+    });
   }
 };

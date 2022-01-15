@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 const format = '%c{0} %c{1}';
 const dateFormat = '[{y}-{m}-{d} {h}:{i}:{s}.{ms}]';
 
