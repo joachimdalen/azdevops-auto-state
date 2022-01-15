@@ -3,12 +3,14 @@ import { JsonPatchDocument } from 'azure-devops-extension-api/WebApi';
 import {
   WorkItem,
   WorkItemErrorPolicy,
-  WorkItemExpand
+  WorkItemExpand,
+  WorkItemType
 } from 'azure-devops-extension-api/WorkItemTracking';
 
 export const mockGetWorkItem = jest.fn().mockRejectedValue(new Error('Not implemented'));
 export const mockGetWorkItems = jest.fn().mockRejectedValue(new Error('Not implemented'));
 export const mockUpdateWorkItem = jest.fn().mockRejectedValue(new Error('Not implemented'));
+export const mockGetWorkItemTypes = jest.fn().mockRejectedValue(new Error('Not implemented'));
 
 export class WitRestClient {
   constructor(options: IVssRestClientOptions) {}
@@ -58,5 +60,10 @@ export class WitRestClient {
         )
       )
     );
+  }
+  getWorkItemTypes(project: string): Promise<WorkItemType[]> {
+    return new Promise(resolve => {
+      resolve(mockGetWorkItemTypes(project));
+    });
   }
 }

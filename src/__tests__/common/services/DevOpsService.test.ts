@@ -1,8 +1,12 @@
+import { IPanelOptions, IProjectInfo, IToast } from 'azure-devops-extension-api';
 
-import { IProjectInfo, IToast } from 'azure-devops-extension-api';
-
-import { mockAddToast, mockGetProject } from '../../../__mocks__/azure-devops-extension-sdk';
-import DevOpsService from '../../../common/services/DevOpsService';
+import {
+  mockAddToast,
+  mockGetProject,
+  mockOpenNewWindow,
+  mockOpenPanel
+} from '../../../__mocks__/azure-devops-extension-sdk';
+import DevOpsService, { PanelIds } from '../../../common/services/DevOpsService';
 
 describe('DevOpsService', () => {
   describe('getProject', () => {
@@ -39,6 +43,55 @@ describe('DevOpsService', () => {
       const devOpsService = new DevOpsService();
 
       await devOpsService.showToast('This is message');
+    });
+  });
+  describe('showPanel', () => {
+    afterEach(() => {
+      jest.clearAllMocks();
+    });
+    it('should open correct panel', async () => {
+      expect.assertions(2);
+
+      mockOpenPanel.mockImplementation((id: string, options: IPanelOptions<any>) => {
+        expect(id).toEqual('as-pub.auto-state.settings-panel');
+        expect(options.size).toEqual(2);
+      });
+
+      const devOpsService = new DevOpsService();
+
+      await devOpsService.showPanel(PanelIds.Settings, {
+        size: 2
+      });
+    });
+  });
+
+  describe('getPanelId', () => {
+    afterEach(() => {
+      jest.clearAllMocks();
+    });
+    it('should return correct', async () => {
+      const devOpsService = new DevOpsService();
+
+      expect(devOpsService.getPanelId(PanelIds.RulePanel)).toEqual('rule-modal');
+      expect(devOpsService.getPanelId(PanelIds.RuleTesterPanel)).toEqual('rule-tester');
+      expect(devOpsService.getPanelId(PanelIds.Settings)).toEqual('settings-panel');
+    });
+  });
+  describe('openLink', () => {
+    afterEach(() => {
+      jest.clearAllMocks();
+    });
+    it('should open correct link', async () => {
+      expect.assertions(2);
+
+      mockOpenNewWindow.mockImplementation((url: string, features: string) => {
+        expect(url).toEqual('https://example.com');
+        expect(features).toEqual('');
+      });
+
+      const devOpsService = new DevOpsService();
+
+      await devOpsService.openLink('https://example.com');
     });
   });
 });
