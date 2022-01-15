@@ -44,12 +44,32 @@ export const getListColumns = (
 ): IColumn[] => {
   const columns: IColumn[] = [
     {
+      key: 'enabled',
+      name: 'Enabled',
+      fieldName: 'disabled',
+      className: 'flex-self-center',
+      minWidth: 50,
+      maxWidth: 80,
+      isResizable: true,
+      onRender: (item: Rule, index?: number, column?: IColumn) => {
+        return (
+          <FontIcon
+            className={mergeStyles({
+              fontSize: 20,
+              color: item.disabled ? 'red' : 'green'
+            })}
+            iconName={item.disabled ? 'Clear' : 'Accept'}
+          />
+        );
+      }
+    },
+    {
       key: 'transitionState',
       name: 'Transition state',
       fieldName: 'transitionState',
       className: 'flex-self-center',
       minWidth: 50,
-      maxWidth: 300,
+      maxWidth: 200,
       isResizable: true,
       onRender: (item: Rule, index?: number, column?: IColumn) => {
         const state = getState(types, item.workItemType, item.transitionState);
@@ -62,7 +82,7 @@ export const getListColumns = (
       fieldName: 'parentType',
       className: 'flex-self-center',
       minWidth: 100,
-      maxWidth: 300,
+      maxWidth: 200,
       isResizable: true,
       onRender: (item: Rule, index?: number, column?: IColumn) => {
         const type = getWorkItemType(types, item.parentType);
@@ -79,7 +99,7 @@ export const getListColumns = (
       fieldName: 'parentExcludedStates',
       className: 'flex-self-center',
       minWidth: 100,
-      maxWidth: 300,
+      maxWidth: 200,
       isResizable: true,
       onRender: (item: Rule, index?: number, column?: IColumn) => {
         const states = getWorkItemType(types, item.parentType);
@@ -103,7 +123,7 @@ export const getListColumns = (
       fieldName: 'parentTargetState',
       className: 'flex-self-center',
       minWidth: 100,
-      maxWidth: 300,
+      maxWidth: 200,
       isResizable: true,
       onRender: (item: Rule, index?: number, column?: IColumn) => {
         const state = getState(types, item.parentType, item.parentTargetState);
@@ -116,7 +136,7 @@ export const getListColumns = (
       fieldName: 'childrenLookup',
       className: 'flex-self-center',
       minWidth: 100,
-      maxWidth: 300,
+      maxWidth: 200,
       isResizable: true,
       onRender: (item: Rule, index?: number, column?: IColumn) => {
         return (
@@ -136,7 +156,7 @@ export const getListColumns = (
       fieldName: 'processParent',
       className: 'flex-self-center',
       minWidth: 100,
-      maxWidth: 300,
+      maxWidth: 200,
       isResizable: true,
       onRender: (item: Rule, index?: number, column?: IColumn) => {
         return (

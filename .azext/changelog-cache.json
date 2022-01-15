@@ -1,6 +1,13 @@
 {
   "issues": [
     {
+      "id": 1103081433,
+      "number": 22,
+      "submitter": "joachimdalen",
+      "title": "Add ability to disable rule",
+      "url": "https://github.com/joachimdalen/azdevops-auto-state/issues/22"
+    },
+    {
       "id": 1091521520,
       "number": 18,
       "submitter": "joachimdalen",
@@ -23,6 +30,13 @@
     }
   ],
   "pullRequests": [
+    {
+      "id": 823048624,
+      "number": 26,
+      "submitter": "joachimdalen",
+      "title": "Add ability to disable rules",
+      "url": "https://github.com/joachimdalen/azdevops-auto-state/pull/26"
+    },
     {
       "id": 816841293,
       "number": 21,

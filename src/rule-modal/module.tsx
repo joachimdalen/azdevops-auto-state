@@ -33,7 +33,10 @@ const ModalContent = (): React.ReactElement => {
   const [transitionState, setTransitionState] = useState('');
   const [childrenLookup, setChildrenLookup] = useState(false);
   const [processParent, setProcessParent] = useState(false);
+  const [enabled, setEnabled] = useState(true);
   const [loading, setLoading] = useState(true);
+
+  const isDisabled = !enabled && rule !== undefined;
   useEffect(() => {
     loadTheme(createTheme(appTheme));
     DevOps.init({
@@ -42,33 +45,31 @@ const ModalContent = (): React.ReactElement => {
     }).then(async () => {
       webLogger.information('Loading rule modal...');
     });
-    DevOps.ready()
-      .then(() => {
-        const config = DevOps.getConfiguration();
-        const service = new WorkItemService();
-        service.getWorkItemTypes().then(x => {
-          setTypes(x);
-          if (config.rule) {
-            const rle: Rule = config.rule;
-            setRule(rle);
-            setWorkItemType(rle.workItemType);
-            setParentType(rle.parentType);
-            setTransitionState(rle.transitionState);
-            setParentExcludedStates(rle.parentExcludedStates);
-            setParentTargetState(rle.parentTargetState);
-            setChildrenLookup(rle.childrenLookup);
-            setProcessParent(rle.processParent);
-          }
-        });
-        DevOps.notifyLoadSucceeded().then(() => {
-          DevOps.resize();
-        });
-      })
-      .finally(() => {
+    DevOps.ready().then(() => {
+      const config = DevOps.getConfiguration();
+      const service = new WorkItemService();
+      service.getWorkItemTypes().then(x => {
+        setTypes(x);
+        if (config.rule) {
+          const rle: Rule = config.rule;
+          setRule(rle);
+          setWorkItemType(rle.workItemType);
+          setParentType(rle.parentType);
+          setTransitionState(rle.transitionState);
+          setParentExcludedStates(rle.parentExcludedStates);
+          setParentTargetState(rle.parentTargetState);
+          setChildrenLookup(rle.childrenLookup);
+          setProcessParent(rle.processParent);
+          setEnabled(!rle.disabled || true);
+          setLoading(false);
+        }
         setLoading(false);
       });
+      DevOps.notifyLoadSucceeded().then(() => {
+        DevOps.resize();
+      });
+    });
   }, []);
-
 
   const dismiss = () => {
     const config = DevOps.getConfiguration();
@@ -90,7 +91,8 @@ const ModalContent = (): React.ReactElement => {
         parentExcludedStates: parentExcludedStates,
         parentTargetState: parentTargetState,
         childrenLookup: childrenLookup,
-        processParent: processParent
+        processParent: processParent,
+        disabled: !enabled
       };
 
       const res: AddRuleResult = {
@@ -117,10 +119,17 @@ const ModalContent = (): React.ReactElement => {
     }
   };
 
+  if (loading) {
+    return (
+      <div className="flex-grow flex-center">
+        <LoadingSection isLoading={loading} text="Loading..." />
+      </div>
+    );
+  }
+
   return (
     <div className="flex-column">
       <div className="flex-grow">
-        <LoadingSection isLoading={loading} text="Loading..." />
         <ConditionalChildren renderChildren={!loading}>
           <ConditionalChildren renderChildren={error !== undefined}>
             <MessageCard className="margin-bottom-8" severity={MessageCardSeverity.Warning}>
@@ -128,6 +137,9 @@ const ModalContent = (): React.ReactElement => {
             </MessageCard>
           </ConditionalChildren>
           <div className="rhythm-vertical-16 flex-grow">
+            <FormItem label="Rule enabled">
+              <Toggle checked={enabled} onChange={(_, c) => setEnabled(c)} />
+            </FormItem>
             <FormItem
               className="flex-grow"
               label="Work item type"
@@ -137,6 +149,7 @@ const ModalContent = (): React.ReactElement => {
                 types={types}
                 selected={workItemType}
                 onSelect={(_, i) => setWorkItemType(i.id)}
+                disabled={isDisabled}
               />
             </FormItem>
             <FormItem
@@ -150,6 +163,7 @@ const ModalContent = (): React.ReactElement => {
                 filter={[workItemType]}
                 deps={[workItemType]}
                 onSelect={(_, i) => setParentType(i.id)}
+                disabled={isDisabled}
               />
             </FormItem>
 
@@ -162,6 +176,7 @@ const ModalContent = (): React.ReactElement => {
                 workItemType={workItemType}
                 selected={rule?.transitionState}
                 onSelect={(_, i) => setTransitionState(i.id)}
+                disabled={isDisabled}
               />
             </FormItem>
             <FormItem
@@ -175,6 +190,7 @@ const ModalContent = (): React.ReactElement => {
                 onSelect={(_, i) => addOrRemove(i.id)}
                 multiSelection
                 deps={[parentType]}
+                disabled={isDisabled}
               />
             </FormItem>
             <FormItem
@@ -189,6 +205,7 @@ const ModalContent = (): React.ReactElement => {
                 filter={parentExcludedStates}
                 include={true}
                 deps={[parentType, parentExcludedStates]}
+                disabled={isDisabled}
               />
             </FormItem>
             <FormItem
@@ -203,13 +220,21 @@ const ModalContent = (): React.ReactElement => {
                 </p>
               }
             >
-              <Toggle checked={childrenLookup} onChange={(_, c) => setChildrenLookup(c)} />
+              <Toggle
+                disabled={isDisabled}
+                checked={childrenLookup}
+                onChange={(_, c) => setChildrenLookup(c)}
+              />
             </FormItem>
             <FormItem
               label="Process parent"
               message="Process rules for parent when prosessing this rule"
             >
-              <Toggle checked={processParent} onChange={(_, c) => setProcessParent(c)} />
+              <Toggle
+                disabled={isDisabled}
+                checked={processParent}
+                onChange={(_, c) => setProcessParent(c)}
+              />
             </FormItem>
           </div>
         </ConditionalChildren>

@@ -1,11 +1,25 @@
 # Changelog
 
-## 1.1.1 (2022-01-XX)
+## 1.2.0 (2022-01-XX)
 
 ### 🛠️ Maintenance (1)
 
 - Update azext and implement new changes
   - Changed in [PR#21 - Update azext](https://github.com/joachimdalen/azdevops-auto-state/pull/21)
+
+### 🚀 Features (1)
+
+- Added the ability to disable rules
+  - Suggested in [GH#22 - Add ability to disable rule](https://github.com/joachimdalen/azdevops-auto-state/issues/22)
+  - Added in [PR#26 - Add ability to disable rules](https://github.com/joachimdalen/azdevops-auto-state/pull/26)
+
+## 📦 Module changes
+
+### 🐛 Fixes (1)
+
+#### `rule-modal@1.2.0`
+
+- Fixed UI showing/flashing before loading was completed
 
 ---
 
@@ -40,19 +54,19 @@
 - Replaced modal with panels for better UX
   - Added in [PR#19 - Add recursive updating and rule improvements](https://github.com/joachimdalen/azdevops-auto-state/pull/19)
 
-### 💬 Other (1)
-
-#### `rule-modal@1.1.0`
-
-- Added helper texts to all fields
-  - Pull Request: [PR#19 - Add recursive updating and rule improvements](https://github.com/joachimdalen/azdevops-auto-state/pull/19)
-
 ### 🐛 Fixes (1)
 
 #### `rule-modal@1.1.0`
 
 - Fixed an issue when updating a rule where it would report it being a duplicated rule
   - Fixed in [PR#19 - Add recursive updating and rule improvements](https://github.com/joachimdalen/azdevops-auto-state/pull/19)
+
+### 💬 Other (1)
+
+#### `rule-modal@1.1.0`
+
+- Added helper texts to all fields
+  - Pull Request: [PR#19 - Add recursive updating and rule improvements](https://github.com/joachimdalen/azdevops-auto-state/pull/19)
 
 ---
 

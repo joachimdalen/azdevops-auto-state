@@ -179,6 +179,8 @@ class RuleProcessor implements IRuleProcessor {
     dryRun: boolean,
     processedItems: ProcessedItem[]
   ): Promise<boolean> {
+    if (rule.disabled) return false;
+
     const childType = getWorkItemType(workItem, this._workItemTypes);
     if (rule.workItemType !== childType) return false;
 
@@ -263,7 +265,9 @@ class RuleProcessor implements IRuleProcessor {
       x => x.id === getWorkItemTypeFromName(workItemType, this._workItemTypes)
     );
     const matchedRules = docs?.rules.filter(x => {
-      return x.parentTargetState === parentState && x.parentType === parentType;
+      return (
+        x.parentTargetState === parentState && x.parentType === parentType && x.disabled !== true
+      );
     });
     return matchedRules;
   }
