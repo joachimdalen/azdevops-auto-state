@@ -13,6 +13,11 @@
         "description": "Added the ability to disable rules",
         "issue": 22,
         "pullRequest": 26
+      },
+      {
+        "type": "feature",
+        "description": "Add setting to be able to scope work item types to current process",
+        "issue": 23
       }
     ],
     "modules": [
@@ -23,6 +28,10 @@
           {
             "type": "fix",
             "description": "Fixed UI showing/flashing before loading was completed"
+          },
+          {
+            "type": "enhancement",
+            "description": "Added labels to toggle states to indicate the current state"
           }
         ]
       }

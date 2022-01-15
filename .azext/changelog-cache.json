@@ -1,6 +1,13 @@
 {
   "issues": [
     {
+      "id": 1103082733,
+      "number": 23,
+      "submitter": "joachimdalen",
+      "title": "Add setting to be able to limit work item types to current process",
+      "url": "https://github.com/joachimdalen/azdevops-auto-state/issues/23"
+    },
+    {
       "id": 1103081433,
       "number": 22,
       "submitter": "joachimdalen",
