@@ -54,7 +54,6 @@ export let spyWorkItemCallBackAccessor: workItemCallBackType;
  */
 export function register(instanceId: string, instance: any) {
   if (typeof instance === typeof WorkItemListener) {
-    console.log('wuk');
     spyWorkItemCallBackAccessor = instance;
   }
 

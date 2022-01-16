@@ -10,4 +10,10 @@
   &:last-child {
     border-bottom: none;
   }
+  &-wi-display {
+    border: 1px solid rgba(var(--palette-neutral-30, 234, 234, 234), 1);
+  }
+  &-action {
+    width: 50px;
+  }
 }

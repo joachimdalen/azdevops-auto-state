@@ -300,6 +300,19 @@ export const getCommandBarItems = (
     }
   },
   {
+    iconProps: { iconName: 'Work' },
+    id: 'presets',
+    text: 'Rule Presets',
+    important: false,
+    onActivate: () => {
+      const options: IPanelOptions<any> = {
+        title: 'Presets',
+        size: 2
+      };
+      devOpsService.showPanel(PanelIds.PresetsPanel, options);
+    }
+  },
+  {
     id: 'splitter-one',
     itemType: MenuItemType.Divider
   },
