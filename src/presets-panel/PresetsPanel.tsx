@@ -9,6 +9,7 @@ import { ZeroData } from 'azure-devops-ui/ZeroData';
 import { useEffect, useMemo, useState } from 'react';
 
 import { ProcessNames, toProcessName } from '../common/constants';
+import { ActionResult } from '../common/models/ActionResult';
 import RuleDocument from '../common/models/WorkItemRules';
 import RuleService from '../common/services/RuleService';
 import WorkItemService from '../common/services/WorkItemService';
@@ -51,7 +52,6 @@ const PresetsPanel = (): JSX.Element => {
           setRules(loadResult.data);
         }
 
-        console.log('got here', processName);
         setTypes(types);
         setProcessName(toProcessName(processName));
         setLoading(false);
@@ -80,7 +80,6 @@ const PresetsPanel = (): JSX.Element => {
   }, [rules]);
 
   const groups = useMemo(() => {
-    console.log(processName);
     return presets
       .filter(x => x.processes.includes(processName))
       .map(x => x.rule.workItemType)
@@ -105,10 +104,18 @@ const PresetsPanel = (): JSX.Element => {
     }
   };
 
-  const dismiss = () => {
+  const dismiss = (added = false) => {
     const config = DevOps.getConfiguration();
     if (config.panel) {
-      config.panel.close();
+      if (added) {
+        const ar: ActionResult<any> = {
+          success: true,
+          message: 'ADDED'
+        };
+        config.panel.close(ar);
+      } else {
+        config.panel.close();
+      }
     }
   };
 
@@ -123,7 +130,6 @@ const PresetsPanel = (): JSX.Element => {
     const rules = presets.filter(x => selected.includes(x.id)).map(x => x.rule);
     for (const rle of rules) {
       await ruleService.updateRule(rle.workItemType, rle);
-      console.log(rules);
     }
   };
 
@@ -197,7 +203,7 @@ const PresetsPanel = (): JSX.Element => {
           primary
           onClick={async () => {
             await createRules();
-            dismiss();
+            dismiss(true);
           }}
           iconProps={{ iconName: 'Save' }}
         />

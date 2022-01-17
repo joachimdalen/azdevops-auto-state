@@ -3,7 +3,7 @@ import { Toggle } from 'azure-devops-ui/Toggle';
 
 import { PresetRule } from '../constants';
 
-interface RulePresetProps extends PresetRule {
+interface RulePresetProps extends Omit<PresetRule, 'rule' | 'processes'> {
   checked: boolean;
   description: string;
   canCreate: boolean;

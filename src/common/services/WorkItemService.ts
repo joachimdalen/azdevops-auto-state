@@ -23,7 +23,6 @@ export interface IWorkItemService {
 
 class WorkItemService implements IWorkItemService {
   private _devOpsService: IDevOpsService;
-  private _currentProcessId = 'System.CurrentProcessTemplateId';
   private _processTemplateTypeKey = 'System.ProcessTemplateType';
   constructor(devOpsService?: IDevOpsService) {
     this._devOpsService = devOpsService ?? new DevOpsService();
