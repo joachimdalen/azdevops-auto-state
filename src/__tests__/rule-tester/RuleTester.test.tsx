@@ -44,7 +44,7 @@ describe('RuleTester', () => {
     const loadButton = screen.getByRole('button', { name: 'Load' });
     fireEvent.click(loadButton);
 
-    await waitFor(() => screen.getAllByText(/Work item title for Task/));
+    await screen.findAllByText(/Work item title for Task/);
 
     const clearButton = screen.queryByRole('button', { name: 'Clear' });
     expect(clearButton).toBeDefined();
@@ -62,12 +62,12 @@ describe('RuleTester', () => {
     const loadButton = screen.getByRole('button', { name: 'Load' });
     fireEvent.click(loadButton);
 
-    await waitFor(() => screen.getAllByText(/Work item title for Task/));
+    await screen.findAllByText(/Work item title for Task/);
 
     const clearButton = screen.getByRole('button', { name: 'Clear' });
     fireEvent.click(clearButton);
 
-    await waitFor(() => screen.getAllByText(/Work item id/));
+    await screen.findAllByText(/Work item id/);
   });
 
   it('should render pre selected work item when given', async () => {
@@ -83,7 +83,7 @@ describe('RuleTester', () => {
     mockGetWorkItem.mockResolvedValue(getWorkItem(123, WorkItemNames.Task, 'New'));
     render(<RuleTester />);
 
-    await waitFor(() => screen.getAllByText(/Work item title for Task/));
+    await screen.findAllByText(/Work item title for Task/);
 
     const clearButton = screen.queryByRole('button', { name: 'Clear' });
     expect(clearButton).toBeNull();
@@ -111,20 +111,18 @@ describe('RuleTester', () => {
 
     render(<RuleTester />);
 
-    await waitFor(() => screen.getAllByText(/Work item title for Task/));
+    await screen.findAllByText(/Work item title for Task/);
 
     const dropdown = screen.getByRole('button', { name: 'Transition state' });
     fireEvent.click(dropdown);
-    await waitFor(() => screen.getAllByText(/Active/));
+    await screen.findAllByText(/Active/);
     const selectableItem = screen.getByText('Active');
     fireEvent.click(selectableItem);
 
     const testButton = screen.getByRole('button', { name: 'Test' });
     fireEvent.click(testButton);
 
-    await waitFor(() =>
-      screen.getAllByText(/Testing rules.. This might take a few seconds. Please wait/)
-    );
+    await screen.findAllByText(/Testing rules.. This might take a few seconds. Please wait/);
   });
 
   it('should render results', async () => {
@@ -149,22 +147,20 @@ describe('RuleTester', () => {
 
     render(<RuleTester />);
 
-    await waitFor(() => screen.getAllByText(/Work item title for Task/));
+    await screen.findAllByText(/Work item title for Task/);
 
     const dropdown = screen.getByRole('button', { name: 'Transition state' });
     fireEvent.click(dropdown);
-    await waitFor(() => screen.getAllByText(/Active/));
+    await screen.findAllByText(/Active/);
     const selectableItem = screen.getByText('Active');
     fireEvent.click(selectableItem);
 
     const testButton = screen.getByRole('button', { name: 'Test' });
     fireEvent.click(testButton);
 
-    await waitFor(() =>
-      screen.getAllByText(/Testing rules.. This might take a few seconds. Please wait/)
-    );
+    await screen.findAllByText(/Testing rules.. This might take a few seconds. Please wait/);
 
-    await waitFor(() => screen.getAllByText(/This would update/));
+    await screen.findAllByText(/This would update/);
   });
 
   it('should show error when failing', async () => {
@@ -174,17 +170,17 @@ describe('RuleTester', () => {
 
     render(<RuleTester />);
 
-    await waitFor(() => screen.getAllByText(/Work item title for Task/));
+    await screen.findAllByText(/Work item title for Task/);
 
     const dropdown = screen.getByRole('button', { name: 'Transition state' });
     fireEvent.click(dropdown);
-    await waitFor(() => screen.getAllByText(/Active/));
+    await screen.findAllByText(/Active/);
     const selectableItem = screen.getByText('Active');
     fireEvent.click(selectableItem);
 
     const testButton = screen.getByRole('button', { name: 'Test' });
     fireEvent.click(testButton);
 
-    await waitFor(() => screen.getAllByText(/n error occurred while testing the work item:/));
+    await screen.findAllByText(/n error occurred while testing the work item:/);
   });
 });
