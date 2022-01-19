@@ -299,17 +299,9 @@ export const getCommandBarItems = (
     id: 'presets',
     text: 'Rule Presets',
     important: false,
-    onActivate: () => {
-      const options: IPanelOptions<any> = {
-        title: 'Presets',
-        size: 2,
-        onClose: (result: ActionResult<any>) => {
-          if (result.success && result.message === 'ADDED') {
-            refreshData(true);
-          }
-        }
-      };
-      devOpsService.showPanel(PanelIds.PresetsPanel, options);
+    onActivate: async () => {
+      const options = await getPresetPanelProps(refreshData);
+      await devOpsService.showPanel(PanelIds.PresetsPanel, options);
     }
   },
   {
@@ -327,4 +319,21 @@ export const getCommandBarItems = (
   }
 ];
 
-export { getState, getWorkItemType, isGroup };
+const getPresetPanelProps = async (
+  refreshData: (force: boolean) => Promise<void>
+): Promise<IPanelOptions<any>> => {
+  const options: IPanelOptions<any> = {
+    title: 'Use preset rules',
+    description: 'Preset rules are predefined rules that can be created for easier setup',
+    size: 2,
+    onClose: async (result: ActionResult<any>) => {
+      if (result.success && result.message === 'ADDED') {
+        await refreshData(true);
+      }
+    }
+  };
+
+  return options;
+};
+
+export { getState, getWorkItemType, isGroup, getPresetPanelProps };

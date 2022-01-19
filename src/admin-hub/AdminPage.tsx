@@ -29,7 +29,7 @@ import webLogger from '../common/webLogger';
 import LoadingSection from '../shared-ui/component/LoadingSection';
 import VersionDisplay from '../shared-ui/component/VersionDisplay';
 import WorkItemTypeTag from '../shared-ui/component/WorkItemTypeTag';
-import { getCommandBarItems, getListColumns, isGroup } from './helpers';
+import { getCommandBarItems, getListColumns, getPresetPanelProps, isGroup } from './helpers';
 
 const AdminPage = (): React.ReactElement => {
   const [types, setTypes] = useState<WorkItemType[]>([]);
@@ -154,10 +154,8 @@ const AdminPage = (): React.ReactElement => {
                 <Button
                   text="Show default rule wizard"
                   onClick={async () => {
-                    await devOpsService.showPanel(PanelIds.PresetsPanel, {
-                      size: 2,
-                      title: 'Preset rules'
-                    });
+                    const options = await getPresetPanelProps(refreshData);
+                    await devOpsService.showPanel(PanelIds.PresetsPanel, options);
                   }}
                 />
               </ButtonGroup>
