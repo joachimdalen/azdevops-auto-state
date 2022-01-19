@@ -326,8 +326,8 @@ const getPresetPanelProps = async (
     title: 'Use preset rules',
     description: 'Preset rules are predefined rules that can be created for easier setup',
     size: 2,
-    onClose: async (result: ActionResult<any>) => {
-      if (result.success && result.message === 'ADDED') {
+    onClose: async (result?: ActionResult<any>) => {
+      if (result?.success && result?.message === 'ADDED') {
         await refreshData(true);
       }
     }
