@@ -110,6 +110,14 @@ const PresetsPanel = (): JSX.Element => {
     }, {});
   }, [types, processName]);
 
+  const presetsForProcess = useMemo(() => {
+    return presets
+      .filter(x =>
+        hideCreated ? existingRules[x.id] !== undefined && existingRules[x.id] === true : true
+      )
+      .filter(x => x.processes.includes(processName));
+  }, [processName, hideCreated]);
+
   const addOrRemove = (id: string) => {
     if (selected.includes(id)) {
       setSelected(prev => prev.filter(x => x !== id));
@@ -168,41 +176,43 @@ const PresetsPanel = (): JSX.Element => {
               />
             </FormItem>
           </div>
-          {groups.map(groupName => {
-            const items = presets
-              .filter(x =>
-                hideCreated
-                  ? existingRules[x.id] !== undefined && existingRules[x.id] === true
-                  : true
-              )
-              .filter(x => x.processes.includes(processName))
-              .filter(x => x.rule.workItemType === groupName);
+          <ConditionalChildren renderChildren={presetsForProcess.length === 0}>
+            <ZeroData
+              imageAltText=""
+              primaryText="You have already created all preset rules for this process"
+              iconProps={{ iconName: 'Work' }}
+            />
+          </ConditionalChildren>
+          <ConditionalChildren renderChildren={presetsForProcess.length > 0}>
+            {groups.map(groupName => {
+              const items = presetsForProcess.filter(x => x.rule.workItemType === groupName);
 
-            if (items.length === 0) return null;
+              if (items.length === 0) return null;
 
-            return (
-              <div key={groupName}>
-                <div className="flex-row flex-center">
-                  {workItemIcons[groupName] && (
-                    <img className="margin-right-8" src={workItemIcons[groupName]} height={20} />
-                  )}
-                  <h3>{groupHeaders[groupName]}</h3>
+              return (
+                <div key={groupName}>
+                  <div className="flex-row flex-center">
+                    {workItemIcons[groupName] && (
+                      <img className="margin-right-8" src={workItemIcons[groupName]} height={20} />
+                    )}
+                    <h3>{groupHeaders[groupName]}</h3>
+                  </div>
+
+                  <div className="rhythm-vertical-16 flex-grow settings-list">
+                    {items.map(preset => (
+                      <RulePreset
+                        key={preset.id}
+                        {...preset}
+                        checked={selected.includes(preset.id)}
+                        onSelected={(id, selected) => addOrRemove(id)}
+                        canCreate={existingRules[preset.id] && existingRules[preset.id] === true}
+                      />
+                    ))}
+                  </div>
                 </div>
-
-                <div className="rhythm-vertical-16 flex-grow settings-list">
-                  {items.map(preset => (
-                    <RulePreset
-                      key={preset.id}
-                      {...preset}
-                      checked={selected.includes(preset.id)}
-                      onSelected={(id, selected) => addOrRemove(id)}
-                      canCreate={existingRules[preset.id] && existingRules[preset.id] === true}
-                    />
-                  ))}
-                </div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </ConditionalChildren>
         </ConditionalChildren>
       </div>
       <ButtonGroup className="justify-space-between flex-center margin-bottom-16">
