@@ -37,7 +37,7 @@ export const presets: PresetRule[] = [
       parentType: WorkItemReferenceNames.UserStory,
       transitionState: 'Closed',
       parentExcludedStates: ['Resolved', 'Closed', 'Removed'],
-      parentTargetState: 'Closed',
+      parentTargetState: 'Resolved',
       processParent: true,
       disabled: false,
       childrenLookup: true
@@ -83,9 +83,9 @@ export const presets: PresetRule[] = [
     rule: {
       workItemType: WorkItemReferenceNames.UserStory,
       parentType: WorkItemReferenceNames.Feature,
-      transitionState: 'Resolved',
+      transitionState: 'Closed',
       parentExcludedStates: ['Resolved', 'Closed', 'Removed'],
-      parentTargetState: 'Resolved',
+      parentTargetState: 'Closed',
       processParent: true,
       disabled: false,
       childrenLookup: true
@@ -140,17 +140,17 @@ export const presets: PresetRule[] = [
     }
   },
   {
-    id: 'scrum-task-approved',
-    name: 'Task approved',
+    id: 'scrum-task-in-progress',
+    name: 'Task in progress',
     description:
-      'Rule that triggers when a task is approved and the product backlog item is not approved',
+      'Rule that triggers when a task is in progress and the product backlog item is not committed',
     processes: [ProcessNames.Scrum],
     rule: {
       workItemType: WorkItemReferenceNames.Task,
       parentType: WorkItemReferenceNames.ProductBacklogItem,
-      transitionState: 'Approved',
-      parentExcludedStates: ['Approved', 'Committed', 'Done', 'Removed'],
-      parentTargetState: 'Approved',
+      transitionState: 'In Progress',
+      parentExcludedStates: ['Committed', 'Done', 'Removed'],
+      parentTargetState: 'Committed',
       processParent: true,
       disabled: false,
       childrenLookup: false
@@ -173,7 +173,7 @@ export const presets: PresetRule[] = [
     }
   },
   {
-    id: 'scrum-pbi-approved',
+    id: 'scrum-pbi-committed',
     name: 'Product Backlog Item approved',
     description:
       'Rule that triggers when a PBI is approved and the product backlog item is not approved',
@@ -181,9 +181,9 @@ export const presets: PresetRule[] = [
     rule: {
       workItemType: WorkItemReferenceNames.ProductBacklogItem,
       parentType: WorkItemReferenceNames.Feature,
-      transitionState: 'Approved',
-      parentExcludedStates: ['Approved', 'Committed', 'Done', 'Removed'],
-      parentTargetState: 'Approved',
+      transitionState: 'Committed',
+      parentExcludedStates: ['In Progress', 'Done', 'Removed'],
+      parentTargetState: 'In Progress',
       processParent: true,
       disabled: false,
       childrenLookup: false
@@ -192,7 +192,7 @@ export const presets: PresetRule[] = [
   {
     id: 'scrum-pbi-done',
     name: 'Product Backlog Item done',
-    description: 'Rule that triggers when a PBI is done and the product backlog item is not done',
+    description: 'Rule that triggers when a PBI is done and the feature is not done',
     processes: [ProcessNames.Scrum],
     rule: {
       workItemType: WorkItemReferenceNames.ProductBacklogItem,
@@ -206,16 +206,16 @@ export const presets: PresetRule[] = [
     }
   },
   {
-    id: 'scrum-feature-approved',
-    name: 'Feature approved',
-    description: 'Rule that triggers when a feature is approved and the epic is not approved',
+    id: 'scrum-feature-in-progress',
+    name: 'Feature in progress',
+    description: 'Rule that triggers when a feature is in progress and the epic is not in progress',
     processes: [ProcessNames.Scrum],
     rule: {
       workItemType: WorkItemReferenceNames.Feature,
       parentType: WorkItemReferenceNames.Epic,
-      transitionState: 'Approved',
-      parentExcludedStates: ['Approved', 'Committed', 'Done', 'Removed'],
-      parentTargetState: 'Approved',
+      transitionState: 'In Progress',
+      parentExcludedStates: ['In Progress', 'Done', 'Removed'],
+      parentTargetState: 'In Progress',
       processParent: true,
       disabled: false,
       childrenLookup: false
@@ -223,8 +223,8 @@ export const presets: PresetRule[] = [
   },
   {
     id: 'scrum-feature-done',
-    name: 'Feture done',
-    description: 'Rule that triggers when a feature is closed and the epic is not closed',
+    name: 'Feature done',
+    description: 'Rule that triggers when a feature is closed and the epic is not done',
     processes: [ProcessNames.Scrum],
     rule: {
       workItemType: WorkItemReferenceNames.Feature,
@@ -234,7 +234,71 @@ export const presets: PresetRule[] = [
       parentTargetState: 'Done',
       processParent: true,
       disabled: false,
+      childrenLookup: true
+    }
+  },
+  {
+    id: 'basic-task-doing',
+    name: 'Task Doing',
+    description: 'Rule that triggers when a task is doing and issue is not doing',
+    processes: [ProcessNames.Basic],
+    rule: {
+      workItemType: WorkItemReferenceNames.Task,
+      parentType: WorkItemReferenceNames.Issue,
+      transitionState: 'Doing',
+      parentExcludedStates: ['Doing', 'Done'],
+      parentTargetState: 'Doing',
+      processParent: true,
+      disabled: false,
       childrenLookup: false
+    }
+  },
+  {
+    id: 'basic-task-done',
+    name: 'Task Done',
+    description: 'Rule that triggers when a task is done and issue is not done',
+    processes: [ProcessNames.Basic],
+    rule: {
+      workItemType: WorkItemReferenceNames.Task,
+      parentType: WorkItemReferenceNames.Issue,
+      transitionState: 'Done',
+      parentExcludedStates: ['Done'],
+      parentTargetState: 'Done',
+      processParent: true,
+      disabled: false,
+      childrenLookup: true
+    }
+  },
+  {
+    id: 'basic-issue-doing',
+    name: 'Issue Doing',
+    description: 'Rule that triggers when a issue is doing and epic is not doing',
+    processes: [ProcessNames.Basic],
+    rule: {
+      workItemType: WorkItemReferenceNames.Issue,
+      parentType: WorkItemReferenceNames.Epic,
+      transitionState: 'Doing',
+      parentExcludedStates: ['Doing', 'Done'],
+      parentTargetState: 'Doing',
+      processParent: true,
+      disabled: false,
+      childrenLookup: false
+    }
+  },
+  {
+    id: 'basic-issue-done',
+    name: 'Issue Done',
+    description: 'Rule that triggers when a issue is done and epic is not done',
+    processes: [ProcessNames.Basic],
+    rule: {
+      workItemType: WorkItemReferenceNames.Issue,
+      parentType: WorkItemReferenceNames.Epic,
+      transitionState: 'Done',
+      parentExcludedStates: ['Done'],
+      parentTargetState: 'Done',
+      processParent: true,
+      disabled: false,
+      childrenLookup: true
     }
   }
 ];
