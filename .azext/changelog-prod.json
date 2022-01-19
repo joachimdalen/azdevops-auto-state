@@ -12,6 +12,12 @@
     },
     "changes": [
       {
+        "type": "feature",
+        "issue": 24,
+        "pullRequest": 29,
+        "description": "Added preset rules"
+      },
+      {
         "description": "Update azext and implement new changes",
         "type": "maint",
         "pullRequest": 21
