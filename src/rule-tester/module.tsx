@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 import './index.scss';
 
 import showRootComponent from '../shared-ui/showRootComponent';

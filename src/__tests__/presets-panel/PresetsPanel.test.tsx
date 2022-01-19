@@ -1,9 +1,12 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 
 import { getWorkItemTypes } from '../../__test-utils__/WorkItemTestUtils';
 import { StorageService } from '../../common/services/StorageService';
 import WorkItemService from '../../common/services/WorkItemService';
 import PresetsPanel from '../../presets-panel/PresetsPanel';
+import RuleService from '../../common/services/RuleService';
+import { presets } from '../../presets-panel/constants';
+import { mockGetConfiguration } from '../../__mocks__/azure-devops-extension-sdk';
 
 jest.mock('../../common/webLogger');
 
@@ -39,6 +42,7 @@ const defaultRules = [
 describe('PresetsPanel', () => {
   const getProcessTemplateNameSpy = jest.spyOn(WorkItemService.prototype, 'getProcessTemplateName');
   const getRuleDocumentsSpy = jest.spyOn(StorageService.prototype, 'getRuleDocuments');
+  const updateRuleSpy = jest.spyOn(RuleService.prototype, 'updateRule');
   beforeEach(() => {
     jest.clearAllMocks();
     jest.spyOn(WorkItemService.prototype, 'getWorkItemTypes').mockResolvedValue(getWorkItemTypes());
@@ -77,7 +81,10 @@ describe('PresetsPanel', () => {
     await screen.findAllByText(/Hide already created rules/);
 
     const toggles = screen.queryAllByRole('switch');
-    expect(toggles.length).toEqual(8);
+    const toggle = screen.queryByTestId('__bolt-agile-task-active');
+
+    expect(toggles.length).not.toEqual(0);
+    expect(toggle).toBeNull();
   });
 
   it('should render create button initially disabled', async () => {
@@ -108,5 +115,56 @@ describe('PresetsPanel', () => {
 
     expect(button).toHaveTextContent('Create (1)');
     expect(button).toHaveAttribute('aria-disabled', 'false');
+  });
+
+  it('should enable and disabled button', async () => {
+    getProcessTemplateNameSpy.mockResolvedValueOnce('Agile');
+    getRuleDocumentsSpy.mockResolvedValue(defaultRules);
+    render(<PresetsPanel />);
+    await screen.findAllByText(/Hide already created rules/);
+
+    const toggle = screen.getByTestId('__bolt-agile-feature-active');
+
+    fireEvent.click(toggle);
+
+    const button = screen.getByRole('button', {
+      name: /create/i
+    });
+
+    expect(button).toHaveTextContent('Create (1)');
+    expect(button).toHaveAttribute('aria-disabled', 'false');
+
+    fireEvent.click(toggle);
+    expect(button).toHaveTextContent('Create');
+    expect(button).toHaveAttribute('aria-disabled', 'true');
+  });
+
+  it('should create rules', async () => {
+    getProcessTemplateNameSpy.mockResolvedValueOnce('Agile');
+    getRuleDocumentsSpy.mockResolvedValue(defaultRules);
+    updateRuleSpy.mockResolvedValue({ success: true });
+
+    mockGetConfiguration.mockResolvedValue({
+      panel: true,
+      close: (result: any) => jest.fn()
+    });
+
+    render(<PresetsPanel />);
+    await screen.findAllByText(/Hide already created rules/);
+
+    const rules = presets.find(x => x.id === 'agile-feature-active');
+    const toggle = screen.getByTestId('__bolt-agile-feature-active');
+
+    fireEvent.click(toggle);
+
+    const button = screen.getByRole('button', {
+      name: /create/i
+    });
+
+    fireEvent.click(button);
+
+    await waitFor(() => expect(updateRuleSpy).toHaveBeenCalledTimes(1));
+
+    expect(updateRuleSpy).toHaveBeenCalledWith(rules?.rule.workItemType, rules?.rule);
   });
 });
