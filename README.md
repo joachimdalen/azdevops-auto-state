@@ -71,6 +71,13 @@
 
 An issue I often face is forgetting to update the state of a parent workitem when starting a new Task. This extension aims to auto update parent workitems based on a set of rules when the child workitem is started.
 
+**Features:**
+
+- Create rules to manage state transitions
+  - Ability to check that all child work items also matches rules
+  - Ability to process rules from the current work item to the top of the tree
+- Get started easily by using preset rules. See [preset rules](./docs/PRESETS.md)
+
 ### Limitations
 
 - This extension does not work when doing mass updates
