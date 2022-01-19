@@ -18,7 +18,7 @@ import { getWorkTypeFromReferenceName } from '../common/workItemUtils';
 import LoadingSection from '../shared-ui/component/LoadingSection';
 import VersionDisplay from '../shared-ui/component/VersionDisplay';
 import RulePreset from './components/RulePreset';
-import { PresetRule, presets, titleMap } from './constants';
+import { PresetRule, presets } from './constants';
 
 const distinct = <T,>(value: T, index: number, self: T[]) => self.indexOf(value) === index;
 
@@ -85,6 +85,20 @@ const PresetsPanel = (): JSX.Element => {
       .map(x => x.rule.workItemType)
       .filter(distinct);
   }, [processName]);
+
+  const groupHeaders = useMemo(() => {
+    return groups.reduce((obj: { [key: string]: string }, item: string) => {
+      const nameParts = item.split('.');
+      const refName = nameParts.length >= 1 ? nameParts[nameParts.length - 1] : 'Unknown';
+      const name = refName.replace(/([A-Z])/g, ' $1');
+
+      return {
+        ...obj,
+        [item]: `${name} Rules`
+      };
+    }, {});
+  }, [groups]);
+
   const workItemIcons = useMemo(() => {
     return groups.reduce((obj: any, item: string) => {
       const type = getWorkTypeFromReferenceName(item, types);
@@ -172,7 +186,7 @@ const PresetsPanel = (): JSX.Element => {
                   {workItemIcons[groupName] && (
                     <img className="margin-right-8" src={workItemIcons[groupName]} height={20} />
                   )}
-                  <h3>{titleMap[groupName]}</h3>
+                  <h3>{groupHeaders[groupName]}</h3>
                 </div>
 
                 <div className="rhythm-vertical-16 flex-grow settings-list">

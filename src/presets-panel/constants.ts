@@ -9,14 +9,6 @@ export interface PresetRule {
   rule: Rule;
 }
 
-export const titleMap: { [key: string]: string } = {
-  [WorkItemReferenceNames.Task]: 'Task Rules',
-  [WorkItemReferenceNames.UserStory]: 'User Story Rules',
-  [WorkItemReferenceNames.Feature]: 'Feature Rules',
-  [WorkItemReferenceNames.Epic]: 'Epic Rules',
-  [WorkItemReferenceNames.ProductBacklogItem]: 'Product Backlog Item Rules'
-};
-
 export const presets: PresetRule[] = [
   {
     id: 'agile-task-active',
