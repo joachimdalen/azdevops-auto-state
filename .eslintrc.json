@@ -14,7 +14,7 @@
     "prettier/react",
     // "react-app",
     "eslint:recommended",
-    // "plugin:react/recommended",
+    "plugin:react/recommended",
     "prettier/@typescript-eslint",
     "plugin:@typescript-eslint/eslint-recommended",
     "plugin:@typescript-eslint/recommended",
@@ -35,10 +35,16 @@
     "simple-import-sort/sort": "warn",
     "no-console": "off",
     "sort-keys": "off",
-    "testing-library/no-debugging-utils": "off"
+    "testing-library/no-debugging-utils": "off",
+    "react/react-in-jsx-scope": "off"
   },
   "env": {
     "browser": true,
     "es6": true
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
   }
 }

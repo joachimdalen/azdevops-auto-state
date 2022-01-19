@@ -22,6 +22,7 @@
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^6.15.0",
     "eslint-plugin-prettier": "^3.4.1",
+    "eslint-plugin-react": "^7.28.0",
     "eslint-plugin-simple-import-sort": "^5.0.3",
     "eslint-plugin-testing-library": "^5.0.3",
     "file-loader": "^6.2.0",
@@ -72,6 +73,7 @@
     "test:coverage": "env TEST_REPORT_FILENAME=test-results.xml jest --verbose --coverage"
   },
   "jest": {
+    "setupFilesAfterEnv": ["<rootDir>/src/setupTests.ts"],
     "testEnvironment": "jsdom",
     "transform": {
       "^.+\\.(js|ts|tsx|jsx)$": "ts-jest"

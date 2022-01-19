@@ -21,7 +21,7 @@ const RulePreset = ({
     <div className="rule-preset flex-center flex-grow flex-row">
       <div className="rule-preset-action flex-row flex-center justify-center">
         {canCreate ? (
-          <Toggle checked={checked} onChange={(e, c) => onSelected(id, c)} />
+          <Toggle checked={checked} onChange={(e, c) => onSelected(id, c)} id={id} />
         ) : (
           <Status {...Statuses.Success} key="success" size={StatusSize.l} />
         )}
