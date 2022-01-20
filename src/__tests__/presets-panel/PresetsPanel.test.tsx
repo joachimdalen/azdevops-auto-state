@@ -1,12 +1,12 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 
+import { mockGetConfiguration } from '../../__mocks__/azure-devops-extension-sdk';
 import { getWorkItemTypes } from '../../__test-utils__/WorkItemTestUtils';
+import RuleService from '../../common/services/RuleService';
 import { StorageService } from '../../common/services/StorageService';
 import WorkItemService from '../../common/services/WorkItemService';
-import PresetsPanel from '../../presets-panel/PresetsPanel';
-import RuleService from '../../common/services/RuleService';
 import { presets } from '../../presets-panel/constants';
-import { mockGetConfiguration } from '../../__mocks__/azure-devops-extension-sdk';
+import PresetsPanel from '../../presets-panel/PresetsPanel';
 
 jest.mock('../../common/webLogger');
 
