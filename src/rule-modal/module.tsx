@@ -70,7 +70,8 @@ const ModalContent = (): React.ReactElement => {
               setParentTargetState(rle.parentTargetState);
               setChildrenLookup(rle.childrenLookup);
               setProcessParent(rle.processParent);
-              setEnabled(!rle.disabled || true);
+              const disabled = rle.disabled === undefined ? false : rle.disabled;
+              setEnabled(disabled === false);
               setLoading(false);
             }
             setLoading(false);
