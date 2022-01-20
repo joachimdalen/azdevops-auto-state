@@ -1,6 +1,13 @@
 {
   "issues": [
     {
+      "id": 1107323396,
+      "number": 30,
+      "submitter": "joachimdalen",
+      "title": "Disable work item type after rule creation",
+      "url": "https://github.com/joachimdalen/azdevops-auto-state/issues/30"
+    },
+    {
       "id": 1103084611,
       "number": 24,
       "submitter": "joachimdalen",
@@ -44,6 +51,13 @@
     }
   ],
   "pullRequests": [
+    {
+      "id": 827829239,
+      "number": 31,
+      "submitter": "joachimdalen",
+      "title": "Disable work item type in edit",
+      "url": "https://github.com/joachimdalen/azdevops-auto-state/pull/31"
+    },
     {
       "id": 825791326,
       "number": 29,

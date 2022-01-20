@@ -34,11 +34,15 @@ This extension does not properly work when having the `New boards hub` feature e
 
 ## 📦 Module changes
 
-### 🐛 Fixes (1)
+### 🐛 Fixes (2)
 
 #### `rule-modal@1.2.0`
 
 - Fixed UI showing/flashing before loading was completed
+
+- Fix work item type dropdown not being disabled in edit view. Changing work item type is not supported
+  - Reported in [GH#30 - Disable work item type after rule creation](https://github.com/joachimdalen/azdevops-auto-state/issues/30)
+  - Fixed in [PR#31 - Disable work item type in edit](https://github.com/joachimdalen/azdevops-auto-state/pull/31)
 
 ### 📣 Enhancements (1)
 

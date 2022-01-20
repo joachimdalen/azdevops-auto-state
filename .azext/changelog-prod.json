@@ -52,6 +52,12 @@
             "type": "enhancement",
             "description": "Added labels to toggle states to indicate the current state",
             "pullRequest": 27
+          },
+          {
+            "type": "fix",
+            "issue": 30,
+            "pullRequest": 31,
+            "description": "Fix work item type dropdown not being disabled in edit view. Changing work item type is not supported"
           }
         ]
       }
