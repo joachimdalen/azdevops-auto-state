@@ -165,13 +165,17 @@ const ModalContent = (): React.ReactElement => {
             <FormItem
               className="flex-grow"
               label="Work item type"
-              message="This is the work item type for this rule to trigger on"
+              message={
+                rule !== undefined
+                  ? 'To change work item type you will need to create a new rule'
+                  : 'This is the work item type for this rule to trigger on'
+              }
             >
               <WorkItemTypeDropdown
                 types={types}
                 selected={workItemType}
                 onSelect={(_, i) => setWorkItemType(i.id)}
-                disabled={isDisabled}
+                disabled={isDisabled || rule !== undefined}
               />
             </FormItem>
             <FormItem

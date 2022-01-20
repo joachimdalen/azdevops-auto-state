@@ -12,6 +12,11 @@
     },
     "changes": [
       {
+        "type": "fix",
+        "issue": 30,
+        "description": "Fix work item type dropdown not being disabled in edit view. Changing work item type is not supported"
+      },
+      {
         "type": "feature",
         "issue": 24,
         "pullRequest": 29,
