@@ -27,6 +27,26 @@
     "maint": ":hammer_and_wrench: Maintenance ({{changeCount}})",
     "enhancement": ":mega: Enhancements ({{changeCount}})"
   },
+  "sections": {
+    "summary": {
+      "title": {
+        "size": "bold",
+        "format": ":pencil2: Release summary"
+      }
+    },
+    "knownIssues": {
+      "title": {
+        "size": "bold",
+        "format": ":bulb: Known issues"
+      }
+    },
+    "breakingChanges": {
+      "title": {
+        "size": "bold",
+        "format": ":fire: BREAKING CHANGES :fire:"
+      }
+    }
+  },
   "typeResourcePrefixMapping": {
     "feature": {
       "issue": "Suggested in",
@@ -70,7 +90,7 @@
     "moduleChangesTitle": true,
     "githubIssues": false,
     "githubPullRequests": false,
-    "notes": true,
-    "summary": true
+    "sectionTitle": true,
+    "sectionContent": true
   }
 }

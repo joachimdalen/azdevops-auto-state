@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.1",
   "devDependencies": {
-    "@joachimdalen/azext": "^0.4.0",
+    "@joachimdalen/azext": "^0.5.0",
     "@testing-library/jest-dom": "^5.15.1",
     "@testing-library/react": "^12.1.2",
     "@testing-library/react-hooks": "^7.0.2",
@@ -22,8 +22,9 @@
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^6.15.0",
     "eslint-plugin-prettier": "^3.4.1",
+    "eslint-plugin-react": "^7.28.0",
     "eslint-plugin-simple-import-sort": "^5.0.3",
-    "eslit": "^6.0.0",
+    "eslint-plugin-testing-library": "^5.0.3",
     "file-loader": "^6.2.0",
     "html-webpack-plugin": "^5.5.0",
     "jest": "^27.4.0",
@@ -72,6 +73,7 @@
     "test:coverage": "env TEST_REPORT_FILENAME=test-results.xml jest --verbose --coverage"
   },
   "jest": {
+    "setupFilesAfterEnv": ["<rootDir>/src/setupTests.ts"],
     "testEnvironment": "jsdom",
     "transform": {
       "^.+\\.(js|ts|tsx|jsx)$": "ts-jest"

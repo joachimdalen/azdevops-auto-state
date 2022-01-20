@@ -19,6 +19,10 @@ class RuleService {
     this._data = [];
   }
 
+  public isInitialized(): boolean {
+    return this._isInitialized;
+  }
+
   public async load(force = false): Promise<ActionResult<RuleDocument[]>> {
     if (this._isInitialized && !force) return { success: true, data: this._data };
     try {

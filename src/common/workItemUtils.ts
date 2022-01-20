@@ -45,6 +45,10 @@ export const getWorkItemTypeFromName = (
   name: string,
   workItemTypes: WorkItemType[]
 ): string | undefined => workItemTypes.find(x => x.name === name)?.referenceName;
+export const getWorkTypeFromReferenceName = (
+  referenceName: string,
+  workItemTypes: WorkItemType[]
+): WorkItemType | undefined => workItemTypes.find(x => x.referenceName === referenceName);
 export const getWorkItemTypeField = (workItem: WorkItem): string => workItem.fields[workItemType];
 
 export const getIdFormWorkItemUrl = (url: string): number | undefined => {

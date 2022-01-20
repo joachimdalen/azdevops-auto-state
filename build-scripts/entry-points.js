@@ -37,6 +37,12 @@ const modules = [
     entry: './src/settings-panel/module',
     root: 'settings-panel-container',
     generate: true
+  },
+  {
+    name: 'presets-panel',
+    entry: './src/presets-panel/module',
+    root: 'presets-panel-container',
+    generate: true
   }
 ];
 

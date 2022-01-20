@@ -8,16 +8,17 @@
     "ecmaVersion": 2018,
     "sourceType": "module"
   },
-  "plugins": ["@typescript-eslint", "simple-import-sort"],
+  "plugins": ["@typescript-eslint", "simple-import-sort", "testing-library"],
   "extends": [
     "prettier",
     "prettier/react",
     // "react-app",
     "eslint:recommended",
-    // "plugin:react/recommended",
+    "plugin:react/recommended",
     "prettier/@typescript-eslint",
     "plugin:@typescript-eslint/eslint-recommended",
-    "plugin:@typescript-eslint/recommended"
+    "plugin:@typescript-eslint/recommended",
+    "plugin:testing-library/react"
   ],
   "rules": {
     "@typescript-eslint/explicit-member-accessibility": "off",
@@ -33,10 +34,17 @@
     "@typescript-eslint/camelcase": "off",
     "simple-import-sort/sort": "warn",
     "no-console": "off",
-    "sort-keys": "off"
+    "sort-keys": "off",
+    "testing-library/no-debugging-utils": "off",
+    "react/react-in-jsx-scope": "off"
   },
   "env": {
     "browser": true,
     "es6": true
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
   }
 }

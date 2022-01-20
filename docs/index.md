@@ -4,8 +4,9 @@ Welcome to the Auto State documentation.
 
 Auto State is a rule based extension for updating parent states when a work item updated.
 
-- [RULES](./RULES.md)
-- [SETTINGS](./SETTINGS.md)
+- [How to create rules](./RULES.md)
+- [Settings](./SETTINGS.md)
+- [Preset rules](./PRESETS.md)
 
 ## Rules
 

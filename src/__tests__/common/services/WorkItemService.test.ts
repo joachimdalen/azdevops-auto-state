@@ -1,8 +1,13 @@
 import { IProjectInfo } from 'azure-devops-extension-api';
+import { ProjectProperty } from 'azure-devops-extension-api/Core';
+import { ProcessInfo } from 'azure-devops-extension-api/WorkItemTrackingProcess';
 
 import { mockGetProjectProperties } from '../../../__mocks__/azure-devops-extension-api/Core';
 import { mockGetWorkItemTypes } from '../../../__mocks__/azure-devops-extension-api/WorkItemTracking';
-import { mockGetProcessWorkItemTypes } from '../../../__mocks__/azure-devops-extension-api/WorkItemTrackingProcess';
+import {
+  mockGetProcessByItsId,
+  mockGetProcessWorkItemTypes
+} from '../../../__mocks__/azure-devops-extension-api/WorkItemTrackingProcess';
 import { mockGetProject } from '../../../__mocks__/azure-devops-extension-sdk';
 import {
   getProcessWorkItemTypes,
@@ -84,6 +89,85 @@ describe('WorkItemService', () => {
       const wiTypes = await wiService.getWorkItemTypes(true);
 
       expect(wiTypes.every(x => processItems.includes(x.referenceName))).toBeTruthy();
+    });
+  });
+
+  describe('getProcessTemplateName', () => {
+    afterEach(() => {
+      jest.clearAllMocks();
+    });
+    it('should return undefined if failing to get project', async () => {
+      mockGetProject.mockResolvedValue(undefined);
+      const wiService = new WorkItemService();
+      const processName = await wiService.getProcessTemplateName();
+
+      expect(processName).toBeUndefined();
+    });
+    it('should return process name if not inherited', async () => {
+      const project: IProjectInfo = {
+        id: '5395360b-3cb4-456c-acb8-b2107d72395e',
+        name: 'Demo Project'
+      };
+      mockGetProject.mockResolvedValue(project);
+
+      const properties: ProjectProperty[] = [
+        {
+          name: 'System.ProcessTemplateType',
+          value: 'df42e8eb-40c9-4509-a282-3da50e967849'
+        }
+      ];
+      mockGetProjectProperties.mockResolvedValue(properties);
+
+      const processInfo: Partial<ProcessInfo> = {
+        name: 'MyProcess',
+        parentProcessTypeId: '00000000-0000-0000-0000-000000000000'
+      } as ProcessInfo;
+
+      mockGetProcessByItsId.mockResolvedValue(processInfo);
+
+      const wiService = new WorkItemService();
+      const processName = await wiService.getProcessTemplateName();
+
+      expect(processName).toEqual('MyProcess');
+      expect(mockGetProcessByItsId).toHaveBeenCalledTimes(1);
+    });
+
+    it('should return process name if not inherited', async () => {
+      const project: IProjectInfo = {
+        id: '5395360b-3cb4-456c-acb8-b2107d72395e',
+        name: 'Demo Project'
+      };
+      mockGetProject.mockResolvedValue(project);
+
+      const properties: ProjectProperty[] = [
+        {
+          name: 'System.ProcessTemplateType',
+          value: 'df42e8eb-40c9-4509-a282-3da50e967849'
+        }
+      ];
+      mockGetProjectProperties.mockResolvedValue(properties);
+
+      const processInfoRoot: Partial<ProcessInfo> = {
+        typeId: 'e39394c0-c27b-45dd-a4cc-40e4e9b8070d',
+        name: 'MyProcess',
+        parentProcessTypeId: '00000000-0000-0000-0000-000000000000'
+      } as ProcessInfo;
+
+      const processInfoCurrent: Partial<ProcessInfo> = {
+        typeId: 'df42e8eb-40c9-4509-a282-3da50e967849',
+        name: 'MyInheritedProcess',
+        parentProcessTypeId: 'e39394c0-c27b-45dd-a4cc-40e4e9b8070d'
+      } as ProcessInfo;
+
+      mockGetProcessByItsId
+        .mockResolvedValueOnce(processInfoCurrent)
+        .mockResolvedValueOnce(processInfoRoot);
+
+      const wiService = new WorkItemService();
+      const processName = await wiService.getProcessTemplateName();
+
+      expect(processName).toEqual('MyProcess');
+      expect(mockGetProcessByItsId).toHaveBeenCalledTimes(2);
     });
   });
 });

@@ -2,7 +2,21 @@
   {
     "version": "1.2.0",
     "publishDate": "2022-01-XX",
+    "sections": {
+      "knownIssues": [
+        {
+          "type": "text",
+          "content": "This extension does not properly work when having the `New boards hub` feature enabled. This is being tracked in: [Observer does not work with 'New boards hub'](https://github.com/joachimdalen/azdevops-auto-state/issues/17)"
+        }
+      ]
+    },
     "changes": [
+      {
+        "type": "feature",
+        "issue": 24,
+        "pullRequest": 29,
+        "description": "Added preset rules"
+      },
       {
         "description": "Update azext and implement new changes",
         "type": "maint",
@@ -125,7 +139,14 @@
   {
     "version": "1.0.0",
     "publishDate": "2021-12-25",
-    "summary": "Published extension",
+    "sections": {
+      "summary": [
+        {
+          "type": "text",
+          "content": "Published extension"
+        }
+      ]
+    },
     "modules": []
   }
 ]

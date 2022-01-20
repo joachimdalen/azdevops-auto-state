@@ -2,23 +2,18 @@ import {
   ContextualMenuItemType,
   FontIcon,
   IColumn,
-  Icon,
   IconButton,
   IContextualMenuItem,
   IContextualMenuProps,
   IGroup,
   mergeStyles
 } from '@fluentui/react';
-import {
-  IHostNavigationService,
-  IHostPageLayoutService,
-  IPanelOptions
-} from 'azure-devops-extension-api';
+import { IPanelOptions } from 'azure-devops-extension-api';
 import { WorkItemStateColor, WorkItemType } from 'azure-devops-extension-api/WorkItemTracking';
-import * as DevOps from 'azure-devops-extension-sdk';
 import { IHeaderCommandBarItem } from 'azure-devops-ui/HeaderCommandBar';
 import { MenuItemType } from 'azure-devops-ui/Menu';
 
+import { ActionResult } from '../common/models/ActionResult';
 import Rule from '../common/models/Rule';
 import { IDevOpsService, PanelIds } from '../common/services/DevOpsService';
 import webLogger from '../common/webLogger';
@@ -300,6 +295,16 @@ export const getCommandBarItems = (
     }
   },
   {
+    iconProps: { iconName: 'Work' },
+    id: 'presets',
+    text: 'Rule Presets',
+    important: false,
+    onActivate: async () => {
+      const options = await getPresetPanelProps(refreshData);
+      await devOpsService.showPanel(PanelIds.PresetsPanel, options);
+    }
+  },
+  {
     id: 'splitter-one',
     itemType: MenuItemType.Divider
   },
@@ -314,4 +319,21 @@ export const getCommandBarItems = (
   }
 ];
 
-export { getState, getWorkItemType, isGroup };
+const getPresetPanelProps = async (
+  refreshData: (force: boolean) => Promise<void>
+): Promise<IPanelOptions<any>> => {
+  const options: IPanelOptions<any> = {
+    title: 'Use preset rules',
+    description: 'Preset rules are predefined rules that can be created for easier setup',
+    size: 2,
+    onClose: async (result?: ActionResult<any>) => {
+      if (result?.success && result?.message === 'ADDED') {
+        await refreshData(true);
+      }
+    }
+  };
+
+  return options;
+};
+
+export { getState, getWorkItemType, isGroup, getPresetPanelProps };

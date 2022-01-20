@@ -1,8 +1,7 @@
 /* istanbul ignore file */
-
 import './index.scss';
 
 import showRootComponent from '../shared-ui/showRootComponent';
-import RuleTester from './RuleTester';
+import PresetsPanel from './PresetsPanel';
 
-showRootComponent(<RuleTester />, 'rule-tester-container');
+showRootComponent(<PresetsPanel />, 'presets-panel-container');

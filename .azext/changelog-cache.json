@@ -1,6 +1,13 @@
 {
   "issues": [
     {
+      "id": 1103084611,
+      "number": 24,
+      "submitter": "joachimdalen",
+      "title": "Add option to create default rules based on the default processes",
+      "url": "https://github.com/joachimdalen/azdevops-auto-state/issues/24"
+    },
+    {
       "id": 1103082733,
       "number": 23,
       "submitter": "joachimdalen",
@@ -37,6 +44,13 @@
     }
   ],
   "pullRequests": [
+    {
+      "id": 825791326,
+      "number": 29,
+      "submitter": "joachimdalen",
+      "title": "Add preset rules",
+      "url": "https://github.com/joachimdalen/azdevops-auto-state/pull/29"
+    },
     {
       "id": 823687136,
       "number": 27,

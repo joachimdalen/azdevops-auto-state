@@ -2,15 +2,18 @@
 
 ## 1.2.0 (2022-01-XX)
 
-### 🛠️ Maintenance (2)
+**💡 Known issues**
 
-- Update azext and implement new changes
+This extension does not properly work when having the `New boards hub` feature enabled. This is being tracked in: [Observer does not work with 'New boards hub'](https://github.com/joachimdalen/azdevops-auto-state/issues/17)
 
-  - Changed in [PR#21 - Update azext](https://github.com/joachimdalen/azdevops-auto-state/pull/21)
+---
 
-- Update dependencies
+### 🚀 Features (3)
 
-### 🚀 Features (2)
+- Added preset rules
+
+  - Suggested in [GH#24 - Add option to create default rules based on the default processes](https://github.com/joachimdalen/azdevops-auto-state/issues/24)
+  - Added in [PR#29 - Add preset rules](https://github.com/joachimdalen/azdevops-auto-state/pull/29)
 
 - Added the ability to disable rules
 
@@ -20,6 +23,14 @@
 - Add setting to be able to scope work item types to current process
   - Suggested in [GH#23 - Add setting to be able to limit work item types to current process](https://github.com/joachimdalen/azdevops-auto-state/issues/23)
   - Added in [PR#27 - Add settings module](https://github.com/joachimdalen/azdevops-auto-state/pull/27)
+
+### 🛠️ Maintenance (2)
+
+- Update azext and implement new changes
+
+  - Changed in [PR#21 - Update azext](https://github.com/joachimdalen/azdevops-auto-state/pull/21)
+
+- Update dependencies
 
 ## 📦 Module changes
 
@@ -40,15 +51,6 @@
 
 ## 1.1.0 (2022-01-05)
 
-### 🛠️ Maintenance (2)
-
-- Refactor build setup to reduce file sizes
-
-  - Changed in [PR#19 - Add recursive updating and rule improvements](https://github.com/joachimdalen/azdevops-auto-state/pull/19)
-
-- Updated dependencies
-  - Changed in [PR#19 - Add recursive updating and rule improvements](https://github.com/joachimdalen/azdevops-auto-state/pull/19)
-
 ### 🚀 Features (2)
 
 - Added support for recursive updating of parents
@@ -59,6 +61,15 @@
 - Added `Rule tester` to perform a dry run of rules. See [rule tester docs](https://github.com/joachimdalen/azdevops-auto-state/blob/master/docs/index.md#testing-rules) for more information on usage.
   - Suggested in [GH#18 - Add the ability to run 'What if' tests on rules](https://github.com/joachimdalen/azdevops-auto-state/issues/18)
   - Added in [PR#20 - Add rule tester to perform dry run of rules](https://github.com/joachimdalen/azdevops-auto-state/pull/20)
+
+### 🛠️ Maintenance (2)
+
+- Refactor build setup to reduce file sizes
+
+  - Changed in [PR#19 - Add recursive updating and rule improvements](https://github.com/joachimdalen/azdevops-auto-state/pull/19)
+
+- Updated dependencies
+  - Changed in [PR#19 - Add recursive updating and rule improvements](https://github.com/joachimdalen/azdevops-auto-state/pull/19)
 
 ## 📦 Module changes
 
@@ -105,6 +116,10 @@
 
 ## 1.0.0 (2021-12-25)
 
+**✏️ Release summary**
+
 Published extension
+
+---
 
 ---

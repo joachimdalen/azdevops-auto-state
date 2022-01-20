@@ -113,6 +113,22 @@
       ]
     },
     {
+      "id": "presets-panel",
+      "type": "ms.vss-web.external-content",
+      "targets": [],
+      "properties": {
+        "uri": "presets-panel.html"
+      },
+      "constraints": [
+        {
+          "name": "Feature",
+          "properties": {
+            "featureId": "joachimdalen.auto-state-dev.auto-state-enabled"
+          }
+        }
+      ]
+    },
+    {
       "id": "rule-tester",
       "type": "ms.vss-web.external-content",
       "targets": [],

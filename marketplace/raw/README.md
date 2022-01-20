@@ -23,11 +23,26 @@
 
 ![rule-editor](marketplace/docs/images/rule-editor.png)
 
+---
+
+## ⚠️ Information about the `New Boards Hub` feature
+
+This extension does not work if you have the `New Boards Hub` feature enabled. When this preview feature is enabled, certain contributions from this extension is not loaded. Microsoft says that they are "Optimizing" the feature, so all I can do is wait until this feature comes out of preview.
+
+This issue is being tracked:
+
+- [GitHub](https://github.com/joachimdalen/azdevops-auto-state/issues/17)
+- [Developer Community](https://developercommunity.visualstudio.com/t/Extension-contribution-no-longer-loads-w/1631893)
+
+---
+
 ## Features
 
-- Rule based editor for defining when states should update
-- Recursive updating of parent work items
+- Create rules to manage state transitions
+  - Ability to check that all child work items also matches rules
+  - Ability to process rules from the current work item to the top of the tree
 - Rule tester to see how rules work and what work items will be updated
+- Get started easily by using preset rules. See [preset rules](https://github.com/joachimdalen/azdevops-auto-state/blob/master/docs/PRESETS.md)
 
 ## Activating the extension
 

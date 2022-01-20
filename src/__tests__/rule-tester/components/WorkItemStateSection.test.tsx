@@ -38,7 +38,7 @@ describe('WorkItemStateSection', () => {
 
     const dropdown = screen.getByRole('button', { name: 'Transition state' });
     fireEvent.click(dropdown);
-    await waitFor(() => screen.getAllByText(/Active/));
+    await screen.findAllByText(/Active/);
     const selectableItem = screen.getByText('Active');
     fireEvent.click(selectableItem);
 
@@ -54,7 +54,7 @@ describe('WorkItemStateSection', () => {
 
     const dropdown = screen.getByRole('button', { name: 'Transition state' });
     fireEvent.click(dropdown);
-    await waitFor(() => screen.getAllByText(/Active/));
+    await screen.findAllByText(/Active/);
     const selectableItem = screen.getByText('Active');
     fireEvent.click(selectableItem);
 
