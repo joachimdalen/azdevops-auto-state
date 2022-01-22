@@ -1,4 +1,3 @@
-import { IPanel, Panel } from '@fluentui/react';
 import {
   IGlobalMessagesService,
   IHostNavigationService,
