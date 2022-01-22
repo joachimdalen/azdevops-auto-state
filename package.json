@@ -45,7 +45,6 @@
     "@fluentui/react": "^8.42.4",
     "@fluentui/react-hooks": "^8.3.6",
     "azure-devops-extension-api": "^1.158.0",
-    "azure-devops-sdk": "^1.1.2",
     "azure-devops-ui": "^2.167.22",
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
@@ -73,7 +72,9 @@
     "test:coverage": "env TEST_REPORT_FILENAME=test-results.xml jest --verbose --coverage"
   },
   "jest": {
-    "setupFilesAfterEnv": ["<rootDir>/src/setupTests.ts"],
+    "setupFilesAfterEnv": [
+      "<rootDir>/src/setupTests.ts"
+    ],
     "testEnvironment": "jsdom",
     "transform": {
       "^.+\\.(js|ts|tsx|jsx)$": "ts-jest"
