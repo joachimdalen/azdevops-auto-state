@@ -26,6 +26,7 @@ These are the valid scopes for AutoState:
 - `rule-tester-action`: Changes to the rule tester action
 - `observer`: Changes to the work item observer
 - `styles`: Changes to only styling
+- `presets-panel`: Changes to preset rules
 
 ## 📂 Folder structure
 
