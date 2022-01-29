@@ -59,6 +59,13 @@
   ],
   "pullRequests": [
     {
+      "id": 834972900,
+      "number": 36,
+      "submitter": "joachimdalen",
+      "title": "docs: Clarify where to find feature toggle",
+      "url": "https://github.com/joachimdalen/azdevops-auto-state/pull/36"
+    },
+    {
       "id": 827829239,
       "number": 31,
       "submitter": "joachimdalen",

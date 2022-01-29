@@ -12,6 +12,7 @@ This extension does not properly work when having the `New boards hub` feature e
 
 - Clarified activation of AutoState from feature flag
   - Changed needed [GH#35 - Auto state entry doesn't appear under the preview features](https://github.com/joachimdalen/azdevops-auto-state/issues/35)
+  - Changed in [PR#36 - docs: Clarify where to find feature toggle](https://github.com/joachimdalen/azdevops-auto-state/pull/36)
 
 ## 🌟 Contributors
 

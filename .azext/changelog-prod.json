@@ -14,6 +14,7 @@
       {
         "type": "docs",
         "issue": 35,
+        "pullRequest": 36,
         "description": "Clarified activation of AutoState from feature flag"
       }
     ]
