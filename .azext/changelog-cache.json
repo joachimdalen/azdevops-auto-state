@@ -1,6 +1,13 @@
 {
   "issues": [
     {
+      "id": 1117448209,
+      "number": 35,
+      "submitter": "SteeveDess",
+      "title": "Auto state entry doesn't appear under the preview features",
+      "url": "https://github.com/joachimdalen/azdevops-auto-state/issues/35"
+    },
+    {
       "id": 1107323396,
       "number": 30,
       "submitter": "joachimdalen",

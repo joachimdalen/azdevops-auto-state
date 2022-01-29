@@ -1,5 +1,24 @@
 [
   {
+    "version": "1.2.1",
+    "publishDate": "2022-01-XX",
+    "sections": {
+      "knownIssues": [
+        {
+          "type": "text",
+          "content": "This extension does not properly work when having the `New boards hub` feature enabled. This is being tracked in: [Observer does not work with 'New boards hub'](https://github.com/joachimdalen/azdevops-auto-state/issues/17)"
+        }
+      ]
+    },
+    "changes": [
+      {
+        "type": "docs",
+        "issue": 35,
+        "description": "Clarified activation of AutoState from feature flag"
+      }
+    ]
+  },
+  {
     "version": "1.2.0",
     "publishDate": "2022-01-22",
     "sections": {

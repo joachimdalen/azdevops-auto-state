@@ -101,7 +101,13 @@ An issue I often face is forgetting to update the state of a parent workitem whe
 
 ## Post Install Activation
 
-Auto State is hidden behind a feature flag for several reasons. After installing the extension a Project or Organization administrator will need to toggle the feature flag to `On`.
+Auto State is hidden behind a feature flag for several reasons. After installing the extension a Project or Organization administrator will need to toggle the feature flag to `On`. This feature flag is scoped to individual projects, that means you need to be inside a project for the feature flag to appear. The url should look something like `https://dev.azure.com/ORGANIZATION/PROJECT`
+
+When you open the modal with all the feature flags the dropdown should have three options
+
+- `for me [Your name]`
+- `for this project [Project Name]` (This is the one you should select)
+- `for this organization [Organization Name]`
 
 ![Feature Toggle][feature-toggle-screenshot]
 
