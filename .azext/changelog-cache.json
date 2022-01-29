@@ -1,6 +1,13 @@
 {
   "issues": [
     {
+      "id": 1117448209,
+      "number": 35,
+      "submitter": "SteeveDess",
+      "title": "Auto state entry doesn't appear under the preview features",
+      "url": "https://github.com/joachimdalen/azdevops-auto-state/issues/35"
+    },
+    {
       "id": 1107323396,
       "number": 30,
       "submitter": "joachimdalen",
@@ -51,6 +58,13 @@
     }
   ],
   "pullRequests": [
+    {
+      "id": 834972900,
+      "number": 36,
+      "submitter": "joachimdalen",
+      "title": "docs: Clarify where to find feature toggle",
+      "url": "https://github.com/joachimdalen/azdevops-auto-state/pull/36"
+    },
     {
       "id": 827829239,
       "number": 31,

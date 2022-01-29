@@ -1,5 +1,27 @@
 # Changelog
 
+## 1.2.1 (2022-01-XX)
+
+**💡 Known issues**
+
+This extension does not properly work when having the `New boards hub` feature enabled. This is being tracked in: [Observer does not work with 'New boards hub'](https://github.com/joachimdalen/azdevops-auto-state/issues/17)
+
+---
+
+### 📝 Documentation (1)
+
+- Clarified activation of AutoState from feature flag
+  - Changed needed [GH#35 - Auto state entry doesn't appear under the preview features](https://github.com/joachimdalen/azdevops-auto-state/issues/35)
+  - Changed in [PR#36 - docs: Clarify where to find feature toggle](https://github.com/joachimdalen/azdevops-auto-state/pull/36)
+
+## 🌟 Contributors
+
+Thank you to the following for contributing to the latest release
+
+- [@SteeveDess](https://github.com/SteeveDess)
+
+---
+
 ## 1.2.0 (2022-01-22)
 
 **💡 Known issues**
@@ -102,6 +124,12 @@ This extension does not properly work when having the `New boards hub` feature e
 
 ## 1.0.1 (2021-12-25)
 
+### 📝 Documentation (1)
+
+#### `Core@1.0.1`
+
+- Update links in manifest
+
 ### 🐛 Fixes (1)
 
 #### `observer@1.0.1`
@@ -109,12 +137,6 @@ This extension does not properly work when having the `New boards hub` feature e
 - Fixed an issue where `Children lookup` did not work properly
   - Reported in [GH#13 - "Children lookup" does not work as intended](https://github.com/joachimdalen/azdevops-auto-state/issues/13)
   - Fixed in [PR#14 - Version 1.0.1](https://github.com/joachimdalen/azdevops-auto-state/pull/14)
-
-### 📝 Documentation (1)
-
-#### `Core@1.0.1`
-
-- Update links in manifest
 
 ---
 
