@@ -1,7 +1,7 @@
 [
   {
     "version": "1.2.1",
-    "publishDate": "2022-01-XX",
+    "publishDate": "2022-02-16",
     "sections": {
       "knownIssues": [
         {
@@ -16,6 +16,11 @@
         "issue": 35,
         "pullRequest": 36,
         "description": "Clarified activation of AutoState from feature flag"
+      },
+      {
+        "type": "maint",
+        "pullRequest": 37,
+        "description": "Update dependencies to fix [CVE-2022-0536](https://github.com/advisories/GHSA-pw2r-vq6v-hr8c)"
       }
     ]
   },
