@@ -44,9 +44,22 @@ This issue is being tracked:
 - Rule tester to see how rules work and what work items will be updated
 - Get started easily by using preset rules. See [preset rules](https://github.com/joachimdalen/azdevops-auto-state/blob/master/docs/PRESETS.md)
 
+## Where does this work?
+
+This extension does **not** work on all areas where work items are located:
+
+| View              | Status                                                                                        |
+| ----------------- | --------------------------------------------------------------------------------------------- |
+| Work item fom     | Fully working                                                                                 |
+| Backlog           | Fully working                                                                                 |
+| Boards            | Does not work. See issue [#38](https://github.com/joachimdalen/azdevops-auto-state/issues/38) |
+| Query result view | Does not work                                                                                 |
+
+The reason for this is that Azure DevOps does not include contribution types that allows the extension to hook into State changes in these views
+
 ## Activating the extension
 
-For this extension to work properly there are a few steps that needs to be taken after installing: 
+For this extension to work properly there are a few steps that needs to be taken after installing:
 
 ### Activation
 
@@ -59,7 +72,6 @@ When you open the modal with all the feature flags the dropdown should have thre
 - `for this organization [Organization Name]`
 
 ![feature-toogle](marketplace/docs/images/feature-toggle.png)
-
 
 - Rules needs to be configured. The rule editor is found under `Project Settings > Extensions > Auto State`
 

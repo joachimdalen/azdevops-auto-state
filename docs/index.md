@@ -8,6 +8,19 @@ Auto State is a rule based extension for updating parent states when a work item
 - [Settings](./SETTINGS.md)
 - [Preset rules](./PRESETS.md)
 
+## Usage
+
+This extension does **not** work on all areas where work items are located:
+
+| View              | Status                                                                             |
+| ----------------- | ---------------------------------------------------------------------------------- |
+| Work item fom     | Fully working                                                                      |
+| Backlog           | Fully working                                                                      |
+| Boards            | Does not work. See issue [#38](https://github.com/joachimdalen/azdevops-auto-state/issues/38) |
+| Query result view | Does not work                                                                      |
+
+The reason for this is that Azure DevOps does not include contribution types that allows the extension to hook into State changes in these views
+
 ## Rules
 
 For details on how to configure rules, see [RULES](./RULES.md);

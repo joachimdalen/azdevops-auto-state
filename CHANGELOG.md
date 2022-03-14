@@ -1,12 +1,22 @@
 # Changelog
 
-## 1.2.1 (2022-02-16)
+## 1.2.2 (2022-03-14)
 
 **💡 Known issues**
 
 This extension does not properly work when having the `New boards hub` feature enabled. This is being tracked in: [Observer does not work with 'New boards hub'](https://github.com/joachimdalen/azdevops-auto-state/issues/17)
 
 ---
+
+### 📝 Documentation (1)
+
+- Added information about where this extension works
+  - Changed needed [GH#40 - Better document which parts the extension triggers on](https://github.com/joachimdalen/azdevops-auto-state/issues/40)
+  - Changed in [PR#41 - Added docs about where this extension works](https://github.com/joachimdalen/azdevops-auto-state/pull/41)
+
+---
+
+## 1.2.1 (2022-02-16)
 
 ### 📝 Documentation (1)
 
