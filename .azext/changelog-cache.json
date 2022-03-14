@@ -1,6 +1,13 @@
 {
   "issues": [
     {
+      "id": 1167624060,
+      "number": 40,
+      "submitter": "joachimdalen",
+      "title": "Better document which parts the extension triggers on",
+      "url": "https://github.com/joachimdalen/azdevops-auto-state/issues/40"
+    },
+    {
       "id": 1117448209,
       "number": 35,
       "submitter": "SteeveDess",
@@ -58,6 +65,13 @@
     }
   ],
   "pullRequests": [
+    {
+      "id": 879239710,
+      "number": 41,
+      "submitter": "joachimdalen",
+      "title": "Added docs about where this extension works",
+      "url": "https://github.com/joachimdalen/azdevops-auto-state/pull/41"
+    },
     {
       "id": 853632906,
       "number": 37,

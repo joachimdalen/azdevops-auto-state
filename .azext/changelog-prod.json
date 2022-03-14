@@ -1,7 +1,7 @@
 [
   {
-    "version": "1.2.1",
-    "publishDate": "2022-02-16",
+    "version": "1.2.2",
+    "publishDate": "2022-03-14",
     "sections": {
       "knownIssues": [
         {
@@ -10,6 +10,18 @@
         }
       ]
     },
+    "changes": [
+      {
+        "type": "docs",
+        "issue": 40,
+        "pullRequest": 41,
+        "description": "Added information about where this extension works"
+      }
+    ]
+  },
+  {
+    "version": "1.2.1",
+    "publishDate": "2022-02-16",
     "changes": [
       {
         "type": "docs",
