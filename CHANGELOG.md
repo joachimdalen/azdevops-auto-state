@@ -1,12 +1,20 @@
 # Changelog
 
-## 1.2.2 (2022-03-14)
+## 1.2.3 (2022-04-08)
 
 **💡 Known issues**
 
 This extension does not properly work when having the `New boards hub` feature enabled. This is being tracked in: [Observer does not work with 'New boards hub'](https://github.com/joachimdalen/azdevops-auto-state/issues/17)
 
 ---
+
+### 🛠️ Maintenance (1)
+
+- Update dependencies
+
+---
+
+## 1.2.2 (2022-03-14)
 
 ### 📝 Documentation (1)
 
@@ -18,16 +26,16 @@ This extension does not properly work when having the `New boards hub` feature e
 
 ## 1.2.1 (2022-02-16)
 
+### 🛠️ Maintenance (1)
+
+- Update dependencies to fix [CVE-2022-0536](https://github.com/advisories/GHSA-pw2r-vq6v-hr8c)
+  - Changed in [PR#37 - Update dependencies](https://github.com/joachimdalen/azdevops-auto-state/pull/37)
+
 ### 📝 Documentation (1)
 
 - Clarified activation of AutoState from feature flag
   - Changed needed [GH#35 - Auto state entry doesn't appear under the preview features](https://github.com/joachimdalen/azdevops-auto-state/issues/35)
   - Changed in [PR#36 - docs: Clarify where to find feature toggle](https://github.com/joachimdalen/azdevops-auto-state/pull/36)
-
-### 🛠️ Maintenance (1)
-
-- Update dependencies to fix [CVE-2022-0536](https://github.com/advisories/GHSA-pw2r-vq6v-hr8c)
-  - Changed in [PR#37 - Update dependencies](https://github.com/joachimdalen/azdevops-auto-state/pull/37)
 
 ## 🌟 Contributors
 
