@@ -11,6 +11,7 @@ This extension does not properly work when having the `New boards hub` feature e
 ### 🛠️ Maintenance (1)
 
 - Update dependencies
+  - Changed in [PR#42 - Update dependencies](https://github.com/joachimdalen/azdevops-auto-state/pull/42)
 
 ---
 

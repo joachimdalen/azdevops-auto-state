@@ -13,7 +13,8 @@
     "changes": [
       {
         "type": "maint",
-        "description": "Update dependencies"
+        "description": "Update dependencies",
+        "pullRequest": 42
       }
     ]
   },
