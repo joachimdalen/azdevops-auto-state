@@ -19,10 +19,12 @@ import WorkItemService from '../common/services/WorkItemService';
 import webLogger from '../common/webLogger';
 import { appTheme } from '../shared-ui/azure-devops-theme';
 import LoadingSection from '../shared-ui/component/LoadingSection';
+import RelationShipTypeDropdown from '../shared-ui/component/RelationShipTypeDropdown';
 import VersionDisplay from '../shared-ui/component/VersionDisplay';
 import WorkItemStateDropdown from '../shared-ui/component/WorkItemStateDropdown';
 import WorkItemTypeDropdown from '../shared-ui/component/WorkItemTypeDropdown';
 import showRootComponent from '../shared-ui/showRootComponent';
+import { RelationTypes } from '../common/constants';
 
 const ModalContent = (): React.ReactElement => {
   const [error, setError] = useState<ActionResult<any> | undefined>(undefined);
@@ -39,6 +41,7 @@ const ModalContent = (): React.ReactElement => {
   const [transitionState, setTransitionState] = useState('');
   const [childrenLookup, setChildrenLookup] = useState(false);
   const [processParent, setProcessParent] = useState(false);
+  const [relationType, setRelationType] = useState<RelationTypes>('parent-child');
   const [enabled, setEnabled] = useState(true);
   const [loading, setLoading] = useState(true);
 
@@ -109,7 +112,8 @@ const ModalContent = (): React.ReactElement => {
         parentTargetState: parentTargetState,
         childrenLookup: childrenLookup,
         processParent: processParent,
-        disabled: !enabled
+        disabled: !enabled,
+        relationType: relationType
       };
 
       const res: AddRuleResult = {
@@ -162,110 +166,146 @@ const ModalContent = (): React.ReactElement => {
                 onText={'Enabled'}
               />
             </FormItem>
-            <FormItem
-              className="flex-grow"
-              label="Work item type"
-              message={
-                rule !== undefined
-                  ? 'To change work item type you will need to create a new rule'
-                  : 'This is the work item type for this rule to trigger on'
-              }
-            >
-              <WorkItemTypeDropdown
-                types={types}
-                selected={workItemType}
-                onSelect={(_, i) => setWorkItemType(i.id)}
-                disabled={isDisabled || rule !== undefined}
-              />
-            </FormItem>
-            <FormItem
-              className="flex-grow"
-              label="Parent type"
-              message="This is the work item type of the parent relation. E.g the work item type that should be updated."
-            >
-              <WorkItemTypeDropdown
-                types={types}
-                selected={parentType}
-                filter={[workItemType]}
-                deps={[workItemType]}
-                onSelect={(_, i) => setParentType(i.id)}
-                disabled={isDisabled}
-              />
-            </FormItem>
 
-            <FormItem
-              label="Transition state"
-              message="The transitioned state for the rule to trigger on (When work item type changes to this)"
-            >
-              <WorkItemStateDropdown
-                types={types}
-                workItemType={workItemType}
-                selected={rule?.transitionState}
-                onSelect={(_, i) => setTransitionState(i.id)}
-                disabled={isDisabled}
-              />
-            </FormItem>
-            <FormItem
-              label="Parent not in state"
-              message="Do not trigger the rule if the parent work item is in this state"
-            >
-              <WorkItemStateDropdown
-                types={types}
-                workItemType={parentType}
-                selected={rule?.parentExcludedStates}
-                onSelect={(_, i) => addOrRemove(i.id)}
-                multiSelection
-                deps={[parentType]}
-                disabled={isDisabled}
-              />
-            </FormItem>
-            <FormItem
-              label="Parent target state"
-              message="This is the state that the parent work item should transition to"
-            >
-              <WorkItemStateDropdown
-                types={types}
-                workItemType={parentType}
-                selected={rule?.parentTargetState}
-                onSelect={(_, i) => setParentTargetState(i.id)}
-                filter={parentExcludedStates}
-                include={true}
-                deps={[parentType, parentExcludedStates]}
-                disabled={isDisabled}
-              />
-            </FormItem>
-            <FormItem
-              label="Children lookup"
-              message={
-                <p>
-                  Take child work items into consideration when processing the rule. See{' '}
-                  <a href="https://github.com/joachimdalen/azdevops-auto-state/blob/master/docs/RULES.md#children-lookup">
-                    Children lookup
-                  </a>{' '}
-                  for more information.
-                </p>
-              }
-            >
-              <Toggle
-                disabled={isDisabled}
-                checked={childrenLookup}
-                onChange={(_, c) => setChildrenLookup(c)}
-                offText={'Off'}
-                onText={'On'}
-              />
-            </FormItem>
-            <FormItem
-              label="Process parent"
-              message="Process rules for parent when prosessing this rule"
-            >
-              <Toggle
-                disabled={isDisabled}
-                checked={processParent}
-                onChange={(_, c) => setProcessParent(c)}
-                offText={'Off'}
-                onText={'On'}
-              />
-            </FormItem>
+            <div className="rhythm-horizontal-16 flex-grow flex-row">
+              <FormItem
+                className="flex-split"
+                label="Work item type"
+                message={
+                  rule !== undefined
+                    ? 'To change work item type you will need to create a new rule'
+                    : 'This is the work item type for this rule to trigger on'
+                }
+              >
+                <WorkItemTypeDropdown
+                  types={types}
+                  selected={workItemType}
+                  onSelect={(_, i) => setWorkItemType(i.id)}
+                  disabled={isDisabled || rule !== undefined}
+                />
+              </FormItem>
+              <FormItem label="Relation Type" className="flex-split">
+                <RelationShipTypeDropdown
+                  selected={relationType}
+                  onSelect={(_, i) => setRelationType(i.id as RelationTypes)}
+                />
+              </FormItem>
+            </div>
+            <div className="rhythm-horizontal-16 flex-grow flex-row">
+              <FormItem
+                className="flex-split"
+                label="Parent type"
+                message="This is the work item type of the parent relation. E.g the work item type that should be updated."
+              >
+                <WorkItemTypeDropdown
+                  types={types}
+                  selected={parentType}
+                  filter={[workItemType]}
+                  deps={[workItemType]}
+                  onSelect={(_, i) => setParentType(i.id)}
+                  disabled={isDisabled}
+                />
+              </FormItem>
+              <FormItem
+                label="Transition state"
+                message="The transitioned state for the rule to trigger on (When work item type changes to this)"
+                className="flex-split"
+              >
+                <WorkItemStateDropdown
+                  types={types}
+                  workItemType={workItemType}
+                  selected={rule?.transitionState}
+                  onSelect={(_, i) => setTransitionState(i.id)}
+                  disabled={isDisabled}
+                />
+              </FormItem>
+            </div>
+            <div className="rhythm-horizontal-16 flex-grow flex-row">
+              <FormItem
+                label="Parent not in state"
+                message="Do not trigger the rule if the parent work item is in this state"
+                className="flex-split"
+              >
+                <WorkItemStateDropdown
+                  types={types}
+                  workItemType={parentType}
+                  selected={rule?.parentExcludedStates}
+                  onSelect={(_, i) => addOrRemove(i.id)}
+                  multiSelection
+                  deps={[parentType]}
+                  disabled={isDisabled}
+                />
+              </FormItem>
+              <FormItem
+                label="Parent target state"
+                message="This is the state that the parent work item should transition to"
+                className="flex-split"
+              >
+                <WorkItemStateDropdown
+                  types={types}
+                  workItemType={parentType}
+                  selected={rule?.parentTargetState}
+                  onSelect={(_, i) => setParentTargetState(i.id)}
+                  filter={parentExcludedStates}
+                  include={true}
+                  deps={[parentType, parentExcludedStates]}
+                  disabled={isDisabled}
+                />
+              </FormItem>
+            </div>
+
+            <div className="rhythm-horizontal-16 flex-grow flex-row">
+              <FormItem
+                label="Children lookup"
+                message={
+                  <p>
+                    Take child work items into consideration when processing the rule. See{' '}
+                    <a
+                      href="https://docs.devops-extensions.dev/docs/extensions/auto-state/rules#children-lookup"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      Children lookup
+                    </a>{' '}
+                    for more information.
+                  </p>
+                }
+                className="flex-split"
+              >
+                <Toggle
+                  disabled={isDisabled}
+                  checked={childrenLookup}
+                  onChange={(_, c) => setChildrenLookup(c)}
+                  offText={'Off'}
+                  onText={'On'}
+                />
+              </FormItem>
+              <FormItem
+                label="Process parent"
+                message={
+                  <p>
+                    Process rules for parent when prosessing this rule. See{' '}
+                    <a
+                      href="https://docs.devops-extensions.dev/docs/extensions/auto-state/rules#process-parents"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      Process Parents
+                    </a>{' '}
+                    for more information.
+                  </p>
+                }
+                className="flex-split"
+              >
+                <Toggle
+                  disabled={isDisabled}
+                  checked={processParent}
+                  onChange={(_, c) => setProcessParent(c)}
+                  offText={'Off'}
+                  onText={'On'}
+                />
+              </FormItem>
+            </div>
           </div>
         </ConditionalChildren>
       </div>

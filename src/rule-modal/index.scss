@@ -1,3 +1,7 @@
 @import 'azure-devops-ui/Core/override.css';
 @import '../styles/mixins.scss';
 @include extension-container('modal-container');
+
+.flex-split {
+  flex: 1;
+}

@@ -35,4 +35,6 @@ const toProcessName = (key?: string): ProcessNames => {
   return ProcessNames.Unknwon;
 };
 
+export type RelationTypes = 'parent-child' | 'related' | 'successor' | 'predecessor';
+
 export { WorkItemReferenceNames, ProcessNames, toProcessName };
