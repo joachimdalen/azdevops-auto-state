@@ -1,7 +1,7 @@
 [
   {
-    "version": "1.2.3",
-    "publishDate": "2022-04-08",
+    "version": "1.2.4",
+    "publishDate": "2022-05-02",
     "sections": {
       "knownIssues": [
         {
@@ -10,6 +10,17 @@
         }
       ]
     },
+    "changes": [
+      {
+        "type": "maint",
+        "description": "Update dependencies",
+        "pullRequest": 43
+      }
+    ]
+  },
+  {
+    "version": "1.2.3",
+    "publishDate": "2022-04-08",
     "changes": [
       {
         "type": "maint",
