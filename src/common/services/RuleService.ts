@@ -215,7 +215,8 @@ class RuleService {
     this._devOpsService.showPanel(PanelIds.RulePanel, {
       title: rule === undefined ? 'Add rule' : 'Edit rule',
       onClose: handleDialogResult,
-      configuration: { rule: rule, validate: isValid }
+      configuration: { rule: rule, validate: isValid },
+      size: 2
     });
   }
 }

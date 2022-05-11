@@ -23,6 +23,8 @@ import VersionDisplay from '../shared-ui/component/VersionDisplay';
 import WorkItemStateDropdown from '../shared-ui/component/WorkItemStateDropdown';
 import WorkItemTypeDropdown from '../shared-ui/component/WorkItemTypeDropdown';
 import showRootComponent from '../shared-ui/showRootComponent';
+import { Expandable } from 'azure-devops-ui/Expandable';
+import WorkItemFilter from './components/WorkItemFilter';
 
 const ModalContent = (): React.ReactElement => {
   const [error, setError] = useState<ActionResult<any> | undefined>(undefined);
@@ -153,6 +155,7 @@ const ModalContent = (): React.ReactElement => {
               {error?.message || 'Unknown error'}
             </MessageCard>
           </ConditionalChildren>
+
           <div className="rhythm-vertical-16 flex-grow">
             <FormItem label="Rule enabled">
               <Toggle
@@ -162,63 +165,66 @@ const ModalContent = (): React.ReactElement => {
                 onText={'Enabled'}
               />
             </FormItem>
-            <FormItem
-              className="flex-grow"
-              label="Work item type"
-              message={
-                rule !== undefined
-                  ? 'To change work item type you will need to create a new rule'
-                  : 'This is the work item type for this rule to trigger on'
-              }
-            >
-              <WorkItemTypeDropdown
-                types={types}
-                selected={workItemType}
-                onSelect={(_, i) => setWorkItemType(i.id)}
-                disabled={isDisabled || rule !== undefined}
-              />
-            </FormItem>
-            <FormItem
-              className="flex-grow"
-              label="Parent type"
-              message="This is the work item type of the parent relation. E.g the work item type that should be updated."
-            >
-              <WorkItemTypeDropdown
-                types={types}
-                selected={parentType}
-                filter={[workItemType]}
-                deps={[workItemType]}
-                onSelect={(_, i) => setParentType(i.id)}
-                disabled={isDisabled}
-              />
-            </FormItem>
+            <div className="flex-row rhythm-horizontal-16">
+              <FormItem
+                label="Work item type"
+                message={
+                  rule !== undefined
+                    ? 'To change work item type you will need to create a new rule'
+                    : 'This is the work item type for this rule to trigger on'
+                }
+              >
+                <WorkItemTypeDropdown
+                  types={types}
+                  selected={workItemType}
+                  onSelect={(_, i) => setWorkItemType(i.id)}
+                  disabled={isDisabled || rule !== undefined}
+                />
+              </FormItem>
+              <FormItem
+                label="Transition state"
+                message="The transitioned state for the rule to trigger on (When work item type changes to this)"
+              >
+                <WorkItemStateDropdown
+                  types={types}
+                  workItemType={workItemType}
+                  selected={rule?.transitionState}
+                  onSelect={(_, i) => setTransitionState(i.id)}
+                  disabled={isDisabled}
+                />
+              </FormItem>
+            </div>
+            <div className="rhythm-horizontal-16">
+              <FormItem
+                className="flex-grow"
+                label="Parent type"
+                message="This is the work item type of the parent relation. E.g the work item type that should be updated."
+              >
+                <WorkItemTypeDropdown
+                  types={types}
+                  selected={parentType}
+                  filter={[workItemType]}
+                  deps={[workItemType]}
+                  onSelect={(_, i) => setParentType(i.id)}
+                  disabled={isDisabled}
+                />
+              </FormItem>
 
-            <FormItem
-              label="Transition state"
-              message="The transitioned state for the rule to trigger on (When work item type changes to this)"
-            >
-              <WorkItemStateDropdown
-                types={types}
-                workItemType={workItemType}
-                selected={rule?.transitionState}
-                onSelect={(_, i) => setTransitionState(i.id)}
-                disabled={isDisabled}
-              />
-            </FormItem>
-            <FormItem
-              label="Parent not in state"
-              message="Do not trigger the rule if the parent work item is in this state"
-            >
-              <WorkItemStateDropdown
-                types={types}
-                workItemType={parentType}
-                selected={rule?.parentExcludedStates}
-                onSelect={(_, i) => addOrRemove(i.id)}
-                multiSelection
-                deps={[parentType]}
-                disabled={isDisabled}
-              />
-            </FormItem>
+              <FormItem
+                label="Parent not in state"
+                message="Do not trigger the rule if the parent work item is in this state"
+              >
+                <WorkItemStateDropdown
+                  types={types}
+                  workItemType={parentType}
+                  selected={rule?.parentExcludedStates}
+                  onSelect={(_, i) => addOrRemove(i.id)}
+                  multiSelection
+                  deps={[parentType]}
+                  disabled={isDisabled}
+                />
+              </FormItem>
+            </div>
             <FormItem
               label="Parent target state"
               message="This is the state that the parent work item should transition to"
@@ -266,6 +272,8 @@ const ModalContent = (): React.ReactElement => {
                 onText={'On'}
               />
             </FormItem>
+
+            <WorkItemFilter workItemType={types.find(x => x.referenceName === workItemType)} />
           </div>
         </ConditionalChildren>
       </div>
