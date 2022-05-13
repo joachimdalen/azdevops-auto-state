@@ -1,11 +1,17 @@
-import { WorkItemType } from 'azure-devops-extension-api/WorkItemTracking';
+import {
+  WorkItemType,
+  WorkItemTypeFieldInstance
+} from 'azure-devops-extension-api/WorkItemTracking';
 import { Button } from 'azure-devops-ui/Button';
 import { Dropdown } from 'azure-devops-ui/Dropdown';
 import { FormItem } from 'azure-devops-ui/FormItem';
 import { IListBoxItem } from 'azure-devops-ui/ListBox';
 import { TextField, TextFieldWidth } from 'azure-devops-ui/TextField';
+
 import { ArrayItemProvider } from 'azure-devops-ui/Utilities/Provider';
 import { useMemo, useState } from 'react';
+import { Dialog } from 'azure-devops-ui/Dialog';
+import { ContentJustification, ContentLocation } from 'azure-devops-ui/Callout';
 
 interface WorkItemFilterProps {
   workItemType?: WorkItemType;
@@ -21,18 +27,6 @@ const WorkItemFilter = ({ workItemType }: WorkItemFilterProps): JSX.Element => {
   const [items, setItems] = useState<FilterOption[]>([
     { field: 'System.Title', operator: 'contains', value: 'Black' }
   ]);
-
-  const fields = useMemo(() => {
-    const item = (workItemType?.fields || []).map(field => {
-      const items: IListBoxItem = {
-        id: field.referenceName,
-        text: field.name
-      };
-      return items;
-    });
-
-    return new ArrayItemProvider(item);
-  }, [workItemType]);
 
   const add = (id: FilterOption) => {
     setItems(prev => [...prev, id]);
@@ -56,8 +50,24 @@ const WorkItemFilter = ({ workItemType }: WorkItemFilterProps): JSX.Element => {
     setItems(newItems);
   };
 
+  const getItems = () => {
+    const parent = { id: '1', text: 'One' };
+    const child = { id: '2', text: 'Two', parent: parent };
+
+    return [parent, child];
+  };
+
   return (
     <div className="rhythm-vertical-16 flex-grow margin-top-8">
+      <div className=" rhythm-horizontal-16 flex-row flex-center">
+        {/* <Dropdown
+          placeholder="Select field to filter on"
+          items={fields}
+          containerClassName="flex-grow"
+          className="flex-grow"
+        /> */}
+        <Button text="Add" iconProps={{ iconName: 'Add' }} />
+      </div>
       <div className="rhythm-vertical-8 padding-bottom-16">
         {items.map((item, index) => {
           return (
@@ -69,33 +79,12 @@ const WorkItemFilter = ({ workItemType }: WorkItemFilterProps): JSX.Element => {
                   onChange={(_, val) => updateItem(item, val)}
                   value={item.field}
                 /> */}
-                <Dropdown width={200} items={fields} containerClassName="flex-grow" />
+                <span className="flex-one">System.Title</span>
+                <Dropdown className="flex-one" items={[{ id: 'equals', text: '=' }]} />
 
-                <Button
-                  id={`${item.field}-up`}
-                  disabled={index === 0}
-                  iconProps={{ iconName: 'Up' }}
-                  subtle
-                  tooltipProps={{ text: 'Move Up' }}
-                  onClick={() => {
-                    const nI = [...items];
-                    //  move(nI, index, -1);
-                    setItems(nI);
-                  }}
-                />
+      
+                <TextField className="flex-one" placeholder="Value" />
 
-                <Button
-                  id={`${item.field}-down`}
-                  disabled={index === items.length - 1}
-                  iconProps={{ iconName: 'Down' }}
-                  subtle
-                  tooltipProps={{ text: 'Move Down' }}
-                  onClick={() => {
-                    const nI = [...items];
-                    //move(nI, index, 1);
-                    setItems(nI);
-                  }}
-                />
                 <Button
                   id={`${item.field}-remove`}
                   iconProps={{ iconName: 'Delete' }}

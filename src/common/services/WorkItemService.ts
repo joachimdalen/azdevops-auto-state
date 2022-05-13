@@ -1,12 +1,17 @@
 import { getClient } from 'azure-devops-extension-api/Common';
 import { CoreRestClient, ProjectProperty } from 'azure-devops-extension-api/Core';
 import {
+  GetFieldsExpand,
   WorkItem,
   WorkItemExpand,
+  WorkItemField,
   WorkItemTrackingRestClient,
   WorkItemType
 } from 'azure-devops-extension-api/WorkItemTracking';
-import { WorkItemTrackingProcessRestClient } from 'azure-devops-extension-api/WorkItemTrackingProcess';
+import {
+  GetWorkItemTypeExpand,
+  WorkItemTrackingProcessRestClient
+} from 'azure-devops-extension-api/WorkItemTrackingProcess';
 
 import { getChildIds, getParentId } from '../workItemUtils';
 import DevOpsService, { IDevOpsService } from './DevOpsService';
@@ -111,6 +116,16 @@ class WorkItemService implements IWorkItemService {
       } else {
         return types.sort(this.sortWorkItemTypes);
       }
+    }
+    return [];
+  }
+
+  public async getWorkItemFields(): Promise<WorkItemField[]> {
+    const project = await this._devOpsService.getProject();
+    if (project) {
+      const client = getClient(WorkItemTrackingRestClient);
+      const fields = await client.getFields(project.name, GetFieldsExpand.IncludeDeleted);
+      return fields;
     }
     return [];
   }

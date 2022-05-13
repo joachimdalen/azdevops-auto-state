@@ -1,7 +1,7 @@
 import './index.scss';
 
 import { createTheme, loadTheme } from '@fluentui/react';
-import { WorkItemType } from 'azure-devops-extension-api/WorkItemTracking';
+import { WorkItemField, WorkItemType } from 'azure-devops-extension-api/WorkItemTracking';
 import * as DevOps from 'azure-devops-extension-sdk';
 import { Button } from 'azure-devops-ui/Button';
 import { ButtonGroup } from 'azure-devops-ui/ButtonGroup';
@@ -25,6 +25,7 @@ import WorkItemTypeDropdown from '../shared-ui/component/WorkItemTypeDropdown';
 import showRootComponent from '../shared-ui/showRootComponent';
 import { Expandable } from 'azure-devops-ui/Expandable';
 import WorkItemFilter from './components/WorkItemFilter';
+import WorkItemFilterModal from './components/WorkItemFilterModal';
 
 const ModalContent = (): React.ReactElement => {
   const [error, setError] = useState<ActionResult<any> | undefined>(undefined);
@@ -34,6 +35,7 @@ const ModalContent = (): React.ReactElement => {
   );
   const [rule, setRule] = useState<Rule>();
   const [types, setTypes] = useState<WorkItemType[]>([]);
+  const [fields, setFields] = useState<WorkItemField[]>([]);
   const [workItemType, setWorkItemType] = useState('');
   const [parentType, setParentType] = useState('');
   const [parentExcludedStates, setParentExcludedStates] = useState<string[]>([]);
@@ -43,6 +45,7 @@ const ModalContent = (): React.ReactElement => {
   const [processParent, setProcessParent] = useState(false);
   const [enabled, setEnabled] = useState(true);
   const [loading, setLoading] = useState(true);
+  const [addWorkItemFilter, setAddWorkItemFilter] = useState(false);
 
   const isDisabled = !enabled && rule !== undefined;
 
@@ -56,6 +59,8 @@ const ModalContent = (): React.ReactElement => {
     });
     DevOps.ready().then(() => {
       const config = DevOps.getConfiguration();
+
+      workItemService.getWorkItemFields().then(fields => setFields(fields));
 
       storageService
         .getSettings()
@@ -167,6 +172,7 @@ const ModalContent = (): React.ReactElement => {
             </FormItem>
             <div className="flex-row rhythm-horizontal-16">
               <FormItem
+                className="flex-one"
                 label="Work item type"
                 message={
                   rule !== undefined
@@ -182,6 +188,7 @@ const ModalContent = (): React.ReactElement => {
                 />
               </FormItem>
               <FormItem
+                className="flex-one"
                 label="Transition state"
                 message="The transitioned state for the rule to trigger on (When work item type changes to this)"
               >
@@ -194,9 +201,9 @@ const ModalContent = (): React.ReactElement => {
                 />
               </FormItem>
             </div>
-            <div className="rhythm-horizontal-16">
+            <div className="flex-row rhythm-horizontal-16">
               <FormItem
-                className="flex-grow"
+                className="flex-one"
                 label="Parent type"
                 message="This is the work item type of the parent relation. E.g the work item type that should be updated."
               >
@@ -211,6 +218,7 @@ const ModalContent = (): React.ReactElement => {
               </FormItem>
 
               <FormItem
+                className="flex-one"
                 label="Parent not in state"
                 message="Do not trigger the rule if the parent work item is in this state"
               >
@@ -273,9 +281,23 @@ const ModalContent = (): React.ReactElement => {
               />
             </FormItem>
 
-            <WorkItemFilter workItemType={types.find(x => x.referenceName === workItemType)} />
+            <FormItem label="Parent filters">
+              {/* <WorkItemFilter workItemType={types.find(x => x.referenceName === workItemType)} /> */}
+              <Button
+                text="Add"
+                iconProps={{ iconName: 'Add' }}
+                onClick={() => setAddWorkItemFilter(true)}
+              />
+            </FormItem>
           </div>
         </ConditionalChildren>
+        {addWorkItemFilter && (
+          <WorkItemFilterModal
+            workItemType={types.find(x => x.referenceName === workItemType)}
+            fields={fields}
+            onClose={() => setAddWorkItemFilter(false)}
+          />
+        )}
       </div>
       <ButtonGroup className="justify-space-between flex-center margin-bottom-16">
         <Button text="Close" onClick={() => dismiss()} />
