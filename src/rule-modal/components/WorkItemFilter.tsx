@@ -1,102 +1,154 @@
-import {
-  WorkItemType,
-  WorkItemTypeFieldInstance
-} from 'azure-devops-extension-api/WorkItemTracking';
+import { IInternalIdentity } from '@joachimdalen/azdevops-ext-core/CommonTypes';
+import { WorkItemField, WorkItemType } from 'azure-devops-extension-api/WorkItemTracking';
 import { Button } from 'azure-devops-ui/Button';
-import { Dropdown } from 'azure-devops-ui/Dropdown';
-import { FormItem } from 'azure-devops-ui/FormItem';
-import { IListBoxItem } from 'azure-devops-ui/ListBox';
-import { TextField, TextFieldWidth } from 'azure-devops-ui/TextField';
-
+import { ConditionalChildren } from 'azure-devops-ui/ConditionalChildren';
+import { ColumnMore, ITableColumn, SimpleTableCell, Table } from 'azure-devops-ui/Table';
+import { Tooltip } from 'azure-devops-ui/TooltipEx';
 import { ArrayItemProvider } from 'azure-devops-ui/Utilities/Provider';
 import { useMemo, useState } from 'react';
-import { Dialog } from 'azure-devops-ui/Dialog';
-import { ContentJustification, ContentLocation } from 'azure-devops-ui/Callout';
+
+import FilterItem, { FilterFieldType } from '../../common/models/FilterItem';
+import { filterOperations } from '../types';
+import PersonaDisplay from './PersonaDisplay';
+import WorkItemFilterModal from './WorkItemFilterModal';
 
 interface WorkItemFilterProps {
   workItemType?: WorkItemType;
+  fields: WorkItemField[];
+  disabled: boolean;
+  filters: FilterItem[];
+  onChange: (filters: FilterItem[]) => void;
 }
 
-interface FilterOption {
-  field: string;
-  operator: string;
-  value: string;
-}
+const WorkItemFilter = ({
+  fields,
+  workItemType,
+  disabled,
+  filters,
+  onChange
+}: WorkItemFilterProps): JSX.Element => {
+  const [addWorkItemFilter, setAddWorkItemFilter] = useState(false);
 
-const WorkItemFilter = ({ workItemType }: WorkItemFilterProps): JSX.Element => {
-  const [items, setItems] = useState<FilterOption[]>([
-    { field: 'System.Title', operator: 'contains', value: 'Black' }
-  ]);
-
-  const add = (id: FilterOption) => {
-    setItems(prev => [...prev, id]);
-  };
-
-  const remove = (filt: FilterOption) => {
-    if (items.findIndex(x => x.field === filt.field) !== -1) {
-      setItems(prev => prev.filter(x => x.field !== filt.field));
+  const remove = (filt: FilterItem) => {
+    if (filters.findIndex(x => x.field === filt.field) !== -1) {
+      onChange(filters.filter(x => x.field !== filt.field));
     }
   };
 
-  const updateItem = (criteria: FilterOption, text: string) => {
-    const index = items.findIndex(x => x.field === criteria.field);
-    if (index === -1) return;
-
-    const newItems = [...items];
-    const item = newItems[index];
-    item.value = text;
-    newItems[index] = item;
-
-    setItems(newItems);
-  };
-
-  const getItems = () => {
-    const parent = { id: '1', text: 'One' };
-    const child = { id: '2', text: 'Two', parent: parent };
-
-    return [parent, child];
-  };
+  const tableItems = useMemo(() => new ArrayItemProvider(filters), [filters]);
 
   return (
     <div className="rhythm-vertical-16 flex-grow margin-top-8">
-      <div className=" rhythm-horizontal-16 flex-row flex-center">
-        {/* <Dropdown
-          placeholder="Select field to filter on"
-          items={fields}
-          containerClassName="flex-grow"
-          className="flex-grow"
-        /> */}
-        <Button text="Add" iconProps={{ iconName: 'Add' }} />
-      </div>
+      <Button
+        text="Add"
+        iconProps={{ iconName: 'Add' }}
+        disabled={disabled}
+        onClick={() => setAddWorkItemFilter(true)}
+      />
       <div className="rhythm-vertical-8 padding-bottom-16">
-        {items.map((item, index) => {
-          return (
-            <FormItem key={item.field}>
-              <div className="flex-row flex-center rhythm-horizontal-4">
-                {/* <TextField
-                  containerClassName="flex-grow"
-                  width={TextFieldWidth.auto}
-                  onChange={(_, val) => updateItem(item, val)}
-                  value={item.field}
-                /> */}
-                <span className="flex-one">System.Title</span>
-                <Dropdown className="flex-one" items={[{ id: 'equals', text: '=' }]} />
-
-      
-                <TextField className="flex-one" placeholder="Value" />
-
-                <Button
-                  id={`${item.field}-remove`}
-                  iconProps={{ iconName: 'Delete' }}
-                  subtle
-                  tooltipProps={{ text: 'Remove' }}
-                  onClick={() => remove(item)}
-                />
-              </div>
-            </FormItem>
-          );
-        })}
+        <ConditionalChildren renderChildren={filters.length === 0}>
+          <span>No filters added</span>
+        </ConditionalChildren>
+        <ConditionalChildren renderChildren={filters.length > 0}>
+          <Table
+            columns={[
+              {
+                id: 'field',
+                name: 'Field',
+                width: -100,
+                renderCell: (
+                  rowIndex: number,
+                  columnIndex: number,
+                  tableColumn: ITableColumn<FilterItem>,
+                  tableItem: FilterItem
+                ) => (
+                  <SimpleTableCell
+                    columnIndex={columnIndex}
+                    tableColumn={tableColumn}
+                    key={'col-' + columnIndex}
+                    contentClassName="font-size-m scroll-hidden"
+                  >
+                    <Tooltip text={tableItem.field}>
+                      <span>{tableItem.field}</span>
+                    </Tooltip>
+                  </SimpleTableCell>
+                )
+              },
+              {
+                id: 'operator',
+                name: 'Operator',
+                width: -100,
+                renderCell: (
+                  rowIndex: number,
+                  columnIndex: number,
+                  tableColumn: ITableColumn<FilterItem>,
+                  tableItem: FilterItem
+                ) => (
+                  <SimpleTableCell
+                    columnIndex={columnIndex}
+                    tableColumn={tableColumn}
+                    key={'col-' + columnIndex}
+                    contentClassName="font-size-m scroll-hidden"
+                  >
+                    {filterOperations.find(x => x.referenceName === tableItem.operator)?.name}
+                  </SimpleTableCell>
+                )
+              },
+              {
+                id: 'value',
+                name: 'Value',
+                width: -100,
+                renderCell: (
+                  rowIndex: number,
+                  columnIndex: number,
+                  tableColumn: ITableColumn<FilterItem>,
+                  tableItem: FilterItem
+                ) => (
+                  <SimpleTableCell
+                    columnIndex={columnIndex}
+                    tableColumn={tableColumn}
+                    key={'col-' + columnIndex}
+                    contentClassName="font-weight-semibold font-size-m scroll-hidden"
+                  >
+                    <ConditionalChildren
+                      renderChildren={tableItem.type === FilterFieldType.Identity}
+                    >
+                      <PersonaDisplay approver={tableItem.value as IInternalIdentity} />
+                    </ConditionalChildren>
+                    <ConditionalChildren
+                      renderChildren={tableItem.type !== FilterFieldType.Identity}
+                    >
+                      {tableItem.value}
+                    </ConditionalChildren>
+                  </SimpleTableCell>
+                )
+              },
+              new ColumnMore((item: FilterItem) => {
+                return {
+                  id: 'sub-menu',
+                  items: [
+                    {
+                      id: 'delete',
+                      text: 'Delete',
+                      iconProps: { iconName: 'Delete' },
+                      onActivate: () => remove(item)
+                    }
+                  ]
+                };
+              })
+            ]}
+            itemProvider={tableItems}
+          />
+        </ConditionalChildren>
       </div>
+      {addWorkItemFilter && (
+        <WorkItemFilterModal
+          workItemType={workItemType}
+          fields={fields}
+          onClose={() => setAddWorkItemFilter(false)}
+          onAddItem={(filterItem: FilterItem) => onChange([...filters, filterItem])}
+        />
+      )}
     </div>
   );
 };
