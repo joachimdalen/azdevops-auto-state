@@ -235,6 +235,24 @@ describe('RuleService', () => {
 
         expect(result).toBeTruthy();
       });
+      it('returns false when more filerts', () => {
+        const ruleService = new RuleService();
+        const result = ruleService.isRuleSame(baseRuleWithFilter, {
+          ...baseRuleWithFilter,
+          id: '234',
+          filters: [
+            ...baseRuleWithFilter.filters!,
+            {
+              field: 'System.Tags',
+              operator: FilterOperation.Equals,
+              type: FilterFieldType.Boolean,
+              value: 'backend;frontend'
+            }
+          ]
+        });
+
+        expect(result).toBeFalsy();
+      });
     });
   });
   describe('isFilterSame', () => {

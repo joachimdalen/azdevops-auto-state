@@ -207,14 +207,7 @@ class RuleService {
     if (!ruleOne.parentExcludedStates.every(x => ruleTwo.parentExcludedStates.includes(x)))
       return false;
 
-    // if (ruleOne.filters === undefined && ruleTwo.filters === undefined) return false;
-    // if (ruleOne.filters === undefined && ruleTwo.filters !== undefined) return false;
-    // if (ruleOne.filters !== undefined && ruleTwo.filters === undefined) return false;
     if (ruleOne.filters?.length !== ruleTwo.filters?.length) return false;
-
-    // if (ruleOne.parentFilters === undefined && ruleTwo.parentFilters === undefined) return false;
-    // if (ruleOne.parentFilters === undefined && ruleTwo.parentFilters !== undefined) return false;
-    // if (ruleOne.parentFilters !== undefined && ruleTwo.parentFilters === undefined) return false;
     if (ruleOne.parentFilters?.length !== ruleTwo.parentFilters?.length) return false;
 
     const filterMatch = (ruleOne.filters || []).filter(c =>
