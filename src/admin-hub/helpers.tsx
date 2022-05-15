@@ -132,7 +132,7 @@ export const getListColumns = (
       fieldName: 'childrenLookup',
       className: 'flex-self-center',
       minWidth: 100,
-      maxWidth: 200,
+      maxWidth: 120,
       isResizable: true,
       onRender: (item: Rule, index?: number, column?: IColumn) => {
         return (
@@ -142,6 +142,29 @@ export const getListColumns = (
               color: item.childrenLookup ? 'green' : 'red'
             })}
             iconName={item.childrenLookup ? 'Accept' : 'Clear'}
+          />
+        );
+      }
+    },
+    {
+      key: 'filters',
+      name: 'Filtered',
+      fieldName: 'filtered',
+      className: 'flex-self-center',
+      minWidth: 75,
+      maxWidth: 75,
+      isResizable: true,
+      onRender: (item: Rule, index?: number, column?: IColumn) => {
+        const hasFilters =
+          (item.filters !== undefined && item.filters.length > 0) ||
+          (item.parentFilters !== undefined && item.parentFilters.length > 0);
+        return (
+          <FontIcon
+            className={mergeStyles({
+              fontSize: 20,
+              color: hasFilters ? 'green' : 'red'
+            })}
+            iconName={hasFilters ? 'Accept' : 'Clear'}
           />
         );
       }
