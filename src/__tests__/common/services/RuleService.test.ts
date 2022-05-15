@@ -5,8 +5,9 @@ import Rule from '../../../common/models/Rule';
 import RuleDocument from '../../../common/models/WorkItemRules';
 import RuleService from '../../../common/services/RuleService';
 import { StorageService } from '../../../common/services/StorageService';
-
-
+import FilterItem, { FilterFieldType } from '../../../common/models/FilterItem';
+import { FilterOperation } from '../../../rule-modal/types';
+import { IInternalIdentity } from '@joachimdalen/azdevops-ext-core/CommonTypes';
 
 describe('RuleService', () => {
   describe('load', () => {
@@ -188,6 +189,149 @@ describe('RuleService', () => {
       expect(result.success).toBeTruthy();
       expect(setRuleDocument?.rules?.filter(x => x.id === ruleId).length).toEqual(0);
       expect(setRuleDocument?.rules?.length).toEqual(1);
+    });
+  });
+
+  describe('isRuleSame', () => {
+    const baseFilter: FilterItem = {
+      field: 'System.Title',
+      operator: FilterOperation.Equals,
+      type: FilterFieldType.Boolean,
+      value: '1234'
+    };
+
+    const baseRule: Rule = {
+      id: '222',
+      workItemType: WorkItemReferenceNames.Task,
+      childrenLookup: false,
+      transitionState: 'Active',
+      parentType: WorkItemReferenceNames.UserStory,
+      parentExcludedStates: ['Active'],
+      parentTargetState: 'Active',
+      processParent: false,
+      disabled: false
+    };
+    const baseRuleWithFilter: Rule = {
+      ...baseRule,
+      filters: [baseFilter],
+      parentFilters: [baseFilter]
+    };
+
+    describe('rule properties', () => {
+      it('returns false when same ID', () => {
+        const ruleService = new RuleService();
+        const result = ruleService.isRuleSame(baseRule, baseRule);
+        expect(result).toBeFalsy();
+      });
+    });
+
+    describe('filters', () => {
+      it('returns true when same', () => {
+        const ruleService = new RuleService();
+        const result = ruleService.isRuleSame(baseRuleWithFilter, {
+          ...baseRuleWithFilter,
+          id: '234'
+        });
+
+        expect(result).toBeTruthy();
+      });
+    });
+  });
+  describe('isFilterSame', () => {
+    const baseFilter: FilterItem = {
+      field: 'System.Title',
+      operator: FilterOperation.Equals,
+      type: FilterFieldType.Boolean,
+      value: '1234'
+    };
+
+    const identityOne: IInternalIdentity = {
+      displayName: 'Test User',
+      entityId: '1234',
+      entityType: 'User',
+      id: '54321',
+      descriptor: 'user1234',
+      image: '/image.png'
+    };
+    const identityTwo: IInternalIdentity = {
+      displayName: 'Test User 2',
+      entityId: '4321',
+      entityType: 'User',
+      id: '123456',
+      descriptor: 'user4321',
+      image: '/image.png'
+    };
+
+    it('should return false when field is different', () => {
+      const ruleService = new RuleService();
+      const result = ruleService.isFilterSame(
+        {
+          ...baseFilter,
+          field: 'System.Id'
+        },
+        baseFilter
+      );
+
+      expect(result).toBeFalsy();
+    });
+    it('should return false when operator is different', () => {
+      const ruleService = new RuleService();
+      const result = ruleService.isFilterSame(
+        {
+          ...baseFilter,
+          operator: FilterOperation.GreaterThan
+        },
+        baseFilter
+      );
+
+      expect(result).toBeFalsy();
+    });
+    it('should return false when type is different', () => {
+      const ruleService = new RuleService();
+      const result = ruleService.isFilterSame(
+        {
+          ...baseFilter,
+          type: FilterFieldType.Identity
+        },
+        baseFilter
+      );
+
+      expect(result).toBeFalsy();
+    });
+    it('should return false when value is different', () => {
+      const ruleService = new RuleService();
+      const result = ruleService.isFilterSame(
+        {
+          ...baseFilter,
+          value: 'false'
+        },
+        baseFilter
+      );
+
+      expect(result).toBeFalsy();
+    });
+    it('should return false when value is identity and is different', () => {
+      const ruleService = new RuleService();
+      const result = ruleService.isFilterSame(
+        {
+          ...baseFilter,
+          type: FilterFieldType.Identity,
+          value: identityOne
+        },
+        {
+          ...baseFilter,
+          type: FilterFieldType.Identity,
+          value: identityTwo
+        }
+      );
+
+      expect(result).toBeFalsy();
+    });
+    it('should return true when same', () => {
+      const ruleService = new RuleService();
+      const result = ruleService.isFilterSame(baseFilter, baseFilter);
+
+      expect(result).toBeTruthy();
     });
   });
 });

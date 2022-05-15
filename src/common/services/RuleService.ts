@@ -1,7 +1,9 @@
+import { IInternalIdentity } from '@joachimdalen/azdevops-ext-core/CommonTypes';
 import { v4 as uuidV4 } from 'uuid';
 
 import { ActionResult } from '../models/ActionResult';
 import AddRuleResult from '../models/AddRuleResult';
+import FilterItem, { FilterFieldType } from '../models/FilterItem';
 import Rule from '../models/Rule';
 import RuleDocument from '../models/WorkItemRules';
 import DevOpsService, { IDevOpsService, PanelIds } from './DevOpsService';
@@ -194,7 +196,7 @@ class RuleService {
     };
   }
 
-  private isRuleSame(ruleOne: Rule, ruleTwo: Rule) {
+  public isRuleSame(ruleOne: Rule, ruleTwo: Rule): boolean {
     if (ruleOne.id && ruleTwo.id) {
       if (ruleOne.id === ruleTwo.id) return false;
     }
@@ -204,6 +206,46 @@ class RuleService {
     if (ruleOne.transitionState !== ruleTwo.transitionState) return false;
     if (!ruleOne.parentExcludedStates.every(x => ruleTwo.parentExcludedStates.includes(x)))
       return false;
+
+    // if (ruleOne.filters === undefined && ruleTwo.filters === undefined) return false;
+    // if (ruleOne.filters === undefined && ruleTwo.filters !== undefined) return false;
+    // if (ruleOne.filters !== undefined && ruleTwo.filters === undefined) return false;
+    if (ruleOne.filters?.length !== ruleTwo.filters?.length) return false;
+
+    // if (ruleOne.parentFilters === undefined && ruleTwo.parentFilters === undefined) return false;
+    // if (ruleOne.parentFilters === undefined && ruleTwo.parentFilters !== undefined) return false;
+    // if (ruleOne.parentFilters !== undefined && ruleTwo.parentFilters === undefined) return false;
+    if (ruleOne.parentFilters?.length !== ruleTwo.parentFilters?.length) return false;
+
+    const filterMatch = (ruleOne.filters || []).filter(c =>
+      (ruleTwo.filters || []).some(y => this.isFilterSame(c, y))
+    );
+    const parentFilterMatch = (ruleOne.parentFilters || []).filter(c =>
+      (ruleTwo.parentFilters || []).some(y => this.isFilterSame(c, y))
+    );
+
+    if (filterMatch.length > 0 || parentFilterMatch.length > 0) {
+      return true;
+    }
+
+    return true;
+  }
+
+  public isFilterSame(filtersOne: FilterItem, filtersTwo: FilterItem): boolean {
+    if (filtersOne.field !== filtersTwo.field) return false;
+    if (filtersOne.operator !== filtersTwo.operator) return false;
+    if (filtersOne.type !== filtersTwo.type) return false;
+
+    if (filtersOne.type === FilterFieldType.Identity) {
+      if (
+        (filtersOne.value as IInternalIdentity)?.descriptor !==
+        (filtersTwo.value as IInternalIdentity)?.descriptor
+      )
+        return false;
+    } else {
+      if (filtersOne.value !== filtersTwo.value) return false;
+    }
+
     return true;
   }
 

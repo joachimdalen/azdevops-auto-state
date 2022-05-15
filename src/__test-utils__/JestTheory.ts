@@ -7,10 +7,6 @@ const _testTheory =
     inputData: T[],
     testFunction: (theoryData: T) => Promise<void> | void
   ) => {
-    if (!test) {
-      throw new Error('Jest test global must be accessible to use jest-theories');
-    }
-
     for (let idx = 0; idx < inputData.length; idx++) {
       const theory = inputData[idx];
       const testName = format(
