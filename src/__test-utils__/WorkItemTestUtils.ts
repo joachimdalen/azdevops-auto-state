@@ -12,7 +12,8 @@ const getWorkItem = (
   id: number,
   type: WorkItemNames,
   state: string,
-  related?: { id: number; type: 'parent' | 'children' }[]
+  related?: { id: number; type: 'parent' | 'children' }[],
+  fields?: { [key: string]: any }
 ): WorkItem => {
   const relations: WorkItemRelation[] = (related || [])?.map(wi => {
     const rel: WorkItemRelation = {
@@ -30,7 +31,8 @@ const getWorkItem = (
     fields: {
       'System.State': state,
       'System.WorkItemType': type,
-      'System.Title': 'Work item title for ' + type
+      'System.Title': 'Work item title for ' + type,
+      ...fields
     },
     relations: relations,
     _links: {},

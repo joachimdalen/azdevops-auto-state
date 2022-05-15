@@ -18,7 +18,18 @@ import { ArrayItemProvider } from 'azure-devops-ui/Utilities/Provider';
 import React, { useMemo, useState } from 'react';
 
 import FilterItem, { FilterFieldType } from '../../common/models/FilterItem';
-import { excludedReferenceNames, filterOperations, supportedValueTypes } from '../types';
+import {
+  excludedReferenceNames,
+  FilterOperation,
+  filterOperations,
+  supportedValueTypes
+} from '../types';
+import { WorkItemTagPicker } from './WorkItemTagPicker';
+
+interface ListBoxOperation {
+  op: FilterOperation;
+}
+
 interface WorkItemFilterModalProps {
   workItemType?: WorkItemType;
   fields: WorkItemField[];
@@ -31,11 +42,12 @@ const WorkItemFilterModal = ({
   workItemType,
   onClose,
   fields,
-  onAddItem
+  onAddItem,
+  selectedFields
 }: WorkItemFilterModalProps): React.ReactElement => {
   const [field, setField] = useState<string | undefined>();
   const [fieldReference, setFieldReference] = useState<WorkItemField | undefined>();
-  const [operator, setOperator] = useState<string | undefined>();
+  const [operator, setOperator] = useState<FilterOperation | undefined>();
   const [value, setValue] = useState<string | boolean | number | IInternalIdentity | undefined>();
   const sortItems = (a: WorkItemTypeFieldInstance, b: WorkItemTypeFieldInstance) => {
     if (a.name < b.name) {
@@ -50,14 +62,14 @@ const WorkItemFilterModal = ({
   console.log([field, operator, value]);
 
   const itemFields = useMemo(() => {
-    //  const types = workItemType.fields?.flatMap(x => x.)
     const item = (workItemType?.fields || [])
       .filter(x => {
         const type = fields.find(y => y.referenceName === x.referenceName);
         return type === undefined
           ? false
           : supportedValueTypes.includes(type.isIdentity ? FieldType.Identity : type.type) &&
-              !excludedReferenceNames.includes(type.referenceName);
+              !excludedReferenceNames.includes(type.referenceName) &&
+              !(selectedFields || []).includes(type.referenceName);
       })
       .sort(sortItems)
       .map(field => {
@@ -78,9 +90,12 @@ const WorkItemFilterModal = ({
     const filtered = filterOperations
       .filter(x => x.supportedTypes.includes(type.type))
       .map(x => {
-        const items: IListBoxItem = {
+        const items: IListBoxItem<ListBoxOperation> = {
           id: x.referenceName,
-          text: x.name
+          text: x.name,
+          data: {
+            op: x.referenceName
+          }
         };
         return items;
       });
@@ -104,6 +119,10 @@ const WorkItemFilterModal = ({
       );
     }
 
+    if (selectedField.referenceName === 'System.Tags') {
+      return <WorkItemTagPicker selected={value as string} onChange={v => setValue(v)} />;
+    }
+
     switch (selectedField.type) {
       case FieldType.Boolean: {
         return <Toggle onChange={(e, v) => setValue(v)} checked={value as boolean} />;
@@ -124,7 +143,6 @@ const WorkItemFilterModal = ({
 
   return (
     <Dialog
-      resizable
       calloutClassName="filter-modal-callout"
       titleProps={{ text: 'Add filter item' }}
       onDismiss={onClose}
@@ -156,6 +174,7 @@ const WorkItemFilterModal = ({
               };
 
               onAddItem(item);
+              onClose();
             }
           }
         }
@@ -177,7 +196,9 @@ const WorkItemFilterModal = ({
             <Dropdown
               className="flex-one"
               items={dropdownOperations}
-              onSelect={(_, item) => setOperator(item.id)}
+              onSelect={(_, item) => {
+                if (item?.data?.op !== undefined) setOperator(item.data.op);
+              }}
             />
           </FormItem>
           <FormItem label="Value">{getFieldValueControl()}</FormItem>

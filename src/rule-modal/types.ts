@@ -1,6 +1,16 @@
-import { FieldType, WorkItemFieldOperation } from 'azure-devops-extension-api/WorkItemTracking';
+import { FieldType } from 'azure-devops-extension-api/WorkItemTracking';
 
-export interface FilterOperation extends WorkItemFieldOperation {
+export enum FilterOperation {
+  Equals = 'SupportedOperations.Equals',
+  NotEquals = 'SupportedOperations.NotEquals',
+  GreaterThan = 'SupportedOperations.GreaterThan',
+  LessThan = 'SupportedOperations.LessThan',
+  GreaterThanEquals = 'SupportedOperations.GreaterThanEquals',
+  LessThanEquals = 'SupportedOperations.LessThanEquals'
+}
+export interface FilterOperationDefinition {
+  name: string;
+  referenceName: FilterOperation;
   supportedTypes: FieldType[];
 }
 
@@ -12,34 +22,34 @@ export const supportedValueTypes: FieldType[] = [
   FieldType.String
 ];
 
-export const filterOperations: FilterOperation[] = [
+export const filterOperations: FilterOperationDefinition[] = [
   {
-    referenceName: 'SupportedOperations.Equals',
+    referenceName: FilterOperation.Equals,
     name: '= (Equals)',
     supportedTypes: supportedValueTypes
   },
   {
-    referenceName: 'SupportedOperations.NotEquals',
+    referenceName: FilterOperation.NotEquals,
     name: '<> (Not Equals)',
     supportedTypes: supportedValueTypes
   },
   {
-    referenceName: 'SupportedOperations.GreaterThan',
+    referenceName: FilterOperation.GreaterThan,
     name: '> (Greater Than)',
     supportedTypes: [FieldType.Integer]
   },
   {
-    referenceName: 'SupportedOperations.LessThan',
+    referenceName: FilterOperation.LessThan,
     name: '< (Less Than)',
     supportedTypes: [FieldType.Integer]
   },
   {
-    referenceName: 'SupportedOperations.GreaterThanEquals',
+    referenceName: FilterOperation.GreaterThanEquals,
     name: '>= (Greater Than Equals)',
     supportedTypes: [FieldType.Integer]
   },
   {
-    referenceName: 'SupportedOperations.LessThanEquals',
+    referenceName: FilterOperation.LessThanEquals,
     name: '<= (Less Than Equals)',
     supportedTypes: [FieldType.Integer]
   }

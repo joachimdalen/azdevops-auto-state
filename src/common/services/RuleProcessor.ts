@@ -16,6 +16,7 @@ import {
   isInDryRunState,
   isInState
 } from '../workItemUtils';
+import { RuleFilterProcessor } from './RuleFilterProcessor';
 import { IStorageService, StorageService } from './StorageService';
 import WorkItemService, { IWorkItemService } from './WorkItemService';
 
@@ -37,10 +38,12 @@ class RuleProcessor implements IRuleProcessor {
   private _ruleDocs: RuleDocument[];
   private readonly _workItemService: IWorkItemService;
   private readonly _storageService: IStorageService;
+  private readonly _filterProcessor: RuleFilterProcessor;
   constructor(workItemService?: IWorkItemService, storageService?: IStorageService) {
     webLogger.debug('Setting up rule processor');
     this._storageService = storageService || new StorageService();
     this._workItemService = workItemService || new WorkItemService();
+    this._filterProcessor = new RuleFilterProcessor();
     this._workItemTypes = [];
     this._ruleDocs = [];
   }
@@ -201,12 +204,16 @@ class RuleProcessor implements IRuleProcessor {
     )
       return false;
 
+    const filterResult = await this._filterProcessor.isFilterMatch(rule, workItem, parent);
+    if (!filterResult) return false;
+
     if (rule.childrenLookup && checkChildren) {
       return await this.isChildrenRuleMatch(rule, childType, parent, dryRun, processedItems);
     }
 
     return true;
   }
+
   private async isChildrenRuleMatch(
     rule: Rule,
     childType: string,

@@ -6,6 +6,8 @@ import RuleDocument from '../../../common/models/WorkItemRules';
 import RuleService from '../../../common/services/RuleService';
 import { StorageService } from '../../../common/services/StorageService';
 
+
+
 describe('RuleService', () => {
   describe('load', () => {
     afterEach(() => {
@@ -30,7 +32,9 @@ describe('RuleService', () => {
       }).rejects.toThrow();
     });
     it('should only load once', async () => {
-      const getRuleDocumentsSpy = jest.spyOn(StorageService.prototype, 'getRuleDocuments').mockResolvedValue([]);
+      const getRuleDocumentsSpy = jest
+        .spyOn(StorageService.prototype, 'getRuleDocuments')
+        .mockResolvedValue([]);
       const ruleService = new RuleService();
       await ruleService.load();
       await ruleService.load();

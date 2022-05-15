@@ -11,6 +11,7 @@ import FilterItem, { FilterFieldType } from '../../common/models/FilterItem';
 import { filterOperations } from '../types';
 import PersonaDisplay from './PersonaDisplay';
 import WorkItemFilterModal from './WorkItemFilterModal';
+import WorkItemTagDisplay from './WorkItemTagDisplay';
 
 interface WorkItemFilterProps {
   workItemType?: WorkItemType;
@@ -115,8 +116,14 @@ const WorkItemFilter = ({
                     >
                       <PersonaDisplay approver={tableItem.value as IInternalIdentity} />
                     </ConditionalChildren>
+                    <ConditionalChildren renderChildren={tableItem.field === 'System.Tags'}>
+                      <WorkItemTagDisplay tags={tableItem.value as string} />
+                    </ConditionalChildren>
                     <ConditionalChildren
-                      renderChildren={tableItem.type !== FilterFieldType.Identity}
+                      renderChildren={
+                        tableItem.type !== FilterFieldType.Identity &&
+                        tableItem.field !== 'System.Tags'
+                      }
                     >
                       {tableItem.value}
                     </ConditionalChildren>
@@ -146,6 +153,7 @@ const WorkItemFilter = ({
           workItemType={workItemType}
           fields={fields}
           onClose={() => setAddWorkItemFilter(false)}
+          selectedFields={filters.map(x => x.field)}
           onAddItem={(filterItem: FilterItem) => onChange([...filters, filterItem])}
         />
       )}

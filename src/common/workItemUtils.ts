@@ -78,3 +78,7 @@ export const getChildIds = (workItem: WorkItem): number[] | undefined => {
 
   return children.map(c => getIdFormWorkItemUrl(c.url)).filter(isSetNumber);
 };
+
+export const getTagsAsList = (tags: string): string[] => {
+  return tags.split(';').map(x => x.trim());
+};

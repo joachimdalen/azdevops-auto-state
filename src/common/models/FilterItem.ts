@@ -1,4 +1,5 @@
 import { IInternalIdentity } from '@joachimdalen/azdevops-ext-core/CommonTypes';
+import { FilterOperation } from '../../rule-modal/types';
 
 export enum FilterFieldType {
   String = 0,
@@ -10,7 +11,7 @@ export enum FilterFieldType {
 
 export default interface FilterItem {
   field: string;
-  operator: string;
+  operator: FilterOperation;
   value: string | boolean | IInternalIdentity | number;
   type: FilterFieldType;
 }
