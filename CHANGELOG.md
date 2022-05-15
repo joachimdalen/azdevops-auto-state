@@ -1,12 +1,30 @@
 # Changelog
 
-## 1.2.4 (2022-05-02)
+## 1.3.0 (2022-05-XX)
 
 **💡 Known issues**
 
 This extension does not properly work when having the `New boards hub` feature enabled. This is being tracked in: [Observer does not work with 'New boards hub'](https://github.com/joachimdalen/azdevops-auto-state/issues/17)
 
 ---
+
+### 🚀 Features (1)
+
+#### `rule-modal@1.3.0`
+
+- Add work item filters
+  - Suggested in [GH#44 - Add work item options](https://github.com/joachimdalen/azdevops-auto-state/issues/44)
+  - Added in [PR#45 - Add work item filters](https://github.com/joachimdalen/azdevops-auto-state/pull/45)
+
+## 🌟 Contributors
+
+Thank you to the following for contributing to the latest release
+
+- [@MPDFO](https://github.com/MPDFO)
+
+---
+
+## 1.2.4 (2022-05-02)
 
 ### 🛠️ Maintenance (1)
 

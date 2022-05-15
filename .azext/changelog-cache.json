@@ -1,6 +1,13 @@
 {
   "issues": [
     {
+      "id": 1231221595,
+      "number": 44,
+      "submitter": "MPDFO",
+      "title": "Add work item options",
+      "url": "https://github.com/joachimdalen/azdevops-auto-state/issues/44"
+    },
+    {
       "id": 1167624060,
       "number": 40,
       "submitter": "joachimdalen",
@@ -65,6 +72,13 @@
     }
   ],
   "pullRequests": [
+    {
+      "id": 936744719,
+      "number": 45,
+      "submitter": "joachimdalen",
+      "title": "Add work item filters",
+      "url": "https://github.com/joachimdalen/azdevops-auto-state/pull/45"
+    },
     {
       "id": 924998912,
       "number": 43,
