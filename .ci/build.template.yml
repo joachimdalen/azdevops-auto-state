@@ -5,7 +5,10 @@ parameters:
       - dev
       - qa
       - prod
-
+  - name: taskVersion
+    displayName: 'Task Version'
+    type: string
+    default: $(Task.Extension.Version)
 steps:
   - task: Npm@1
     displayName: 'Compile - ${{ parameters.extensionEnv }}'
