@@ -12,6 +12,9 @@ import { IPanelOptions } from 'azure-devops-extension-api';
 import { WorkItemStateColor, WorkItemType } from 'azure-devops-extension-api/WorkItemTracking';
 import { IHeaderCommandBarItem } from 'azure-devops-ui/HeaderCommandBar';
 import { MenuItemType } from 'azure-devops-ui/Menu';
+import { Pill, PillVariant } from 'azure-devops-ui/Pill';
+import { PillGroup, PillGroupOverflow } from 'azure-devops-ui/PillGroup';
+import { IColor } from 'azure-devops-ui/Utilities/Color';
 
 import { ActionResult } from '../common/models/ActionResult';
 import Rule from '../common/models/Rule';
@@ -29,6 +32,9 @@ const getState = (
 ): WorkItemStateColor | undefined =>
   getWorkItemType(types, type)?.states?.find(x => x.name === state);
 
+const colorGreen: IColor = { red: 15, green: 71, blue: 30 };
+const colorPurple: IColor = { red: 153, green: 67, blue: 196 };
+const colorBlue: IColor = { red: 67, green: 127, blue: 196 };
 const isGroup = (item: IGroup | undefined): item is IGroup => {
   return !!item;
 };
@@ -127,65 +133,47 @@ export const getListColumns = (
       }
     },
     {
-      key: 'childrenLookup',
-      name: 'Children lookup',
-      fieldName: 'childrenLookup',
+      key: 'properties',
+      name: 'Properties',
+      fieldName: 'properties',
       className: 'flex-self-center',
       minWidth: 100,
-      maxWidth: 120,
-      isResizable: true,
-      onRender: (item: Rule, index?: number, column?: IColumn) => {
-        return (
-          <FontIcon
-            className={mergeStyles({
-              fontSize: 20,
-              color: item.childrenLookup ? 'green' : 'red'
-            })}
-            iconName={item.childrenLookup ? 'Accept' : 'Clear'}
-          />
-        );
-      }
-    },
-    {
-      key: 'filters',
-      name: 'Filtered',
-      fieldName: 'filtered',
-      className: 'flex-self-center',
-      minWidth: 75,
-      maxWidth: 75,
+
       isResizable: true,
       onRender: (item: Rule, index?: number, column?: IColumn) => {
         const hasFilters =
           (item.filters !== undefined && item.filters.length > 0) ||
           (item.parentFilters !== undefined && item.parentFilters.length > 0);
         return (
-          <FontIcon
-            className={mergeStyles({
-              fontSize: 20,
-              color: hasFilters ? 'green' : 'red'
-            })}
-            iconName={hasFilters ? 'Accept' : 'Clear'}
-          />
-        );
-      }
-    },
-    {
-      key: 'processParent',
-      name: 'Process Parent',
-      fieldName: 'processParent',
-      className: 'flex-self-center',
-      minWidth: 100,
-      maxWidth: 200,
-      isResizable: true,
-      onRender: (item: Rule, index?: number, column?: IColumn) => {
-        return (
-          <FontIcon
-            className={mergeStyles({
-              fontSize: 20,
-              color: item.processParent ? 'green' : 'red'
-            })}
-            iconName={item.processParent ? 'Accept' : 'Clear'}
-          />
+          <PillGroup overflow={PillGroupOverflow.wrap}>
+            {item.childrenLookup && (
+              <Pill
+                variant={PillVariant.colored}
+                color={colorBlue}
+                iconProps={{ iconName: 'ChevronDown' }}
+              >
+                Children Lookup
+              </Pill>
+            )}
+            {item.processParent && (
+              <Pill
+                variant={PillVariant.colored}
+                color={colorPurple}
+                iconProps={{ iconName: 'ChevronUp' }}
+              >
+                Process Parent
+              </Pill>
+            )}
+            {hasFilters && (
+              <Pill
+                variant={PillVariant.colored}
+                color={colorGreen}
+                iconProps={{ iconName: 'Filter' }}
+              >
+                Filtered
+              </Pill>
+            )}
+          </PillGroup>
         );
       }
     },
