@@ -12,3 +12,6 @@ steps:
     inputs:
       command: custom
       customCommand: 'run compile:${{ parameters.extensionEnv }}'
+    env:
+      COMPILED_TASK_EXTENSION_VERSION: ${{ parameters.taskVersion }}
+  
