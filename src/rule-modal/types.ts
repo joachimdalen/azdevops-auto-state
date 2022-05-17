@@ -1,4 +1,5 @@
 import { FieldType } from 'azure-devops-extension-api/WorkItemTracking';
+import * as yup from 'yup';
 
 export enum FilterOperation {
   Equals = 'SupportedOperations.Equals',
@@ -61,3 +62,17 @@ export const excludedReferenceNames: string[] = [
   'System.Id',
   'System.Parent'
 ];
+
+export const validationSchema = yup.object().shape({
+  disabled: yup.bool(),
+  workItemType: yup.string().trim().required(),
+  parentType: yup.string().trim().required(),
+  transitionState: yup.string().trim().required(),
+  parentExcludedStates: yup
+    .array()
+    .of(yup.string().trim())
+    .min(1, 'Parent not in state is a required field'),
+  parentTargetState: yup.string().trim().required(),
+  childrenLookup: yup.bool(),
+  processParent: yup.bool()
+});

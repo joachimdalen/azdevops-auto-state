@@ -46,12 +46,13 @@
   "dependencies": {
     "@fluentui/react": "^8.42.4",
     "@fluentui/react-hooks": "^8.3.6",
-    "@joachimdalen/azdevops-ext-core": "^0.10.0",
+    "@joachimdalen/azdevops-ext-core": "^0.11.0",
     "azure-devops-extension-api": "^1.158.0",
     "azure-devops-ui": "^2.167.22",
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
-    "uuid": "^8.3.2"
+    "uuid": "^8.3.2",
+    "yup": "^0.32.11"
   },
   "scripts": {
     "prepare:dev": "npm run compile:dev && npm run changelog:dev && npm run docs:readme && npm run package:dev",
