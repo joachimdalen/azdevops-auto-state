@@ -11,6 +11,7 @@ This extension does not properly work when having the `New boards hub` feature e
 ### 🛠️ Maintenance (1)
 
 - Fix ci pipeline setting the wrong extension version
+  - Scheduled in [GH#34 - Build sets the wrong extension version in scripts when setting the version manually](https://github.com/joachimdalen/azdevops-auto-state/issues/34)
   - Changed in [PR#47 - Build sets the wrong extension version in scripts when setting the version manually](https://github.com/joachimdalen/azdevops-auto-state/pull/47)
 
 ---
