@@ -40,7 +40,7 @@ const identityTwo: IInternalIdentity = {
   image: '/image.png'
 };
 
-const parentWorkItem = getWorkItem(9, WorkItemNames.UserStory, 'Active', [
+const mainParentWorkItem = getWorkItem(9, WorkItemNames.UserStory, 'Active', [
   { id: 11, type: 'children' }
 ]);
 
@@ -53,8 +53,104 @@ describe('RuleFilterProcessor', () => {
     it('should return true when no filters', async () => {
       const filterProcessor = new RuleFilterProcessor();
       const workItem = getWorkItem(11, WorkItemNames.Task, 'Closed', [{ id: 9, type: 'parent' }]);
-      const result = await filterProcessor.isFilterMatch(rule, workItem, parentWorkItem);
+      const result = await filterProcessor.isFilterMatch(rule, workItem, mainParentWorkItem);
       expect(result).toBeTruthy();
+    });
+
+    it('should return true when both filter and parent has match', async () => {
+      const filterProcessor = new RuleFilterProcessor();
+      const workItem = getWorkItem(11, WorkItemNames.Task, 'Closed', [{ id: 9, type: 'parent' }], {
+        'System.AreaID': 10
+      });
+      const parentWorkItem = getWorkItem(
+        9,
+        WorkItemNames.UserStory,
+        'Active',
+        [{ id: 11, type: 'children' }],
+        {
+          'System.AreaID': 11
+        }
+      );
+      const innerRule: Rule = {
+        ...rule,
+        filters: [
+          {
+            field: 'System.AreaID',
+            operator: FilterOperation.Equals,
+            type: FilterFieldType.Integer,
+            value: 10
+          }
+        ],
+        parentFilters: [
+          {
+            field: 'System.AreaID',
+            operator: FilterOperation.NotEquals,
+            type: FilterFieldType.Integer,
+            value: 10
+          }
+        ]
+      };
+
+      const result = await filterProcessor.isFilterMatch(innerRule, workItem, parentWorkItem);
+      expect(result).toBeTruthy();
+    });
+    it('should return true when only parent and matches', async () => {
+      const filterProcessor = new RuleFilterProcessor();
+      const workItem = getWorkItem(11, WorkItemNames.Task, 'Closed', [{ id: 9, type: 'parent' }]);
+      const parentWorkItem = getWorkItem(
+        9,
+        WorkItemNames.UserStory,
+        'Active',
+        [{ id: 11, type: 'children' }],
+        {
+          'System.AreaID': 10
+        }
+      );
+      const innerRule: Rule = {
+        ...rule,
+
+        parentFilters: [
+          {
+            field: 'System.AreaID',
+            operator: FilterOperation.Equals,
+            type: FilterFieldType.Integer,
+            value: 10
+          }
+        ]
+      };
+
+      const result = await filterProcessor.isFilterMatch(innerRule, workItem, parentWorkItem);
+      expect(result).toBeTruthy();
+    });
+    it('should return false with multiple filters when only one filter matches', async () => {
+      const filterProcessor = new RuleFilterProcessor();
+      const workItem = getWorkItem(11, WorkItemNames.Task, 'Closed', [{ id: 9, type: 'parent' }], {
+        'System.AreaID': 10,
+        'System.AreaPath': '/Path/Project'
+      });
+      const parentWorkItem = getWorkItem(9, WorkItemNames.UserStory, 'Active', [
+        { id: 11, type: 'children' }
+      ]);
+      const innerRule: Rule = {
+        ...rule,
+        filters: [
+          {
+            field: 'System.AreaID',
+            operator: FilterOperation.Equals,
+            type: FilterFieldType.Integer,
+            value: 10
+          },
+          {
+            field: 'System.AreaPath',
+            operator: FilterOperation.NotEquals,
+            type: FilterFieldType.String,
+            value: '/Path/Project'
+          }
+        ]
+      };
+
+      const result = await filterProcessor.isFilterMatch(innerRule, workItem, parentWorkItem);
+      expect(result).toBeFalsy();
     });
 
     describe('workItem - string', () => {
@@ -103,7 +199,7 @@ describe('RuleFilterProcessor', () => {
               ]
             },
             workItem,
-            parentWorkItem
+            mainParentWorkItem
           );
           expect(result).toEqual(theory.expected);
         }
@@ -194,7 +290,7 @@ describe('RuleFilterProcessor', () => {
               ]
             },
             workItem,
-            parentWorkItem
+            mainParentWorkItem
           );
           expect(result).toEqual(theory.expected);
         }
@@ -240,7 +336,7 @@ describe('RuleFilterProcessor', () => {
               ]
             },
             workItem,
-            parentWorkItem
+            mainParentWorkItem
           );
           expect(result).toEqual(theory.expected);
         }
@@ -280,7 +376,7 @@ describe('RuleFilterProcessor', () => {
               ]
             },
             workItem,
-            parentWorkItem
+            mainParentWorkItem
           );
           expect(result).toEqual(theory.expected);
         }
@@ -291,8 +387,16 @@ describe('RuleFilterProcessor', () => {
         '{operator} returns {expected}',
         [
           { operator: FilterOperation.Equals, expected: true, value: 'backend;frontend' },
-          { operator: FilterOperation.Equals, expected: false, value: 'backend;frontend;full-stack' },
-          { operator: FilterOperation.NotEquals, expected: false, value: 'backend;frontend;full-stack' },
+          {
+            operator: FilterOperation.Equals,
+            expected: false,
+            value: 'backend;frontend;full-stack'
+          },
+          {
+            operator: FilterOperation.NotEquals,
+            expected: false,
+            value: 'backend;frontend;full-stack'
+          },
           { operator: FilterOperation.NotEquals, expected: true, value: 'full-stack' }
         ],
         async theory => {
@@ -320,7 +424,7 @@ describe('RuleFilterProcessor', () => {
               ]
             },
             workItem,
-            parentWorkItem
+            mainParentWorkItem
           );
           expect(result).toEqual(theory.expected);
         }

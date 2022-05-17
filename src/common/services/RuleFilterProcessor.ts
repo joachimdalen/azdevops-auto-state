@@ -36,7 +36,6 @@ export class RuleFilterProcessor {
   private async internalCheck(filters: FilterItem[], workItem: WorkItem) {
     const matchesFilters = await asyncFilter(filters, async x => {
       const field = workItem.fields[x.field];
-      console.log(x.field, field);
       if (field === undefined) return false;
 
       if (x.field === 'System.Tags') {
@@ -62,8 +61,7 @@ export class RuleFilterProcessor {
   private isTagsMatch(operation: FilterOperation, filterValue: string, workItemValue: string) {
     const filterTags = getTagsAsList(filterValue);
     const workItemTags = getTagsAsList(workItemValue);
-    console.log([filterTags, workItemTags]);
-
+    
     if (operation === FilterOperation.Equals)
       return filterTags.every(x => workItemTags.includes(x));
     return workItemTags.every(x => !filterTags.includes(x));
