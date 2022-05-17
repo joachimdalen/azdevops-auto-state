@@ -28,6 +28,16 @@ Thank you to the following for contributing to the latest release
 
 ### 🛠️ Maintenance (1)
 
+- Fix ci pipeline setting the wrong extension version
+  - Scheduled in [GH#34 - Build sets the wrong extension version in scripts when setting the version manually](https://github.com/joachimdalen/azdevops-auto-state/issues/34)
+  - Changed in [PR#47 - Build sets the wrong extension version in scripts when setting the version manually](https://github.com/joachimdalen/azdevops-auto-state/pull/47)
+
+---
+
+## 1.2.4 (2022-05-02)
+
+### 🛠️ Maintenance (1)
+
 - Update dependencies
   - Changed in [PR#43 - Update dependencies](https://github.com/joachimdalen/azdevops-auto-state/pull/43)
 

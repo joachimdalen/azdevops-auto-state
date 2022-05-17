@@ -20,6 +20,12 @@
             "issue": 44,
             "pullRequest": 45,
             "description": "Add work item filters"
+          },
+          {
+            "type": "maint",
+            "description": "Fix ci pipeline setting the wrong extension version",
+            "issue": 34,
+            "pullRequest": 47
           }
         ]
       }

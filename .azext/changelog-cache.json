@@ -1,6 +1,13 @@
 {
   "issues": [
     {
+      "id": 1111282397,
+      "number": 34,
+      "submitter": "joachimdalen",
+      "title": "Build sets the wrong extension version in scripts when setting the version manually",
+      "url": "https://github.com/joachimdalen/azdevops-auto-state/issues/34"
+    },
+    {
       "id": 1231221595,
       "number": 44,
       "submitter": "MPDFO",
@@ -72,6 +79,13 @@
     }
   ],
   "pullRequests": [
+    {
+      "id": 938308260,
+      "number": 47,
+      "submitter": "joachimdalen",
+      "title": "Build sets the wrong extension version in scripts when setting the version manually",
+      "url": "https://github.com/joachimdalen/azdevops-auto-state/pull/47"
+    },
     {
       "id": 936744719,
       "number": 45,

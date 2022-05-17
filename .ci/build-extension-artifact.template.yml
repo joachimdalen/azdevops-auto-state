@@ -34,6 +34,7 @@ jobs:
       - template: build.template.yml
         parameters:
           extensionEnv: ${{ parameters.extensionEnv }}
+          taskVersion: ${{ parameters.taskVersion }}
       - task: Npm@1
         displayName: 'Build changelog'
         inputs:
