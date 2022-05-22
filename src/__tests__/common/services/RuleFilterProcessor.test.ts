@@ -20,7 +20,8 @@ const rule: Rule = {
   parentType: WorkItemReferenceNames.UserStory,
   workItemType: WorkItemReferenceNames.Task,
   processParent: false,
-  disabled: false
+  disabled: false,
+  groups: []
 };
 
 const identityOne: IInternalIdentity = {

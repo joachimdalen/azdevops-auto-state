@@ -71,7 +71,7 @@ export const getListColumns = (
       fieldName: 'transitionState',
       className: 'flex-self-center',
       minWidth: 50,
-      maxWidth: 200,
+      maxWidth: 150,
       isResizable: true,
       onRender: (item: Rule, index?: number, column?: IColumn) => {
         const state = getState(types, item.workItemType, item.transitionState);
@@ -83,7 +83,7 @@ export const getListColumns = (
       name: 'Parent type',
       fieldName: 'parentType',
       className: 'flex-self-center',
-      minWidth: 100,
+      minWidth: 50,
       maxWidth: 200,
       isResizable: true,
       onRender: (item: Rule, index?: number, column?: IColumn) => {
@@ -133,12 +133,43 @@ export const getListColumns = (
       }
     },
     {
+      key: 'group',
+      name: 'Rule Group',
+      fieldName: 'group',
+      className: 'flex-self-center',
+      minWidth: 100,
+      maxWidth: 200,
+      isResizable: true,
+      onRender: (item: Rule, index?: number, column?: IColumn) => {
+        const hasFilters =
+          (item.filters !== undefined && item.filters.length > 0) ||
+          (item.parentFilters !== undefined && item.parentFilters.length > 0);
+        return (
+          <PillGroup overflow={PillGroupOverflow.wrap}>
+            {item.groups?.map(g => {
+              if (g === 'Default') {
+                return (
+                  <Pill key={g} variant={PillVariant.colored} color={colorBlue}>
+                    {g}
+                  </Pill>
+                );
+              }
+              return (
+                <Pill key={g} variant={PillVariant.colored} color={colorBlue}>
+                  {g}
+                </Pill>
+              );
+            })}
+          </PillGroup>
+        );
+      }
+    },
+    {
       key: 'properties',
       name: 'Properties',
       fieldName: 'properties',
       className: 'flex-self-center',
       minWidth: 100,
-
       isResizable: true,
       onRender: (item: Rule, index?: number, column?: IColumn) => {
         const hasFilters =

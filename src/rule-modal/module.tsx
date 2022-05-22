@@ -32,6 +32,10 @@ import WorkItemTypeDropdown from '../shared-ui/component/WorkItemTypeDropdown';
 import showRootComponent from '../shared-ui/showRootComponent';
 import WorkItemFilter from './components/WorkItemFilter';
 import { validationSchema } from './types';
+import SettingRow from './components/settings-list/SettingRow';
+import { Link } from 'azure-devops-ui/Link';
+import SettingRowDropdown from './components/settings-list/SettingRowDropdown';
+import { GroupTagPicker } from './components/GroupTagPicker';
 
 initializeIcons();
 const ModalContent = (): React.ReactElement => {
@@ -51,6 +55,7 @@ const ModalContent = (): React.ReactElement => {
   const [workItemType, setWorkItemType] = useState('');
   const [parentType, setParentType] = useState('');
   const [parentExcludedStates, setParentExcludedStates] = useState<string[]>([]);
+  const [groups, setGroups] = useState<string[]>([]);
   const [parentTargetState, setParentTargetState] = useState('');
   const [transitionState, setTransitionState] = useState('');
   const [childrenLookup, setChildrenLookup] = useState(false);
@@ -91,6 +96,7 @@ const ModalContent = (): React.ReactElement => {
               setProcessParent(rle.processParent);
               setWorkItemFilters(rle.filters || []);
               setParentFilters(rle.parentFilters || []);
+              setGroups(rle.groups || ['Default']);
               const disabled = rle.disabled === undefined ? false : rle.disabled;
               setEnabled(disabled === false);
               setLoading(false);
@@ -108,7 +114,7 @@ const ModalContent = (): React.ReactElement => {
       });
     });
   }, []);
-  
+
   const dismiss = () => {
     const config = DevOps.getConfiguration();
     if (config.panel) {
@@ -134,9 +140,11 @@ const ModalContent = (): React.ReactElement => {
           processParent: processParent,
           filters: workItemFilters.length > 0 ? workItemFilters : undefined,
           parentFilters: parentFilters.length > 0 ? parentFilters : undefined,
-          disabled: !enabled
+          disabled: !enabled,
+          groups: groups
         };
 
+        console.log(ac);
         await validationSchema.validate(ac, {
           abortEarly: false
         });
@@ -210,6 +218,7 @@ const ModalContent = (): React.ReactElement => {
             className="margin-bottom-16"
           >
             <Tab id="details" name="Details" iconProps={{ iconName: 'Page' }} />
+            <Tab id="options" name="Options" iconProps={{ iconName: 'Settings' }} />
             <Tab id="filters" name="Filters" iconProps={{ iconName: 'Filter' }} />
           </TabBar>
         </Surface>
@@ -330,6 +339,51 @@ const ModalContent = (): React.ReactElement => {
               />
             </FormItem>
             <FormItem
+              label="Rule group"
+              error={hasError(validationErrors, 'groups')}
+              message={
+                hasError(validationErrors, 'groups')
+                  ? getCombined(validationErrors, 'groups', 'Work item type')
+                  : rule !== undefined
+                  ? 'To change work item type you will need to create a new rule'
+                  : 'This is the work item type for this rule to trigger on'
+              }
+            >
+              <GroupTagPicker selected={groups} onChange={e => setGroups(e)} />
+            </FormItem>
+          </div>
+        </ConditionalChildren>
+        <ConditionalChildren renderChildren={tabId === 'filters'}>
+          <div className="flex-column rhythm-vertical-16">
+            <FormItem
+              label="Work Item Filters"
+              message="Use work item filters to provide additional checks for the work item"
+            >
+              <WorkItemFilter
+                disabled={workItemType === ''}
+                fields={fields}
+                workItemType={types.find(x => x.referenceName === workItemType)}
+                filters={workItemFilters}
+                onChange={(filters: FilterItem[]) => setWorkItemFilters(filters)}
+              />
+            </FormItem>
+            <FormItem
+              label="Parent Filters"
+              message="Use parent filters to provide additional checks for the parent item"
+            >
+              <WorkItemFilter
+                disabled={parentType === ''}
+                fields={fields}
+                workItemType={types.find(x => x.referenceName === parentType)}
+                filters={parentFilters}
+                onChange={(filters: FilterItem[]) => setParentFilters(filters)}
+              />
+            </FormItem>
+          </div>
+        </ConditionalChildren>
+        <ConditionalChildren renderChildren={tabId === 'options'}>
+          <div className="">
+            {/* <FormItem
               label="Children lookup"
               error={hasError(validationErrors, 'childrenLookup')}
               message={
@@ -370,35 +424,52 @@ const ModalContent = (): React.ReactElement => {
                 offText={'Off'}
                 onText={'On'}
               />
-            </FormItem>
-          </div>
-        </ConditionalChildren>
-        <ConditionalChildren renderChildren={tabId === 'filters'}>
-          <div className="flex-column rhythm-vertical-16">
-            <FormItem
-              label="Work Item Filters"
-              message="Use work item filters to provide additional checks for the work item"
-            >
-              <WorkItemFilter
-                disabled={workItemType === ''}
-                fields={fields}
-                workItemType={types.find(x => x.referenceName === workItemType)}
-                filters={workItemFilters}
-                onChange={(filters: FilterItem[]) => setWorkItemFilters(filters)}
-              />
-            </FormItem>
-            <FormItem
-              label="Parent Filters"
-              message="Use parent filters to provide additional checks for the parent item"
-            >
-              <WorkItemFilter
-                disabled={parentType === ''}
-                fields={fields}
-                workItemType={types.find(x => x.referenceName === parentType)}
-                filters={parentFilters}
-                onChange={(filters: FilterItem[]) => setParentFilters(filters)}
-              />
-            </FormItem>
+            </FormItem> */}
+            <SettingRowDropdown
+              settings={{
+                title: 'Children lookup',
+                description: (
+                  <p>
+                    Take child work items into consideration when processing the rule. See{' '}
+                    <Link
+                      target="_blank"
+                      href="https://github.com/joachimdalen/azdevops-auto-state/blob/master/docs/RULES.md#children-lookup"
+                    >
+                      documentation
+                    </Link>{' '}
+                    for more information.
+                  </p>
+                ),
+                checked: childrenLookup,
+                toggleProps: {
+                  disabled: isDisabled
+                },
+                options: [
+                  {
+                    id: 'selection',
+                    selected: '1',
+                    title: 'Match mode',
+                    items: [{ id: '1', text: 'Abort' }]
+                  }
+                ]
+              }}
+              toggle={async (k, v) => {
+                setChildrenLookup(v);
+              }}
+            />
+            <SettingRow
+              settings={{
+                title: 'Process parent',
+                description: 'Process rules for parent when prosessing this rule',
+                checked: processParent,
+                toggleProps: {
+                  disabled: isDisabled
+                }
+              }}
+              toggle={async (k, v) => {
+                setProcessParent(v);
+              }}
+            />
           </div>
         </ConditionalChildren>
       </ConditionalChildren>

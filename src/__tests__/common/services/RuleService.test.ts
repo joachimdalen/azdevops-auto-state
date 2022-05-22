@@ -67,7 +67,8 @@ describe('RuleService', () => {
         parentExcludedStates: ['Active'],
         parentTargetState: 'Active',
         processParent: false,
-        disabled: false
+        disabled: false,
+        groups: []
       };
       jest.spyOn(StorageService.prototype, 'getRuleDocuments').mockResolvedValue([]);
       const setRuleDocumentSpy = jest.spyOn(StorageService.prototype, 'setRuleDocument');
@@ -102,7 +103,8 @@ describe('RuleService', () => {
         parentExcludedStates: ['Active'],
         parentTargetState: 'Active',
         processParent: false,
-        disabled: false
+        disabled: false,
+        groups: []
       };
 
       const ruleService = new RuleService();
@@ -123,7 +125,8 @@ describe('RuleService', () => {
         parentExcludedStates: ['Active'],
         parentTargetState: 'Active',
         processParent: false,
-        disabled: false
+        disabled: false,
+        groups: []
       };
       const ruleDoc: RuleDocument = {
         id: WorkItemReferenceNames.Task,
@@ -154,7 +157,8 @@ describe('RuleService', () => {
         parentExcludedStates: ['Active'],
         parentTargetState: 'Active',
         processParent: false,
-        disabled: false
+        disabled: false,
+        groups: []
       };
       const ruleIdTwo = uuidV4();
       const ruleTwo: Rule = {
@@ -166,7 +170,8 @@ describe('RuleService', () => {
         parentExcludedStates: ['Active'],
         parentTargetState: 'Active',
         processParent: false,
-        disabled: false
+        disabled: false,
+        groups: []
       };
       const ruleDoc: RuleDocument = {
         id: WorkItemReferenceNames.Task,
@@ -209,7 +214,8 @@ describe('RuleService', () => {
       parentExcludedStates: ['Active'],
       parentTargetState: 'Active',
       processParent: false,
-      disabled: false
+      disabled: false,
+      groups: []
     };
     const baseRuleWithFilter: Rule = {
       ...baseRule,

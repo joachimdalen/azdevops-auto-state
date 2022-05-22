@@ -2,6 +2,7 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 
 import { mockGetConfiguration } from '../../__mocks__/azure-devops-extension-sdk';
 import { getWorkItemTypes } from '../../__test-utils__/WorkItemTestUtils';
+import RuleDocument from '../../common/models/WorkItemRules';
 import RuleService from '../../common/services/RuleService';
 import { StorageService } from '../../common/services/StorageService';
 import WorkItemService from '../../common/services/WorkItemService';
@@ -10,7 +11,7 @@ import PresetsPanel from '../../presets-panel/PresetsPanel';
 
 jest.mock('../../common/webLogger');
 
-const defaultRules = [
+const defaultRules: RuleDocument[] = [
   {
     id: 'Microsoft.VSTS.WorkItemTypes.Task',
     rules: [
@@ -23,7 +24,8 @@ const defaultRules = [
         parentTargetState: 'Active',
         childrenLookup: false,
         processParent: true,
-        disabled: false
+        disabled: false,
+        groups: []
       },
       {
         id: '81646635-5da4-4af4-b8b0-f05845e575fc',
@@ -34,7 +36,8 @@ const defaultRules = [
         parentTargetState: 'Resolved',
         childrenLookup: true,
         processParent: true,
-        disabled: false
+        disabled: false,
+        groups: []
       }
     ]
   }

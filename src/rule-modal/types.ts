@@ -9,6 +9,11 @@ export enum FilterOperation {
   GreaterThanEquals = 'SupportedOperations.GreaterThanEquals',
   LessThanEquals = 'SupportedOperations.LessThanEquals'
 }
+
+export enum ChildrenMatchOption {
+  PickFirst = 'ChildrenMatchOption.PickFirst',
+  Abort = 'ChildrenMatchOption.Abort'
+}
 export interface FilterOperationDefinition {
   name: string;
   referenceName: FilterOperation;
@@ -74,5 +79,6 @@ export const validationSchema = yup.object().shape({
     .min(1, 'Parent not in state is a required field'),
   parentTargetState: yup.string().trim().required(),
   childrenLookup: yup.bool(),
-  processParent: yup.bool()
+  processParent: yup.bool(),
+  groups: yup.array().of(yup.string().trim()).min(1, 'At least one rule group must be specified')
 });

@@ -59,7 +59,8 @@ describe('RuleProcessor', () => {
         parentType: WorkItemReferenceNames.UserStory,
         workItemType: WorkItemReferenceNames.Task,
         processParent: false,
-        disabled: false
+        disabled: false,
+        groups: []
       };
       const ruleProcessor = new RuleProcessor();
       await ruleProcessor.init();
@@ -94,7 +95,8 @@ describe('RuleProcessor', () => {
         parentType: WorkItemReferenceNames.UserStory,
         workItemType: WorkItemReferenceNames.Task,
         processParent: false,
-        disabled: false
+        disabled: false,
+        groups: []
       };
 
       const ruleProcessor = new RuleProcessor();
@@ -113,7 +115,8 @@ describe('RuleProcessor', () => {
         parentType: WorkItemReferenceNames.UserStory,
         workItemType: WorkItemReferenceNames.Task,
         processParent: false,
-        disabled: false
+        disabled: false,
+        groups: []
       };
       jest.spyOn(StorageService.prototype, 'getRuleDocuments').mockResolvedValue([
         {
@@ -163,7 +166,8 @@ describe('RuleProcessor', () => {
         parentType: WorkItemReferenceNames.UserStory,
         workItemType: WorkItemReferenceNames.Task,
         processParent: false,
-        disabled: true
+        disabled: true,
+        groups: []
       };
       jest.spyOn(StorageService.prototype, 'getRuleDocuments').mockResolvedValue([
         {
@@ -198,7 +202,8 @@ describe('RuleProcessor', () => {
         parentType: WorkItemReferenceNames.UserStory,
         workItemType: WorkItemReferenceNames.Task,
         processParent: false,
-        disabled: false
+        disabled: false,
+        groups: []
       };
       const ruleTwo: Rule = {
         id: uuidV4(),
@@ -209,7 +214,8 @@ describe('RuleProcessor', () => {
         parentType: WorkItemReferenceNames.UserStory,
         workItemType: WorkItemReferenceNames.Documentation,
         processParent: false,
-        disabled: false
+        disabled: false,
+        groups: []
       };
       jest.spyOn(StorageService.prototype, 'getRuleDocuments').mockResolvedValue([
         {
@@ -281,7 +287,8 @@ describe('RuleProcessor', () => {
         parentType: WorkItemReferenceNames.UserStory,
         workItemType: WorkItemReferenceNames.Task,
         processParent: false,
-        disabled: false
+        disabled: false,
+        groups: []
       };
 
       const ruleProcessor = new RuleProcessor();
@@ -311,7 +318,8 @@ describe('RuleProcessor', () => {
         parentType: WorkItemReferenceNames.UserStory,
         workItemType: WorkItemReferenceNames.Task,
         processParent: false,
-        disabled: false
+        disabled: false,
+        groups: []
       };
       const ruleProcessor = new RuleProcessor();
       await ruleProcessor.init();
@@ -340,7 +348,8 @@ describe('RuleProcessor', () => {
         parentType: WorkItemReferenceNames.UserStory,
         workItemType: WorkItemReferenceNames.Task,
         processParent: false,
-        disabled: false
+        disabled: false,
+        groups: []
       };
 
       const ruleProcessor = new RuleProcessor();
@@ -370,7 +379,8 @@ describe('RuleProcessor', () => {
         parentType: WorkItemReferenceNames.UserStory,
         workItemType: WorkItemReferenceNames.Task,
         processParent: false,
-        disabled: false
+        disabled: false,
+        groups: []
       };
 
       const ruleProcessor = new RuleProcessor();
@@ -400,7 +410,8 @@ describe('RuleProcessor', () => {
         parentType: WorkItemReferenceNames.Epic,
         workItemType: WorkItemReferenceNames.Feature,
         processParent: false,
-        disabled: false
+        disabled: false,
+        groups: []
       };
 
       const ruleProcessor = new RuleProcessor();
@@ -430,7 +441,8 @@ describe('RuleProcessor', () => {
         parentType: WorkItemReferenceNames.Feature,
         workItemType: WorkItemReferenceNames.Task,
         processParent: false,
-        disabled: false
+        disabled: false,
+        groups: []
       };
 
       const ruleProcessor = new RuleProcessor();
@@ -460,7 +472,8 @@ describe('RuleProcessor', () => {
         parentType: WorkItemReferenceNames.UserStory,
         workItemType: WorkItemReferenceNames.Task,
         processParent: false,
-        disabled: false
+        disabled: false,
+        groups: []
       };
 
       const ruleProcessor = new RuleProcessor();
@@ -489,7 +502,8 @@ describe('RuleProcessor', () => {
         parentType: WorkItemReferenceNames.UserStory,
         workItemType: WorkItemReferenceNames.Task,
         processParent: false,
-        disabled: false
+        disabled: false,
+        groups: []
       };
 
       const ruleProcessor = new RuleProcessor();
@@ -598,7 +612,8 @@ describe('RuleProcessor', () => {
               parentTargetState: 'Active',
               childrenLookup: false,
               processParent: false,
-              disabled: false
+              disabled: false,
+              groups: []
             }
           ]
         }
@@ -656,7 +671,8 @@ describe('RuleProcessor', () => {
               parentTargetState: 'Active',
               childrenLookup: false,
               processParent: false,
-              disabled: true
+              disabled: true,
+              groups: []
             }
           ]
         }
@@ -727,7 +743,8 @@ describe('RuleProcessor', () => {
               parentTargetState: 'Active',
               childrenLookup: false,
               processParent: true,
-              disabled: false
+              disabled: false,
+              groups: []
             }
           ]
         },
@@ -743,7 +760,8 @@ describe('RuleProcessor', () => {
               parentTargetState: 'Active',
               childrenLookup: false,
               processParent: false,
-              disabled: false
+              disabled: false,
+              groups: []
             }
           ]
         }
@@ -842,7 +860,8 @@ describe('RuleProcessor', () => {
               parentTargetState: 'Active',
               childrenLookup: false,
               processParent: true,
-              disabled: false
+              disabled: false,
+              groups: []
             }
           ]
         },
@@ -858,7 +877,8 @@ describe('RuleProcessor', () => {
               parentTargetState: 'Active',
               childrenLookup: false,
               processParent: false,
-              disabled: false
+              disabled: false,
+              groups: []
             }
           ]
         },
@@ -874,7 +894,8 @@ describe('RuleProcessor', () => {
               parentTargetState: 'Active',
               childrenLookup: false,
               processParent: false,
-              disabled: false
+              disabled: false,
+              groups: []
             }
           ]
         }
@@ -955,7 +976,8 @@ describe('RuleProcessor', () => {
               parentTargetState: 'Active',
               childrenLookup: false,
               processParent: true,
-              disabled: false
+              disabled: false,
+              groups: []
             }
           ]
         },
@@ -971,7 +993,8 @@ describe('RuleProcessor', () => {
               parentTargetState: 'Active',
               childrenLookup: false,
               processParent: true,
-              disabled: false
+              disabled: false,
+              groups: []
             }
           ]
         },
@@ -987,7 +1010,8 @@ describe('RuleProcessor', () => {
               parentTargetState: 'Active',
               childrenLookup: false,
               processParent: true,
-              disabled: false
+              disabled: false,
+              groups: []
             }
           ]
         }
@@ -1068,7 +1092,8 @@ describe('RuleProcessor', () => {
               parentTargetState: 'Active',
               childrenLookup: false,
               processParent: true,
-              disabled: false
+              disabled: false,
+              groups: []
             }
           ]
         },
@@ -1084,7 +1109,8 @@ describe('RuleProcessor', () => {
               parentTargetState: 'Active',
               childrenLookup: false,
               processParent: true,
-              disabled: false
+              disabled: false,
+              groups: []
             }
           ]
         },
@@ -1100,7 +1126,8 @@ describe('RuleProcessor', () => {
               parentTargetState: 'Active',
               childrenLookup: false,
               processParent: true,
-              disabled: true
+              disabled: true,
+              groups: []
             }
           ]
         }
@@ -1165,7 +1192,8 @@ describe('RuleProcessor', () => {
               parentTargetState: 'Active',
               childrenLookup: false,
               processParent: false,
-              disabled: false
+              disabled: false,
+              groups: []
             }
           ]
         }
@@ -1240,7 +1268,8 @@ describe('RuleProcessor', () => {
               parentTargetState: 'Active',
               childrenLookup: false,
               processParent: true,
-              disabled: false
+              disabled: false,
+              groups: []
             }
           ]
         },
@@ -1256,7 +1285,8 @@ describe('RuleProcessor', () => {
               parentTargetState: 'Active',
               childrenLookup: false,
               processParent: false,
-              disabled: false
+              disabled: false,
+              groups: []
             }
           ]
         }
