@@ -1,3 +1,4 @@
+import { ChoiceGroup } from '@fluentui/react';
 import { IInternalIdentity } from '@joachimdalen/azdevops-ext-core/CommonTypes';
 import { IdentityPicker } from '@joachimdalen/azdevops-ext-core/IdentityPicker';
 import {
@@ -10,6 +11,7 @@ import { ContentJustification } from 'azure-devops-ui/Callout';
 import { ConditionalChildren } from 'azure-devops-ui/ConditionalChildren';
 import { Dialog } from 'azure-devops-ui/Dialog';
 import { Dropdown } from 'azure-devops-ui/Dropdown';
+import { EditableDropdown } from 'azure-devops-ui/EditableDropdown';
 import { FormItem } from 'azure-devops-ui/FormItem';
 import { IListBoxItem } from 'azure-devops-ui/ListBox';
 import { TextField } from 'azure-devops-ui/TextField';
@@ -17,14 +19,14 @@ import { Toggle } from 'azure-devops-ui/Toggle';
 import { ArrayItemProvider } from 'azure-devops-ui/Utilities/Provider';
 import React, { useMemo, useState } from 'react';
 
-import FilterItem, { FilterFieldType } from '../../common/models/FilterItem';
+import FilterItem, { FilterFieldType } from '../../../common/models/FilterItem';
 import {
   excludedReferenceNames,
   FilterOperation,
   filterOperations,
   supportedValueTypes
-} from '../types';
-import { WorkItemTagPicker } from './WorkItemTagPicker';
+} from '../../types';
+import { WorkItemTagPicker } from '../WorkItemTagPicker';
 
 interface ListBoxOperation {
   op: FilterOperation;
@@ -46,6 +48,7 @@ const WorkItemFilterModal = ({
   selectedFields
 }: WorkItemFilterModalProps): React.ReactElement => {
   const [field, setField] = useState<string | undefined>();
+  const [group, setGroup] = useState<string | undefined>();
   const [fieldReference, setFieldReference] = useState<WorkItemField | undefined>();
   const [operator, setOperator] = useState<FilterOperation | undefined>();
   const [value, setValue] = useState<string | boolean | number | IInternalIdentity | undefined>();
@@ -149,9 +152,18 @@ const WorkItemFilterModal = ({
       contentJustification={ContentJustification.Start}
       footerButtonProps={[
         {
-          text: 'Save',
+          text: 'Add',
+          primary: true,
+          iconProps: {
+            iconName: 'Add'
+          },
           onClick: () => {
-            if (field !== undefined && operator !== undefined && value !== undefined) {
+            if (
+              field !== undefined &&
+              operator !== undefined &&
+              value !== undefined &&
+              group !== undefined
+            ) {
               const getItem = (): FilterFieldType => {
                 if (fieldReference === undefined) return FilterFieldType.String;
                 if (fieldReference.isIdentity) return FilterFieldType.Identity;
@@ -170,7 +182,8 @@ const WorkItemFilterModal = ({
                 field: field,
                 operator: operator,
                 value: value,
-                type: getItem()
+                type: getItem(),
+                group: group
               };
 
               onAddItem(item);
@@ -182,6 +195,43 @@ const WorkItemFilterModal = ({
       showCloseButton
     >
       <div className="rhythm-vertical-8 padding-bottom-16">
+        <ChoiceGroup
+          label="Where should this filter be applied?"
+          defaultSelectedKey="bar"
+          options={[
+            {
+              key: 'bar',
+              imageSrc:
+                'https://tfsprodweu5.visualstudio.com/_apis/wit/workItemIcons/icon_insect?color=CC293D&v=2',
+              selectedImageSrc:
+                'https://tfsprodweu5.visualstudio.com/_apis/wit/workItemIcons/icon_insect?color=CC293D&v=2',
+              imageAlt: 'Bar chart',
+              imageSize: { width: 32, height: 32 },
+              text: 'Bug'
+            },
+            {
+              key: 'user-story',
+              imageSrc:
+                'https://tfsprodweu5.visualstudio.com/_apis/wit/workItemIcons/icon_insect?color=CC293D&v=2',
+              selectedImageSrc:
+                'https://tfsprodweu5.visualstudio.com/_apis/wit/workItemIcons/icon_insect?color=CC293D&v=2',
+              imageAlt: 'Bar chart',
+              imageSize: { width: 32, height: 32 },
+              text: 'User Story (Parent)'
+            }
+          ]}
+        />
+        <FormItem
+          label="Rule group"
+          message="Rule groups allows for creating distinct trigger groups (multiple rules). See the documentation for more info"
+        >
+          <EditableDropdown
+            allowFreeform={true}
+            items={[]}
+            onValueChange={value => value !== undefined && setGroup(value.id)}
+            placeholder="Select or create a group"
+          />
+        </FormItem>
         <FormItem label="Field">
           <Dropdown
             placeholder="Select field to filter on"

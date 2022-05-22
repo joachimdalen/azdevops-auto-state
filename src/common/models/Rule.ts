@@ -12,5 +12,4 @@ export default interface Rule {
   processParent: boolean;
   filters?: FilterItem[];
   parentFilters?: FilterItem[];
-  groups: string[];
 }

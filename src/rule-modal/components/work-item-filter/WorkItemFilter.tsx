@@ -7,11 +7,11 @@ import { Tooltip } from 'azure-devops-ui/TooltipEx';
 import { ArrayItemProvider } from 'azure-devops-ui/Utilities/Provider';
 import { useMemo, useState } from 'react';
 
-import FilterItem, { FilterFieldType } from '../../common/models/FilterItem';
-import { filterOperations } from '../types';
-import PersonaDisplay from './PersonaDisplay';
+import FilterItem, { FilterFieldType } from '../../../common/models/FilterItem';
+import { filterOperations } from '../../types';
+import PersonaDisplay from '../PersonaDisplay';
+import WorkItemTagDisplay from '../WorkItemTagDisplay';
 import WorkItemFilterModal from './WorkItemFilterModal';
-import WorkItemTagDisplay from './WorkItemTagDisplay';
 
 interface WorkItemFilterProps {
   workItemType?: WorkItemType;

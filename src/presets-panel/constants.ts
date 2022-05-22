@@ -23,8 +23,7 @@ export const presets: PresetRule[] = [
       parentTargetState: 'Active',
       processParent: true,
       disabled: false,
-      childrenLookup: false,
-      groups: []
+      childrenLookup: false
     }
   },
   {
@@ -41,8 +40,7 @@ export const presets: PresetRule[] = [
       parentTargetState: 'Resolved',
       processParent: true,
       disabled: false,
-      childrenLookup: true,
-      groups: []
+      childrenLookup: true
     }
   },
   {
@@ -58,8 +56,7 @@ export const presets: PresetRule[] = [
       parentTargetState: 'Active',
       processParent: true,
       disabled: false,
-      childrenLookup: false,
-      groups: []
+      childrenLookup: false
     }
   },
   {
@@ -75,8 +72,7 @@ export const presets: PresetRule[] = [
       parentTargetState: 'Resolved',
       processParent: true,
       disabled: false,
-      childrenLookup: true,
-      groups: []
+      childrenLookup: true
     }
   },
   {
@@ -92,8 +88,7 @@ export const presets: PresetRule[] = [
       parentTargetState: 'Closed',
       processParent: true,
       disabled: false,
-      childrenLookup: true,
-      groups: []
+      childrenLookup: true
     }
   },
   {
@@ -109,8 +104,7 @@ export const presets: PresetRule[] = [
       parentTargetState: 'Active',
       processParent: true,
       disabled: false,
-      childrenLookup: false,
-      groups: []
+      childrenLookup: false
     }
   },
   {
@@ -126,8 +120,7 @@ export const presets: PresetRule[] = [
       parentTargetState: 'Resolved',
       processParent: true,
       disabled: false,
-      childrenLookup: false,
-      groups: []
+      childrenLookup: false
     }
   },
   {
@@ -143,8 +136,7 @@ export const presets: PresetRule[] = [
       parentTargetState: 'Closed',
       processParent: true,
       disabled: false,
-      childrenLookup: false,
-      groups: []
+      childrenLookup: false
     }
   },
   {
@@ -161,8 +153,7 @@ export const presets: PresetRule[] = [
       parentTargetState: 'Committed',
       processParent: true,
       disabled: false,
-      childrenLookup: false,
-      groups: []
+      childrenLookup: false
     }
   },
   {
@@ -178,8 +169,7 @@ export const presets: PresetRule[] = [
       parentTargetState: 'Done',
       processParent: true,
       disabled: false,
-      childrenLookup: true,
-      groups: []
+      childrenLookup: true
     }
   },
   {
@@ -196,8 +186,7 @@ export const presets: PresetRule[] = [
       parentTargetState: 'In Progress',
       processParent: true,
       disabled: false,
-      childrenLookup: false,
-      groups: []
+      childrenLookup: false
     }
   },
   {
@@ -213,8 +202,7 @@ export const presets: PresetRule[] = [
       parentTargetState: 'Done',
       processParent: true,
       disabled: false,
-      childrenLookup: true,
-      groups: []
+      childrenLookup: true
     }
   },
   {
@@ -230,8 +218,7 @@ export const presets: PresetRule[] = [
       parentTargetState: 'In Progress',
       processParent: true,
       disabled: false,
-      childrenLookup: false,
-      groups: []
+      childrenLookup: false
     }
   },
   {
@@ -247,8 +234,7 @@ export const presets: PresetRule[] = [
       parentTargetState: 'Done',
       processParent: true,
       disabled: false,
-      childrenLookup: true,
-      groups: []
+      childrenLookup: true
     }
   },
   {
@@ -264,8 +250,7 @@ export const presets: PresetRule[] = [
       parentTargetState: 'Doing',
       processParent: true,
       disabled: false,
-      childrenLookup: false,
-      groups: []
+      childrenLookup: false
     }
   },
   {
@@ -281,8 +266,7 @@ export const presets: PresetRule[] = [
       parentTargetState: 'Done',
       processParent: true,
       disabled: false,
-      childrenLookup: true,
-      groups: []
+      childrenLookup: true
     }
   },
   {
@@ -298,8 +282,7 @@ export const presets: PresetRule[] = [
       parentTargetState: 'Doing',
       processParent: true,
       disabled: false,
-      childrenLookup: false,
-      groups: []
+      childrenLookup: false
     }
   },
   {
@@ -315,8 +298,7 @@ export const presets: PresetRule[] = [
       parentTargetState: 'Done',
       processParent: true,
       disabled: false,
-      childrenLookup: true,
-      groups: []
+      childrenLookup: true
     }
   }
 ];

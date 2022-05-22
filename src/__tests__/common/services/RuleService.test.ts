@@ -1,13 +1,13 @@
+import { IInternalIdentity } from '@joachimdalen/azdevops-ext-core/CommonTypes';
 import { v4 as uuidV4 } from 'uuid';
 
 import { WorkItemNames, WorkItemReferenceNames } from '../../../__test-utils__/WorkItemTestUtils';
+import FilterItem, { FilterFieldType } from '../../../common/models/FilterItem';
 import Rule from '../../../common/models/Rule';
 import RuleDocument from '../../../common/models/WorkItemRules';
 import RuleService from '../../../common/services/RuleService';
 import { StorageService } from '../../../common/services/StorageService';
-import FilterItem, { FilterFieldType } from '../../../common/models/FilterItem';
 import { FilterOperation } from '../../../rule-modal/types';
-import { IInternalIdentity } from '@joachimdalen/azdevops-ext-core/CommonTypes';
 
 describe('RuleService', () => {
   describe('load', () => {
@@ -67,8 +67,7 @@ describe('RuleService', () => {
         parentExcludedStates: ['Active'],
         parentTargetState: 'Active',
         processParent: false,
-        disabled: false,
-        groups: []
+        disabled: false
       };
       jest.spyOn(StorageService.prototype, 'getRuleDocuments').mockResolvedValue([]);
       const setRuleDocumentSpy = jest.spyOn(StorageService.prototype, 'setRuleDocument');
@@ -103,8 +102,7 @@ describe('RuleService', () => {
         parentExcludedStates: ['Active'],
         parentTargetState: 'Active',
         processParent: false,
-        disabled: false,
-        groups: []
+        disabled: false
       };
 
       const ruleService = new RuleService();
@@ -125,8 +123,7 @@ describe('RuleService', () => {
         parentExcludedStates: ['Active'],
         parentTargetState: 'Active',
         processParent: false,
-        disabled: false,
-        groups: []
+        disabled: false
       };
       const ruleDoc: RuleDocument = {
         id: WorkItemReferenceNames.Task,
@@ -157,8 +154,7 @@ describe('RuleService', () => {
         parentExcludedStates: ['Active'],
         parentTargetState: 'Active',
         processParent: false,
-        disabled: false,
-        groups: []
+        disabled: false
       };
       const ruleIdTwo = uuidV4();
       const ruleTwo: Rule = {
@@ -170,8 +166,7 @@ describe('RuleService', () => {
         parentExcludedStates: ['Active'],
         parentTargetState: 'Active',
         processParent: false,
-        disabled: false,
-        groups: []
+        disabled: false
       };
       const ruleDoc: RuleDocument = {
         id: WorkItemReferenceNames.Task,
@@ -202,7 +197,8 @@ describe('RuleService', () => {
       field: 'System.Title',
       operator: FilterOperation.Equals,
       type: FilterFieldType.Boolean,
-      value: '1234'
+      value: '1234',
+      group: 'default'
     };
 
     const baseRule: Rule = {
@@ -214,8 +210,7 @@ describe('RuleService', () => {
       parentExcludedStates: ['Active'],
       parentTargetState: 'Active',
       processParent: false,
-      disabled: false,
-      groups: []
+      disabled: false
     };
     const baseRuleWithFilter: Rule = {
       ...baseRule,
@@ -252,7 +247,8 @@ describe('RuleService', () => {
               field: 'System.Tags',
               operator: FilterOperation.Equals,
               type: FilterFieldType.Boolean,
-              value: 'backend;frontend'
+              value: 'backend;frontend',
+              group: 'default'
             }
           ]
         });
@@ -266,7 +262,8 @@ describe('RuleService', () => {
       field: 'System.Title',
       operator: FilterOperation.Equals,
       type: FilterFieldType.Boolean,
-      value: '1234'
+      value: '1234',
+      group: 'default'
     };
 
     const identityOne: IInternalIdentity = {

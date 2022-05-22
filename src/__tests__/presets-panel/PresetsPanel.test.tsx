@@ -24,8 +24,7 @@ const defaultRules: RuleDocument[] = [
         parentTargetState: 'Active',
         childrenLookup: false,
         processParent: true,
-        disabled: false,
-        groups: []
+        disabled: false
       },
       {
         id: '81646635-5da4-4af4-b8b0-f05845e575fc',
@@ -36,8 +35,7 @@ const defaultRules: RuleDocument[] = [
         parentTargetState: 'Resolved',
         childrenLookup: true,
         processParent: true,
-        disabled: false,
-        groups: []
+        disabled: false
       }
     ]
   }

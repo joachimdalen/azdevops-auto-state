@@ -11,3 +11,7 @@
     background-color: var(--palette-black-alpha-0) !important;
   }
 }
+.filter-card {
+  box-shadow: none !important;
+  border: 1px solid rgba(var(--palette-neutral-0), 1) !important;
+}

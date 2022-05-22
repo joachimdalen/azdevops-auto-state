@@ -20,8 +20,7 @@ const rule: Rule = {
   parentType: WorkItemReferenceNames.UserStory,
   workItemType: WorkItemReferenceNames.Task,
   processParent: false,
-  disabled: false,
-  groups: []
+  disabled: false
 };
 
 const identityOne: IInternalIdentity = {
@@ -79,7 +78,8 @@ describe('RuleFilterProcessor', () => {
             field: 'System.AreaID',
             operator: FilterOperation.Equals,
             type: FilterFieldType.Integer,
-            value: 10
+            value: 10,
+            group: 'default'
           }
         ],
         parentFilters: [
@@ -87,7 +87,8 @@ describe('RuleFilterProcessor', () => {
             field: 'System.AreaID',
             operator: FilterOperation.NotEquals,
             type: FilterFieldType.Integer,
-            value: 10
+            value: 10,
+            group: 'default'
           }
         ]
       };
@@ -115,7 +116,8 @@ describe('RuleFilterProcessor', () => {
             field: 'System.AreaID',
             operator: FilterOperation.Equals,
             type: FilterFieldType.Integer,
-            value: 10
+            value: 10,
+            group: 'default'
           }
         ]
       };
@@ -139,13 +141,15 @@ describe('RuleFilterProcessor', () => {
             field: 'System.AreaID',
             operator: FilterOperation.Equals,
             type: FilterFieldType.Integer,
-            value: 10
+            value: 10,
+            group: 'default'
           },
           {
             field: 'System.AreaPath',
             operator: FilterOperation.NotEquals,
             type: FilterFieldType.String,
-            value: '/Path/Project'
+            value: '/Path/Project',
+            group: 'default'
           }
         ]
       };
@@ -195,7 +199,8 @@ describe('RuleFilterProcessor', () => {
                   field: 'System.AreaPath',
                   operator: theory.operator,
                   value: 'Area One/This Path',
-                  type: theory.fieldType
+                  type: theory.fieldType,
+                  group: 'default'
                 }
               ]
             },
@@ -286,7 +291,8 @@ describe('RuleFilterProcessor', () => {
                   field: 'System.ItemCount',
                   operator: theory.operator,
                   value: theory.value,
-                  type: FilterFieldType.Integer
+                  type: FilterFieldType.Integer,
+                  group: 'default'
                 }
               ]
             },
@@ -332,7 +338,8 @@ describe('RuleFilterProcessor', () => {
                   field: 'System.Approved',
                   operator: theory.operator,
                   value: true,
-                  type: theory.fieldType
+                  type: theory.fieldType,
+                  group: 'default'
                 }
               ]
             },
@@ -372,7 +379,8 @@ describe('RuleFilterProcessor', () => {
                   field: 'System.AssignedTo',
                   operator: theory.operator,
                   value: theory.value,
-                  type: FilterFieldType.Identity
+                  type: FilterFieldType.Identity,
+                  group: 'default'
                 }
               ]
             },
@@ -420,7 +428,8 @@ describe('RuleFilterProcessor', () => {
                   field: 'System.Tags',
                   operator: theory.operator,
                   value: theory.value,
-                  type: FilterFieldType.Identity
+                  type: FilterFieldType.Identity,
+                  group: 'default'
                 }
               ]
             },

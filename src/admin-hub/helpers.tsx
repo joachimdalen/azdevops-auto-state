@@ -133,38 +133,6 @@ export const getListColumns = (
       }
     },
     {
-      key: 'group',
-      name: 'Rule Group',
-      fieldName: 'group',
-      className: 'flex-self-center',
-      minWidth: 100,
-      maxWidth: 200,
-      isResizable: true,
-      onRender: (item: Rule, index?: number, column?: IColumn) => {
-        const hasFilters =
-          (item.filters !== undefined && item.filters.length > 0) ||
-          (item.parentFilters !== undefined && item.parentFilters.length > 0);
-        return (
-          <PillGroup overflow={PillGroupOverflow.wrap}>
-            {item.groups?.map(g => {
-              if (g === 'Default') {
-                return (
-                  <Pill key={g} variant={PillVariant.colored} color={colorBlue}>
-                    {g}
-                  </Pill>
-                );
-              }
-              return (
-                <Pill key={g} variant={PillVariant.colored} color={colorBlue}>
-                  {g}
-                </Pill>
-              );
-            })}
-          </PillGroup>
-        );
-      }
-    },
-    {
       key: 'properties',
       name: 'Properties',
       fieldName: 'properties',
