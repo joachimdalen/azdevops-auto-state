@@ -207,19 +207,16 @@ class RuleService {
     if (!ruleOne.parentExcludedStates.every(x => ruleTwo.parentExcludedStates.includes(x)))
       return false;
 
-    if (ruleOne.filters?.length !== ruleTwo.filters?.length) return false;
-    if (ruleOne.parentFilters?.length !== ruleTwo.parentFilters?.length) return false;
+    // const filterMatch = (ruleOne.filters || []).filter(c =>
+    //   (ruleTwo.filters || []).some(y => this.isFilterSame(c, y))
+    // );
+    // const parentFilterMatch = (ruleOne.parentFilters || []).filter(c =>
+    //   (ruleTwo.parentFilters || []).some(y => this.isFilterSame(c, y))
+    // );
 
-    const filterMatch = (ruleOne.filters || []).filter(c =>
-      (ruleTwo.filters || []).some(y => this.isFilterSame(c, y))
-    );
-    const parentFilterMatch = (ruleOne.parentFilters || []).filter(c =>
-      (ruleTwo.parentFilters || []).some(y => this.isFilterSame(c, y))
-    );
-
-    if (filterMatch.length > 0 || parentFilterMatch.length > 0) {
-      return true;
-    }
+    // if (filterMatch.length > 0 || parentFilterMatch.length > 0) {
+    //   return true;
+    // }
 
     return true;
   }

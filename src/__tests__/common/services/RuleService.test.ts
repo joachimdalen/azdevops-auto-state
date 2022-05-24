@@ -214,8 +214,9 @@ describe('RuleService', () => {
     };
     const baseRuleWithFilter: Rule = {
       ...baseRule,
-      filters: [baseFilter],
-      parentFilters: [baseFilter]
+      filterGroups: [
+        { name: 'default', workItemFilters: [baseFilter], parentFilters: [baseFilter] }
+      ]
     };
 
     describe('rule properties', () => {
@@ -241,14 +242,19 @@ describe('RuleService', () => {
         const result = ruleService.isRuleSame(baseRuleWithFilter, {
           ...baseRuleWithFilter,
           id: '234',
-          filters: [
-            ...baseRuleWithFilter.filters!,
+          filterGroups: [
             {
-              field: 'System.Tags',
-              operator: FilterOperation.Equals,
-              type: FilterFieldType.Boolean,
-              value: 'backend;frontend',
-              group: 'default'
+              name: 'default',
+              workItemFilters: [
+                ...baseRuleWithFilter.filterGroups![0].workItemFilters!,
+                {
+                  field: 'System.Tags',
+                  operator: FilterOperation.Equals,
+                  type: FilterFieldType.Boolean,
+                  value: 'backend;frontend',
+                  group: 'default'
+                }
+              ]
             }
           ]
         });

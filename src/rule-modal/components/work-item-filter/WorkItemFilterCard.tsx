@@ -7,8 +7,9 @@ import { ColumnMore, ITableColumn, SimpleTableCell, Table } from 'azure-devops-u
 import { Tab, TabBar, TabSize } from 'azure-devops-ui/Tabs';
 import { Tooltip } from 'azure-devops-ui/TooltipEx';
 import { ArrayItemProvider } from 'azure-devops-ui/Utilities/Provider';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
+import { FilterGroup } from '../../../common/models/FilterGroup';
 import FilterItem, { FilterFieldType } from '../../../common/models/FilterItem';
 import { filterOperations } from '../../types';
 import PersonaDisplay from '../PersonaDisplay';
@@ -17,17 +18,27 @@ import { WorkItemFilterInternalProps } from './types';
 
 interface WorkItemFilterCardProps extends WorkItemFilterInternalProps {
   remove: (item: FilterItem) => void;
-  items: ArrayItemProvider<FilterItem>;
+  removeGroup: (groupName: string) => void;
+  group: FilterGroup;
 }
 
 const WorkItemFilterCard = ({
   remove,
-  items,
+  removeGroup,
+  group,
   parent,
   workItem
 }: WorkItemFilterCardProps): JSX.Element => {
   const [selectedTabId, setSelectedTabId] = useState<string>('work-item');
   const [collapsed, setCollapsed] = useState<boolean>(false);
+
+  const [workItemProvider, parentProvider] = useMemo(() => {
+    return [
+      new ArrayItemProvider(group.workItemFilters || []),
+      new ArrayItemProvider(group.parentFilters || [])
+    ];
+  }, [group]);
+
   return (
     <Card
       className="filter-card"
@@ -35,17 +46,19 @@ const WorkItemFilterCard = ({
       collapsed={collapsed}
       onCollapseClick={() => setCollapsed(prev => !prev)}
       headerClassName="flex-grow"
-      titleProps={{ text: 'Default group', size: TitleSize.Small }}
+      titleProps={{ text: group.name, size: TitleSize.Small }}
       contentProps={{ contentPadding: false }}
       headerCommandBarItems={
         collapsed
           ? []
           : [
+              { id: 'rename', text: 'Rename', iconProps: { iconName: 'Add' }, isPrimary: true },
               { id: 'add', text: 'Add filter', iconProps: { iconName: 'Add' }, isPrimary: true },
               {
                 id: 'delete',
                 ariaLabel: 'Delete',
-                iconProps: { iconName: 'Delete' }
+                iconProps: { iconName: 'Delete' },
+                onActivate: () => removeGroup(group.name)
               }
             ]
       }
@@ -86,99 +99,200 @@ const WorkItemFilterCard = ({
             />
           </TabBar>
         </Surface>
-        <Table
-          columns={[
-            {
-              id: 'field',
-              name: 'Field',
-              width: -100,
-              renderCell: (
-                rowIndex: number,
-                columnIndex: number,
-                tableColumn: ITableColumn<FilterItem>,
-                tableItem: FilterItem
-              ) => (
-                <SimpleTableCell
-                  columnIndex={columnIndex}
-                  tableColumn={tableColumn}
-                  key={'col-' + columnIndex}
-                  contentClassName="font-size scroll-hidden"
-                >
-                  <Tooltip text={tableItem.field}>
-                    <span>{tableItem.field}</span>
-                  </Tooltip>
-                </SimpleTableCell>
-              )
-            },
-            {
-              id: 'operator',
-              name: 'Operator',
-              width: -100,
-              renderCell: (
-                rowIndex: number,
-                columnIndex: number,
-                tableColumn: ITableColumn<FilterItem>,
-                tableItem: FilterItem
-              ) => (
-                <SimpleTableCell
-                  columnIndex={columnIndex}
-                  tableColumn={tableColumn}
-                  key={'col-' + columnIndex}
-                  contentClassName="font-size scroll-hidden"
-                >
-                  {filterOperations.find(x => x.referenceName === tableItem.operator)?.name}
-                </SimpleTableCell>
-              )
-            },
-            {
-              id: 'value',
-              name: 'Value',
-              width: -100,
-              renderCell: (
-                rowIndex: number,
-                columnIndex: number,
-                tableColumn: ITableColumn<FilterItem>,
-                tableItem: FilterItem
-              ) => (
-                <SimpleTableCell
-                  columnIndex={columnIndex}
-                  tableColumn={tableColumn}
-                  key={'col-' + columnIndex}
-                  contentClassName="font-weight-semibold font-size scroll-hidden"
-                >
-                  <ConditionalChildren renderChildren={tableItem.type === FilterFieldType.Identity}>
-                    <PersonaDisplay approver={tableItem.value as IInternalIdentity} />
-                  </ConditionalChildren>
-                  <ConditionalChildren renderChildren={tableItem.field === 'System.Tags'}>
-                    <WorkItemTagDisplay tags={tableItem.value as string} />
-                  </ConditionalChildren>
-                  <ConditionalChildren
-                    renderChildren={
-                      tableItem.type !== FilterFieldType.Identity &&
-                      tableItem.field !== 'System.Tags'
-                    }
+        <ConditionalChildren renderChildren={selectedTabId === 'work-item'}>
+          <Table
+            columns={[
+              {
+                id: 'field',
+                name: 'Field',
+                width: -100,
+                renderCell: (
+                  rowIndex: number,
+                  columnIndex: number,
+                  tableColumn: ITableColumn<FilterItem>,
+                  tableItem: FilterItem
+                ) => (
+                  <SimpleTableCell
+                    columnIndex={columnIndex}
+                    tableColumn={tableColumn}
+                    key={'col-' + columnIndex}
+                    contentClassName="font-size scroll-hidden"
                   >
-                    {tableItem.value}
-                  </ConditionalChildren>
-                </SimpleTableCell>
-              )
-            },
-            new ColumnMore((item: FilterItem) => {
-              return {
-                id: 'sub-menu',
-                items: [
-                  {
-                    id: 'delete',
-                    text: 'Delete',
-                    iconProps: { iconName: 'Delete' },
-                    onActivate: () => remove(item)
-                  }
-                ]
-              };
-            })
-          ]}
-          itemProvider={items}
-        />
+                    <Tooltip text={tableItem.field}>
+                      <span>{tableItem.field}</span>
+                    </Tooltip>
+                  </SimpleTableCell>
+                )
+              },
+              {
+                id: 'operator',
+                name: 'Operator',
+                width: -100,
+                renderCell: (
+                  rowIndex: number,
+                  columnIndex: number,
+                  tableColumn: ITableColumn<FilterItem>,
+                  tableItem: FilterItem
+                ) => (
+                  <SimpleTableCell
+                    columnIndex={columnIndex}
+                    tableColumn={tableColumn}
+                    key={'col-' + columnIndex}
+                    contentClassName="font-size scroll-hidden"
+                  >
+                    {filterOperations.find(x => x.referenceName === tableItem.operator)?.name}
+                  </SimpleTableCell>
+                )
+              },
+              {
+                id: 'value',
+                name: 'Value',
+                width: -100,
+                renderCell: (
+                  rowIndex: number,
+                  columnIndex: number,
+                  tableColumn: ITableColumn<FilterItem>,
+                  tableItem: FilterItem
+                ) => (
+                  <SimpleTableCell
+                    columnIndex={columnIndex}
+                    tableColumn={tableColumn}
+                    key={'col-' + columnIndex}
+                    contentClassName="font-weight-semibold font-size scroll-hidden"
+                  >
+                    <ConditionalChildren
+                      renderChildren={tableItem.type === FilterFieldType.Identity}
+                    >
+                      <PersonaDisplay approver={tableItem.value as IInternalIdentity} />
+                    </ConditionalChildren>
+                    <ConditionalChildren renderChildren={tableItem.field === 'System.Tags'}>
+                      <WorkItemTagDisplay tags={tableItem.value as string} />
+                    </ConditionalChildren>
+                    <ConditionalChildren
+                      renderChildren={
+                        tableItem.type !== FilterFieldType.Identity &&
+                        tableItem.field !== 'System.Tags'
+                      }
+                    >
+                      {tableItem.value}
+                    </ConditionalChildren>
+                  </SimpleTableCell>
+                )
+              },
+              new ColumnMore((item: FilterItem) => {
+                return {
+                  id: 'sub-menu',
+                  items: [
+                    {
+                      id: 'delete',
+                      text: 'Delete',
+                      iconProps: { iconName: 'Delete' },
+                      onActivate: () => remove(item)
+                    }
+                  ]
+                };
+              })
+            ]}
+            itemProvider={workItemProvider}
+          />
+        </ConditionalChildren>
+        <ConditionalChildren renderChildren={selectedTabId === 'parent'}>
+          <Table
+            columns={[
+              {
+                id: 'field',
+                name: 'Field',
+                width: -100,
+                renderCell: (
+                  rowIndex: number,
+                  columnIndex: number,
+                  tableColumn: ITableColumn<FilterItem>,
+                  tableItem: FilterItem
+                ) => (
+                  <SimpleTableCell
+                    columnIndex={columnIndex}
+                    tableColumn={tableColumn}
+                    key={'col-' + columnIndex}
+                    contentClassName="font-size scroll-hidden"
+                  >
+                    <Tooltip text={tableItem.field}>
+                      <span>{tableItem.field}</span>
+                    </Tooltip>
+                  </SimpleTableCell>
+                )
+              },
+              {
+                id: 'operator',
+                name: 'Operator',
+                width: -100,
+                renderCell: (
+                  rowIndex: number,
+                  columnIndex: number,
+                  tableColumn: ITableColumn<FilterItem>,
+                  tableItem: FilterItem
+                ) => (
+                  <SimpleTableCell
+                    columnIndex={columnIndex}
+                    tableColumn={tableColumn}
+                    key={'col-' + columnIndex}
+                    contentClassName="font-size scroll-hidden"
+                  >
+                    {filterOperations.find(x => x.referenceName === tableItem.operator)?.name}
+                  </SimpleTableCell>
+                )
+              },
+              {
+                id: 'value',
+                name: 'Value',
+                width: -100,
+                renderCell: (
+                  rowIndex: number,
+                  columnIndex: number,
+                  tableColumn: ITableColumn<FilterItem>,
+                  tableItem: FilterItem
+                ) => (
+                  <SimpleTableCell
+                    columnIndex={columnIndex}
+                    tableColumn={tableColumn}
+                    key={'col-' + columnIndex}
+                    contentClassName="font-weight-semibold font-size scroll-hidden"
+                  >
+                    <ConditionalChildren
+                      renderChildren={tableItem.type === FilterFieldType.Identity}
+                    >
+                      <PersonaDisplay approver={tableItem.value as IInternalIdentity} />
+                    </ConditionalChildren>
+                    <ConditionalChildren renderChildren={tableItem.field === 'System.Tags'}>
+                      <WorkItemTagDisplay tags={tableItem.value as string} />
+                    </ConditionalChildren>
+                    <ConditionalChildren
+                      renderChildren={
+                        tableItem.type !== FilterFieldType.Identity &&
+                        tableItem.field !== 'System.Tags'
+                      }
+                    >
+                      {tableItem.value}
+                    </ConditionalChildren>
+                  </SimpleTableCell>
+                )
+              },
+              new ColumnMore((item: FilterItem) => {
+                return {
+                  id: 'sub-menu',
+                  items: [
+                    {
+                      id: 'delete',
+                      text: 'Delete',
+                      iconProps: { iconName: 'Delete' },
+                      onActivate: () => remove(item)
+                    }
+                  ]
+                };
+              })
+            ]}
+            itemProvider={parentProvider}
+          />
+        </ConditionalChildren>
       </div>
     </Card>
   );

@@ -3,6 +3,7 @@ import { WorkItem } from 'azure-devops-extension-api/WorkItemTracking';
 
 import { FilterOperation } from '../../rule-modal/types';
 import { asyncFilter } from '../helpers';
+import { FilterGroup } from '../models/FilterGroup';
 import FilterItem, { FilterFieldType } from '../models/FilterItem';
 import Rule from '../models/Rule';
 import { getTagsAsList } from '../workItemUtils';
@@ -13,26 +14,39 @@ export class RuleFilterProcessor {
     workItem: WorkItem,
     parentWorkItem: WorkItem
   ): Promise<boolean> {
-    if (rule.filters === undefined && rule.parentFilters === undefined) return true;
+    if (rule.filterGroups === undefined && rule.filterGroups === undefined) return true;
 
     const results: boolean[] = [];
 
-    if (rule.filters) {
-      const res = await this.internalCheck(rule.filters, workItem);
-      results.push(res);
-    } else {
-      results.push(true);
-    }
-
-    if (rule.parentFilters) {
-      const res = await this.internalCheck(rule.parentFilters, parentWorkItem);
-      results.push(res);
+    if (rule.filterGroups) {
+      const matchesFilters = await asyncFilter(rule.filterGroups, async x => {
+        return await this.checkFilterGroup(x, workItem, parentWorkItem);
+      });
+      results.push(matchesFilters.some(z => z));
     } else {
       results.push(true);
     }
 
     return results.every(x => x === true);
   }
+
+  private async checkFilterGroup(
+    filterGroup: FilterGroup,
+    workItem: WorkItem,
+    parentWorkItem: WorkItem
+  ) {
+    const workItemMatch =
+      filterGroup.workItemFilters === undefined
+        ? true
+        : await this.internalCheck(filterGroup.workItemFilters, workItem);
+    const parentMatch =
+      filterGroup.parentFilters === undefined
+        ? true
+        : await this.internalCheck(filterGroup.parentFilters, parentWorkItem);
+
+    return workItemMatch && parentMatch;
+  }
+
   private async internalCheck(filters: FilterItem[], workItem: WorkItem) {
     const matchesFilters = await asyncFilter(filters, async x => {
       const field = workItem.fields[x.field];
@@ -61,7 +75,7 @@ export class RuleFilterProcessor {
   private isTagsMatch(operation: FilterOperation, filterValue: string, workItemValue: string) {
     const filterTags = getTagsAsList(filterValue);
     const workItemTags = getTagsAsList(workItemValue);
-    
+
     if (operation === FilterOperation.Equals)
       return filterTags.every(x => workItemTags.includes(x));
     return workItemTags.every(x => !filterTags.includes(x));

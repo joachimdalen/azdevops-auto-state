@@ -1,4 +1,4 @@
-import FilterItem from './FilterItem';
+import { FilterGroup } from './FilterGroup';
 
 export default interface Rule {
   id?: string;
@@ -10,6 +10,5 @@ export default interface Rule {
   parentTargetState: string;
   childrenLookup: boolean;
   processParent: boolean;
-  filters?: FilterItem[];
-  parentFilters?: FilterItem[];
+  filterGroups?: FilterGroup[];
 }

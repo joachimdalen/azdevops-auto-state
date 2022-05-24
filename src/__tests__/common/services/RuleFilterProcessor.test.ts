@@ -73,22 +73,27 @@ describe('RuleFilterProcessor', () => {
       );
       const innerRule: Rule = {
         ...rule,
-        filters: [
+        filterGroups: [
           {
-            field: 'System.AreaID',
-            operator: FilterOperation.Equals,
-            type: FilterFieldType.Integer,
-            value: 10,
-            group: 'default'
-          }
-        ],
-        parentFilters: [
-          {
-            field: 'System.AreaID',
-            operator: FilterOperation.NotEquals,
-            type: FilterFieldType.Integer,
-            value: 10,
-            group: 'default'
+            name: 'default',
+            workItemFilters: [
+              {
+                field: 'System.AreaID',
+                operator: FilterOperation.Equals,
+                type: FilterFieldType.Integer,
+                value: 10,
+                group: 'default'
+              }
+            ],
+            parentFilters: [
+              {
+                field: 'System.AreaID',
+                operator: FilterOperation.NotEquals,
+                type: FilterFieldType.Integer,
+                value: 10,
+                group: 'default'
+              }
+            ]
           }
         ]
       };
@@ -110,14 +115,18 @@ describe('RuleFilterProcessor', () => {
       );
       const innerRule: Rule = {
         ...rule,
-
-        parentFilters: [
+        filterGroups: [
           {
-            field: 'System.AreaID',
-            operator: FilterOperation.Equals,
-            type: FilterFieldType.Integer,
-            value: 10,
-            group: 'default'
+            name: 'default',
+            parentFilters: [
+              {
+                field: 'System.AreaID',
+                operator: FilterOperation.Equals,
+                type: FilterFieldType.Integer,
+                value: 10,
+                group: 'default'
+              }
+            ]
           }
         ]
       };
@@ -136,20 +145,25 @@ describe('RuleFilterProcessor', () => {
       ]);
       const innerRule: Rule = {
         ...rule,
-        filters: [
+        filterGroups: [
           {
-            field: 'System.AreaID',
-            operator: FilterOperation.Equals,
-            type: FilterFieldType.Integer,
-            value: 10,
-            group: 'default'
-          },
-          {
-            field: 'System.AreaPath',
-            operator: FilterOperation.NotEquals,
-            type: FilterFieldType.String,
-            value: '/Path/Project',
-            group: 'default'
+            name: 'default',
+            workItemFilters: [
+              {
+                field: 'System.AreaID',
+                operator: FilterOperation.Equals,
+                type: FilterFieldType.Integer,
+                value: 10,
+                group: 'default'
+              },
+              {
+                field: 'System.AreaPath',
+                operator: FilterOperation.NotEquals,
+                type: FilterFieldType.String,
+                value: '/Path/Project',
+                group: 'default'
+              }
+            ]
           }
         ]
       };
@@ -194,13 +208,18 @@ describe('RuleFilterProcessor', () => {
           const result = await filterProcessor.isFilterMatch(
             {
               ...rule,
-              filters: [
+              filterGroups: [
                 {
-                  field: 'System.AreaPath',
-                  operator: theory.operator,
-                  value: 'Area One/This Path',
-                  type: theory.fieldType,
-                  group: 'default'
+                  name: 'default',
+                  workItemFilters: [
+                    {
+                      field: 'System.AreaPath',
+                      operator: theory.operator,
+                      value: 'Area One/This Path',
+                      type: theory.fieldType,
+                      group: 'default'
+                    }
+                  ]
                 }
               ]
             },
@@ -286,13 +305,18 @@ describe('RuleFilterProcessor', () => {
           const result = await filterProcessor.isFilterMatch(
             {
               ...rule,
-              filters: [
+              filterGroups: [
                 {
-                  field: 'System.ItemCount',
-                  operator: theory.operator,
-                  value: theory.value,
-                  type: FilterFieldType.Integer,
-                  group: 'default'
+                  name: 'default',
+                  workItemFilters: [
+                    {
+                      field: 'System.ItemCount',
+                      operator: theory.operator,
+                      value: theory.value,
+                      type: FilterFieldType.Integer,
+                      group: 'default'
+                    }
+                  ]
                 }
               ]
             },
@@ -333,13 +357,18 @@ describe('RuleFilterProcessor', () => {
           const result = await filterProcessor.isFilterMatch(
             {
               ...rule,
-              filters: [
+              filterGroups: [
                 {
-                  field: 'System.Approved',
-                  operator: theory.operator,
-                  value: true,
-                  type: theory.fieldType,
-                  group: 'default'
+                  name: 'default',
+                  workItemFilters: [
+                    {
+                      field: 'System.Approved',
+                      operator: theory.operator,
+                      value: true,
+                      type: theory.fieldType,
+                      group: 'default'
+                    }
+                  ]
                 }
               ]
             },
@@ -374,13 +403,18 @@ describe('RuleFilterProcessor', () => {
           const result = await filterProcessor.isFilterMatch(
             {
               ...rule,
-              filters: [
+              filterGroups: [
                 {
-                  field: 'System.AssignedTo',
-                  operator: theory.operator,
-                  value: theory.value,
-                  type: FilterFieldType.Identity,
-                  group: 'default'
+                  name: 'default',
+                  workItemFilters: [
+                    {
+                      field: 'System.AssignedTo',
+                      operator: theory.operator,
+                      value: theory.value,
+                      type: FilterFieldType.Identity,
+                      group: 'default'
+                    }
+                  ]
                 }
               ]
             },
@@ -423,13 +457,18 @@ describe('RuleFilterProcessor', () => {
           const result = await filterProcessor.isFilterMatch(
             {
               ...rule,
-              filters: [
+              filterGroups: [
                 {
-                  field: 'System.Tags',
-                  operator: theory.operator,
-                  value: theory.value,
-                  type: FilterFieldType.Identity,
-                  group: 'default'
+                  name: 'default',
+                  workItemFilters: [
+                    {
+                      field: 'System.Tags',
+                      operator: theory.operator,
+                      value: theory.value,
+                      type: FilterFieldType.Identity,
+                      group: 'default'
+                    }
+                  ]
                 }
               ]
             },

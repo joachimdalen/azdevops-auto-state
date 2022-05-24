@@ -21,7 +21,7 @@ import * as yup from 'yup';
 
 import { ActionResult } from '../common/models/ActionResult';
 import AddRuleResult from '../common/models/AddRuleResult';
-import FilterItem from '../common/models/FilterItem';
+import { FilterGroup } from '../common/models/FilterGroup';
 import Rule from '../common/models/Rule';
 import { StorageService } from '../common/services/StorageService';
 import WorkItemService from '../common/services/WorkItemService';
@@ -33,9 +33,8 @@ import WorkItemTypeDropdown from '../shared-ui/component/WorkItemTypeDropdown';
 import showRootComponent from '../shared-ui/showRootComponent';
 import SettingRow from './components/settings-list/SettingRow';
 import SettingRowDropdown from './components/settings-list/SettingRowDropdown';
-import WorkItemFilter from './components/work-item-filter/WorkItemFilter';
-import { validationSchema } from './types';
 import WorkItemFilterNew from './components/work-item-filter/WorkItemFilterNew';
+import { validationSchema } from './types';
 
 initializeIcons();
 const ModalContent = (): React.ReactElement => {
@@ -50,8 +49,7 @@ const ModalContent = (): React.ReactElement => {
   const [rule, setRule] = useState<Rule>();
   const [types, setTypes] = useState<WorkItemType[]>([]);
   const [fields, setFields] = useState<WorkItemField[]>([]);
-  const [workItemFilters, setWorkItemFilters] = useState<FilterItem[]>([]);
-  const [parentFilters, setParentFilters] = useState<FilterItem[]>([]);
+  const [filterGroups, setFilterGroups] = useState<FilterGroup[]>([]);
   const [workItemType, setWorkItemType] = useState('');
   const [parentType, setParentType] = useState('');
   const [parentExcludedStates, setParentExcludedStates] = useState<string[]>([]);
@@ -93,8 +91,7 @@ const ModalContent = (): React.ReactElement => {
               setParentTargetState(rle.parentTargetState);
               setChildrenLookup(rle.childrenLookup);
               setProcessParent(rle.processParent);
-              setWorkItemFilters(rle.filters || []);
-              setParentFilters(rle.parentFilters || []);
+              setFilterGroups(rle.filterGroups || []);
               const disabled = rle.disabled === undefined ? false : rle.disabled;
               setEnabled(disabled === false);
               setLoading(false);
@@ -136,8 +133,7 @@ const ModalContent = (): React.ReactElement => {
           parentTargetState: parentTargetState,
           childrenLookup: childrenLookup,
           processParent: processParent,
-          filters: workItemFilters.length > 0 ? workItemFilters : undefined,
-          parentFilters: parentFilters.length > 0 ? parentFilters : undefined,
+          filterGroups: filterGroups.length > 0 ? filterGroups : undefined,
           disabled: !enabled
         };
 
@@ -344,8 +340,8 @@ const ModalContent = (): React.ReactElement => {
               workItemType={workItemType}
               parentType={parentType}
               types={types}
-              filters={workItemFilters}
-              onChange={(filters: FilterItem[]) => setWorkItemFilters(filters)}
+              filters={filterGroups}
+              onChange={(filters: FilterGroup[]) => setFilterGroups(filters)}
             />
             {/* <FormItem
               label="Work Item Filters"

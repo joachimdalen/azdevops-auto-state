@@ -140,9 +140,7 @@ export const getListColumns = (
       minWidth: 100,
       isResizable: true,
       onRender: (item: Rule, index?: number, column?: IColumn) => {
-        const hasFilters =
-          (item.filters !== undefined && item.filters.length > 0) ||
-          (item.parentFilters !== undefined && item.parentFilters.length > 0);
+        const hasFilters = item.filterGroups !== undefined && item.filterGroups.length > 0;
         return (
           <PillGroup overflow={PillGroupOverflow.wrap}>
             {item.childrenLookup && (
