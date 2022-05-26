@@ -2,90 +2,81 @@ import { ChoiceGroup } from '@fluentui/react';
 import { IInternalIdentity } from '@joachimdalen/azdevops-ext-core/CommonTypes';
 import { IdentityPicker } from '@joachimdalen/azdevops-ext-core/IdentityPicker';
 import {
+  getCombined,
+  hasError,
+  parseValidationError
+} from '@joachimdalen/azdevops-ext-core/ValidationUtils';
+import {
   FieldType,
   WorkItemField,
-  WorkItemType,
   WorkItemTypeFieldInstance
 } from 'azure-devops-extension-api/WorkItemTracking';
 import { ContentJustification } from 'azure-devops-ui/Callout';
 import { ConditionalChildren } from 'azure-devops-ui/ConditionalChildren';
 import { Dialog } from 'azure-devops-ui/Dialog';
 import { Dropdown } from 'azure-devops-ui/Dropdown';
-import { EditableDropdown } from 'azure-devops-ui/EditableDropdown';
 import { FormItem } from 'azure-devops-ui/FormItem';
 import { IListBoxItem } from 'azure-devops-ui/ListBox';
 import { TextField } from 'azure-devops-ui/TextField';
 import { Toggle } from 'azure-devops-ui/Toggle';
 import { ArrayItemProvider } from 'azure-devops-ui/Utilities/Provider';
 import React, { useMemo, useState } from 'react';
+import * as yup from 'yup';
 
+import { FilterGroup } from '../../../common/models/FilterGroup';
 import FilterItem, { FilterFieldType } from '../../../common/models/FilterItem';
 import {
   excludedReferenceNames,
   FilterOperation,
   filterOperations,
+  filterValidationSchema,
   supportedValueTypes
 } from '../../types';
 import { WorkItemTagPicker } from '../WorkItemTagPicker';
+import { WorkItemFilterInternalProps } from './types';
 
 interface ListBoxOperation {
   op: FilterOperation;
 }
 
-interface WorkItemFilterModalProps {
-  workItemType?: WorkItemType;
+interface WorkItemFilterModalProps extends WorkItemFilterInternalProps {
   fields: WorkItemField[];
-  selectedFields?: string[];
+  group?: FilterGroup;
   onClose: () => void;
-  onAddItem: (filterItem: FilterItem) => void;
+  onAddItem: (filterItem: FilterItem, target: SelectionItem) => void;
 }
 
+type SelectionItem = 'workItem' | 'parent';
+
 const WorkItemFilterModal = ({
-  workItemType,
+  workItem,
+  parent,
   onClose,
   fields,
   onAddItem,
-  selectedFields
+  group
 }: WorkItemFilterModalProps): React.ReactElement => {
-  const [field, setField] = useState<string | undefined>();
-  const [group, setGroup] = useState<string | undefined>();
+  const [field, setField] = useState<string>('');
   const [fieldReference, setFieldReference] = useState<WorkItemField | undefined>();
-  const [operator, setOperator] = useState<FilterOperation | undefined>();
+  const [operator, setOperator] = useState<FilterOperation>(FilterOperation.Equals);
   const [value, setValue] = useState<string | boolean | number | IInternalIdentity | undefined>();
-  const sortItems = (a: WorkItemTypeFieldInstance, b: WorkItemTypeFieldInstance) => {
-    if (a.name < b.name) {
-      return -1;
+  const [selectedItem, setSelectedItem] = useState<SelectionItem>('workItem');
+  const [validationErrors, setValidationErrors] = useState<
+    { [key: string]: string[] } | undefined
+  >();
+  const getItem = (): FilterFieldType => {
+    if (fieldReference === undefined) return FilterFieldType.String;
+    if (fieldReference.isIdentity) return FilterFieldType.Identity;
+
+    switch (fieldReference.type) {
+      case FieldType.Boolean:
+        return FilterFieldType.Boolean;
+      case FieldType.Integer:
+        return FilterFieldType.Integer;
+      default:
+        return FilterFieldType.String;
     }
-    if (a.name > b.name) {
-      return 1;
-    }
-    return 0;
   };
-
-  console.log([field, operator, value]);
-
-  const itemFields = useMemo(() => {
-    const item = (workItemType?.fields || [])
-      .filter(x => {
-        const type = fields.find(y => y.referenceName === x.referenceName);
-        return type === undefined
-          ? false
-          : supportedValueTypes.includes(type.isIdentity ? FieldType.Identity : type.type) &&
-              !excludedReferenceNames.includes(type.referenceName) &&
-              !(selectedFields || []).includes(type.referenceName);
-      })
-      .sort(sortItems)
-      .map(field => {
-        const items: IListBoxItem = {
-          id: field.referenceName,
-          text: field.name
-        };
-        return items;
-      });
-
-    return new ArrayItemProvider(item);
-  }, [workItemType]);
-
   const dropdownOperations = useMemo(() => {
     const type = fields.find(y => y.referenceName === field);
     setFieldReference(type);
@@ -105,6 +96,41 @@ const WorkItemFilterModal = ({
 
     return new ArrayItemProvider(filtered);
   }, [field]);
+  const sortItems = (a: WorkItemTypeFieldInstance, b: WorkItemTypeFieldInstance) => {
+    if (a.name < b.name) {
+      return -1;
+    }
+    if (a.name > b.name) {
+      return 1;
+    }
+    return 0;
+  };
+
+  const itemFields = useMemo(() => {
+    const selectedFields =
+      selectedItem === 'workItem'
+        ? group?.workItemFilters?.map(x => x.field)
+        : group?.parentFilters?.map(x => x.field);
+    const item = ((selectedItem === 'workItem' ? workItem?.fields : parent?.fields) || [])
+      .filter(x => {
+        const type = fields.find(y => y.referenceName === x.referenceName);
+        return type === undefined
+          ? false
+          : supportedValueTypes.includes(type.isIdentity ? FieldType.Identity : type.type) &&
+              !excludedReferenceNames.includes(type.referenceName) &&
+              !(selectedFields || []).includes(type.referenceName);
+      })
+      .sort(sortItems)
+      .map(field => {
+        const items: IListBoxItem = {
+          id: field.referenceName,
+          text: field.name
+        };
+        return items;
+      });
+
+    return new ArrayItemProvider(item);
+  }, [selectedItem]);
 
   const getFieldValueControl = () => {
     const selectedField = fields.find(x => x.referenceName === field);
@@ -144,6 +170,30 @@ const WorkItemFilterModal = ({
     }
   };
 
+  const save = async () => {
+    try {
+      const item: FilterItem = {
+        field: field,
+        operator: operator,
+        value: value || '',
+        type: getItem()
+      };
+      await filterValidationSchema.validate(item, {
+        abortEarly: false
+      });
+
+      onAddItem(item, selectedItem);
+      onClose();
+    } catch (error) {
+      if (error instanceof yup.ValidationError) {
+        const data = parseValidationError(error);
+        setValidationErrors(data);
+      } else {
+        console.error(error);
+      }
+    }
+  };
+
   return (
     <Dialog
       calloutClassName="filter-modal-callout"
@@ -157,82 +207,42 @@ const WorkItemFilterModal = ({
           iconProps: {
             iconName: 'Add'
           },
-          onClick: () => {
-            if (
-              field !== undefined &&
-              operator !== undefined &&
-              value !== undefined &&
-              group !== undefined
-            ) {
-              const getItem = (): FilterFieldType => {
-                if (fieldReference === undefined) return FilterFieldType.String;
-                if (fieldReference.isIdentity) return FilterFieldType.Identity;
-
-                switch (fieldReference.type) {
-                  case FieldType.Boolean:
-                    return FilterFieldType.Boolean;
-                  case FieldType.Integer:
-                    return FilterFieldType.Integer;
-                  default:
-                    return FilterFieldType.String;
-                }
-              };
-
-              const item: FilterItem = {
-                field: field,
-                operator: operator,
-                value: value,
-                type: getItem(),
-                group: group
-              };
-
-              onAddItem(item);
-              onClose();
-            }
-          }
+          onClick: async () => await save()
         }
       ]}
       showCloseButton
     >
       <div className="rhythm-vertical-8 padding-bottom-16">
-        <ChoiceGroup
-          label="Where should this filter be applied?"
-          defaultSelectedKey="bar"
-          options={[
-            {
-              key: 'bar',
-              imageSrc:
-                'https://tfsprodweu5.visualstudio.com/_apis/wit/workItemIcons/icon_insect?color=CC293D&v=2',
-              selectedImageSrc:
-                'https://tfsprodweu5.visualstudio.com/_apis/wit/workItemIcons/icon_insect?color=CC293D&v=2',
-              imageAlt: 'Bar chart',
-              imageSize: { width: 32, height: 32 },
-              text: 'Bug'
-            },
-            {
-              key: 'user-story',
-              imageSrc:
-                'https://tfsprodweu5.visualstudio.com/_apis/wit/workItemIcons/icon_insect?color=CC293D&v=2',
-              selectedImageSrc:
-                'https://tfsprodweu5.visualstudio.com/_apis/wit/workItemIcons/icon_insect?color=CC293D&v=2',
-              imageAlt: 'Bar chart',
-              imageSize: { width: 32, height: 32 },
-              text: 'User Story (Parent)'
-            }
-          ]}
-        />
-        <FormItem
-          label="Rule group"
-          message="Rule groups allows for creating distinct trigger groups (multiple rules). See the documentation for more info"
-        >
-          <EditableDropdown
-            allowFreeform={true}
-            items={[]}
-            onValueChange={value => value !== undefined && setGroup(value.id)}
-            placeholder="Select or create a group"
+        <FormItem label="Where should this filter be applied?">
+          <ChoiceGroup
+            defaultSelectedKey={selectedItem}
+            onChange={(_, option) => option && setSelectedItem(option.key as SelectionItem)}
+            options={[
+              {
+                key: 'workItem',
+                imageSrc: workItem?.icon.url,
+                selectedImageSrc: workItem?.icon.url,
+                imageAlt: workItem?.name,
+                imageSize: { width: 32, height: 32 },
+                text: workItem?.name || 'Work Item'
+              },
+              {
+                key: 'parent',
+                imageSrc: parent?.icon.url,
+                selectedImageSrc: parent?.icon.url,
+                imageAlt: parent?.name,
+                imageSize: { width: 32, height: 32 },
+                text: parent?.name || 'Parent'
+              }
+            ]}
           />
         </FormItem>
-        <FormItem label="Field">
+
+        <FormItem
+          label="Field"
+          error={hasError(validationErrors, 'field')}
+          message={getCombined(validationErrors, 'field')}
+        >
           <Dropdown
             placeholder="Select field to filter on"
             items={itemFields}
@@ -241,8 +251,12 @@ const WorkItemFilterModal = ({
             onSelect={(_, item) => setField(item.id)}
           />
         </FormItem>
-        <ConditionalChildren renderChildren={field !== undefined}>
-          <FormItem label="Operator">
+        <ConditionalChildren renderChildren={field !== ''}>
+          <FormItem
+            label="Operator"
+            error={hasError(validationErrors, 'operator')}
+            message={getCombined(validationErrors, 'operator')}
+          >
             <Dropdown
               className="flex-one"
               items={dropdownOperations}
@@ -251,7 +265,13 @@ const WorkItemFilterModal = ({
               }}
             />
           </FormItem>
-          <FormItem label="Value">{getFieldValueControl()}</FormItem>
+          <FormItem
+            label="Value"
+            error={hasError(validationErrors, 'value')}
+            message={getCombined(validationErrors, 'value')}
+          >
+            {getFieldValueControl()}
+          </FormItem>
         </ConditionalChildren>
       </div>
     </Dialog>

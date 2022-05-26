@@ -8,7 +8,7 @@ interface WorkItemTagDisplayProps {
   tags?: string;
 }
 
-const WorkItemTagDisplay = ({ tags }: WorkItemTagDisplayProps) => {
+const WorkItemTagDisplay = ({ tags }: WorkItemTagDisplayProps): JSX.Element => {
   const tagPills = useMemo(() => {
     if (tags === undefined) return [];
 

@@ -336,37 +336,14 @@ const ModalContent = (): React.ReactElement => {
         <ConditionalChildren renderChildren={tabId === 'filters'}>
           <div className="flex-column rhythm-vertical-16">
             <WorkItemFilterNew
-              disabled={workItemType === ''}
+              disabled={isDisabled || workItemType === '' || parentType === ''}
               workItemType={workItemType}
               parentType={parentType}
+              fields={fields}
               types={types}
               filters={filterGroups}
               onChange={(filters: FilterGroup[]) => setFilterGroups(filters)}
             />
-            {/* <FormItem
-              label="Work Item Filters"
-              message="Use work item filters to provide additional checks for the work item"
-            >
-              <WorkItemFilter
-                disabled={workItemType === ''}
-                fields={fields}
-                workItemType={types.find(x => x.referenceName === workItemType)}
-                filters={workItemFilters}
-                onChange={(filters: FilterItem[]) => setWorkItemFilters(filters)}
-              />
-            </FormItem>
-            <FormItem
-              label="Parent Filters"
-              message="Use parent filters to provide additional checks for the parent item"
-            >
-              <WorkItemFilter
-                disabled={parentType === ''}
-                fields={fields}
-                workItemType={types.find(x => x.referenceName === parentType)}
-                filters={parentFilters}
-                onChange={(filters: FilterItem[]) => setParentFilters(filters)}
-              />
-            </FormItem> */}
           </div>
         </ConditionalChildren>
         <ConditionalChildren renderChildren={tabId === 'options'}>

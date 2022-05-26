@@ -187,7 +187,14 @@ class RuleService {
     if (rootDoc.rules.some(r => this.isRuleSame(r, rule))) {
       return {
         success: false,
-        message: 'Duplicate rule'
+        message: 'A rule already exists that matches the current configuration'
+      };
+    }
+    if (rootDoc.rules.some(r => this.isRuleSame(r, rule))) {
+      return {
+        success: false,
+        message:
+          'Each rule group needs to contain a unique set of filters (Duplicate groups detected)'
       };
     }
 

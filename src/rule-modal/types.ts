@@ -82,3 +82,9 @@ export const validationSchema = yup.object().shape({
   processParent: yup.bool(),
   groups: yup.array().of(yup.string().trim()).min(1, 'At least one rule group must be specified')
 });
+export const filterValidationSchema = yup.object().shape({
+  field: yup.string().trim().required(),
+  operator: yup.string().trim().required(),
+  value: yup.mixed().required('Value is required'), // TODO: Fix type message
+  type: yup.number().positive().required()
+});

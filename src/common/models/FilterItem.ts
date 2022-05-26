@@ -15,5 +15,4 @@ export default interface FilterItem {
   operator: FilterOperation;
   value: string | boolean | IInternalIdentity | number;
   type: FilterFieldType;
-  group: string;
 }

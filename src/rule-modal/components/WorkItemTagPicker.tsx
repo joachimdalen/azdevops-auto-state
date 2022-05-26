@@ -1,12 +1,12 @@
+import { DevOpsService } from '@joachimdalen/azdevops-ext-core/DevOpsService';
 import { ExtendedWorkItemTrackingRestClient } from '@joachimdalen/azdevops-ext-core/ExtendedWorkItemTrackingRestClient';
 import { getClient } from 'azure-devops-extension-api';
 import { WorkItemTagDefinition } from 'azure-devops-extension-api/WorkItemTracking';
 import { useObservableArray } from 'azure-devops-ui/Core/Observable';
 import { ISuggestionItemProps } from 'azure-devops-ui/SuggestionsList';
 import { TagPicker } from 'azure-devops-ui/TagPicker';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
-import DevOpsService from '../../common/services/DevOpsService';
 import { getTagsAsList } from '../../common/workItemUtils';
 
 interface WorkItemTagPicker {
@@ -22,13 +22,16 @@ export const WorkItemTagPicker = ({
   const [suggestions, setSuggestions] = useObservableArray<WorkItemTagDefinition>([]);
   const [loading, setLoading] = useState(false);
   const [loadingSuggestions, setLoadingSuggestions] = useState(false);
+  const [devOpsService] = useMemo(
+    () => [new DevOpsService()],
+    []
+  );
 
   useEffect(() => {
     async function init() {
       setLoading(true);
       const client = getClient(ExtendedWorkItemTrackingRestClient);
-      const devopsService = new DevOpsService();
-      const project = await devopsService.getProject();
+      const project = await devOpsService.getProject();
       if (project) {
         const tags = await client.getWorkItemTags(project.id);
 

@@ -197,8 +197,7 @@ describe('RuleService', () => {
       field: 'System.Title',
       operator: FilterOperation.Equals,
       type: FilterFieldType.Boolean,
-      value: '1234',
-      group: 'default'
+      value: '1234'
     };
 
     const baseRule: Rule = {
@@ -237,30 +236,6 @@ describe('RuleService', () => {
 
         expect(result).toBeTruthy();
       });
-      it('returns false when more filerts', () => {
-        const ruleService = new RuleService();
-        const result = ruleService.isRuleSame(baseRuleWithFilter, {
-          ...baseRuleWithFilter,
-          id: '234',
-          filterGroups: [
-            {
-              name: 'default',
-              workItemFilters: [
-                ...baseRuleWithFilter.filterGroups![0].workItemFilters!,
-                {
-                  field: 'System.Tags',
-                  operator: FilterOperation.Equals,
-                  type: FilterFieldType.Boolean,
-                  value: 'backend;frontend',
-                  group: 'default'
-                }
-              ]
-            }
-          ]
-        });
-
-        expect(result).toBeFalsy();
-      });
     });
   });
   describe('isFilterSame', () => {
@@ -268,8 +243,7 @@ describe('RuleService', () => {
       field: 'System.Title',
       operator: FilterOperation.Equals,
       type: FilterFieldType.Boolean,
-      value: '1234',
-      group: 'default'
+      value: '1234'
     };
 
     const identityOne: IInternalIdentity = {

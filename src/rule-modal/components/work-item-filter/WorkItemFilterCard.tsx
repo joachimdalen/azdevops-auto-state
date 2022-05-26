@@ -1,33 +1,33 @@
-import { IInternalIdentity } from '@joachimdalen/azdevops-ext-core/CommonTypes';
 import { Card } from 'azure-devops-ui/Card';
 import { ConditionalChildren } from 'azure-devops-ui/ConditionalChildren';
 import { TitleSize } from 'azure-devops-ui/Header';
 import { Surface, SurfaceBackground } from 'azure-devops-ui/Surface';
-import { ColumnMore, ITableColumn, SimpleTableCell, Table } from 'azure-devops-ui/Table';
 import { Tab, TabBar, TabSize } from 'azure-devops-ui/Tabs';
-import { Tooltip } from 'azure-devops-ui/TooltipEx';
 import { ArrayItemProvider } from 'azure-devops-ui/Utilities/Provider';
+import { ZeroData } from 'azure-devops-ui/ZeroData';
 import { useMemo, useState } from 'react';
 
 import { FilterGroup } from '../../../common/models/FilterGroup';
-import FilterItem, { FilterFieldType } from '../../../common/models/FilterItem';
-import { filterOperations } from '../../types';
-import PersonaDisplay from '../PersonaDisplay';
-import WorkItemTagDisplay from '../WorkItemTagDisplay';
+import FilterItem from '../../../common/models/FilterItem';
 import { WorkItemFilterInternalProps } from './types';
+import WorkItemFilterTable from './WorkItemFilterTable';
 
 interface WorkItemFilterCardProps extends WorkItemFilterInternalProps {
-  remove: (item: FilterItem) => void;
-  removeGroup: (groupName: string) => void;
+  remove: (target: 'workItem' | 'parent', item: FilterItem) => void;
+  removeGroup: () => void;
+  addFilter: () => void;
   group: FilterGroup;
+  disabled?: boolean;
 }
 
 const WorkItemFilterCard = ({
   remove,
   removeGroup,
+  addFilter,
   group,
   parent,
-  workItem
+  workItem,
+  disabled = false
 }: WorkItemFilterCardProps): JSX.Element => {
   const [selectedTabId, setSelectedTabId] = useState<string>('work-item');
   const [collapsed, setCollapsed] = useState<boolean>(false);
@@ -37,7 +37,7 @@ const WorkItemFilterCard = ({
       new ArrayItemProvider(group.workItemFilters || []),
       new ArrayItemProvider(group.parentFilters || [])
     ];
-  }, [group]);
+  }, [group.parentFilters, group.workItemFilters]);
 
   return (
     <Card
@@ -52,18 +52,25 @@ const WorkItemFilterCard = ({
         collapsed
           ? []
           : [
-              { id: 'rename', text: 'Rename', iconProps: { iconName: 'Add' }, isPrimary: true },
-              { id: 'add', text: 'Add filter', iconProps: { iconName: 'Add' }, isPrimary: true },
+              {
+                id: 'add',
+                text: 'Add filter',
+                iconProps: { iconName: 'Add' },
+                isPrimary: true,
+                disabled: disabled,
+                onActivate: () => addFilter()
+              },
               {
                 id: 'delete',
                 ariaLabel: 'Delete',
+                disabled: disabled,
                 iconProps: { iconName: 'Delete' },
-                onActivate: () => removeGroup(group.name)
+                onActivate: () => removeGroup()
               }
             ]
       }
     >
-      <div className="flex-column">
+      <div className="flex-column  flex-grow">
         <Surface background={SurfaceBackground.neutral}>
           <TabBar
             tabSize={TabSize.Compact}
@@ -79,7 +86,7 @@ const WorkItemFilterCard = ({
                   ? undefined
                   : {
                       render: className => (
-                        <img className="margin-right-4" height={16} src={workItem.icon} />
+                        <img className="margin-right-4" height={16} src={workItem?.icon?.url} />
                       )
                     }
               }
@@ -92,205 +99,48 @@ const WorkItemFilterCard = ({
                   ? undefined
                   : {
                       render: className => (
-                        <img className="margin-right-4" height={16} src={parent.icon} />
+                        <img className="margin-right-4" height={16} src={parent.icon?.url} />
                       )
                     }
               }
             />
           </TabBar>
         </Surface>
-        <ConditionalChildren renderChildren={selectedTabId === 'work-item'}>
-          <Table
-            columns={[
-              {
-                id: 'field',
-                name: 'Field',
-                width: -100,
-                renderCell: (
-                  rowIndex: number,
-                  columnIndex: number,
-                  tableColumn: ITableColumn<FilterItem>,
-                  tableItem: FilterItem
-                ) => (
-                  <SimpleTableCell
-                    columnIndex={columnIndex}
-                    tableColumn={tableColumn}
-                    key={'col-' + columnIndex}
-                    contentClassName="font-size scroll-hidden"
-                  >
-                    <Tooltip text={tableItem.field}>
-                      <span>{tableItem.field}</span>
-                    </Tooltip>
-                  </SimpleTableCell>
-                )
-              },
-              {
-                id: 'operator',
-                name: 'Operator',
-                width: -100,
-                renderCell: (
-                  rowIndex: number,
-                  columnIndex: number,
-                  tableColumn: ITableColumn<FilterItem>,
-                  tableItem: FilterItem
-                ) => (
-                  <SimpleTableCell
-                    columnIndex={columnIndex}
-                    tableColumn={tableColumn}
-                    key={'col-' + columnIndex}
-                    contentClassName="font-size scroll-hidden"
-                  >
-                    {filterOperations.find(x => x.referenceName === tableItem.operator)?.name}
-                  </SimpleTableCell>
-                )
-              },
-              {
-                id: 'value',
-                name: 'Value',
-                width: -100,
-                renderCell: (
-                  rowIndex: number,
-                  columnIndex: number,
-                  tableColumn: ITableColumn<FilterItem>,
-                  tableItem: FilterItem
-                ) => (
-                  <SimpleTableCell
-                    columnIndex={columnIndex}
-                    tableColumn={tableColumn}
-                    key={'col-' + columnIndex}
-                    contentClassName="font-weight-semibold font-size scroll-hidden"
-                  >
-                    <ConditionalChildren
-                      renderChildren={tableItem.type === FilterFieldType.Identity}
-                    >
-                      <PersonaDisplay approver={tableItem.value as IInternalIdentity} />
-                    </ConditionalChildren>
-                    <ConditionalChildren renderChildren={tableItem.field === 'System.Tags'}>
-                      <WorkItemTagDisplay tags={tableItem.value as string} />
-                    </ConditionalChildren>
-                    <ConditionalChildren
-                      renderChildren={
-                        tableItem.type !== FilterFieldType.Identity &&
-                        tableItem.field !== 'System.Tags'
-                      }
-                    >
-                      {tableItem.value}
-                    </ConditionalChildren>
-                  </SimpleTableCell>
-                )
-              },
-              new ColumnMore((item: FilterItem) => {
-                return {
-                  id: 'sub-menu',
-                  items: [
-                    {
-                      id: 'delete',
-                      text: 'Delete',
-                      iconProps: { iconName: 'Delete' },
-                      onActivate: () => remove(item)
-                    }
-                  ]
-                };
-              })
-            ]}
+        <ConditionalChildren
+          renderChildren={selectedTabId === 'work-item' && workItemProvider.length !== 0}
+        >
+          <WorkItemFilterTable
+            remove={(target, item) => remove(target, item)}
             itemProvider={workItemProvider}
+            disabled={disabled}
           />
         </ConditionalChildren>
-        <ConditionalChildren renderChildren={selectedTabId === 'parent'}>
-          <Table
-            columns={[
-              {
-                id: 'field',
-                name: 'Field',
-                width: -100,
-                renderCell: (
-                  rowIndex: number,
-                  columnIndex: number,
-                  tableColumn: ITableColumn<FilterItem>,
-                  tableItem: FilterItem
-                ) => (
-                  <SimpleTableCell
-                    columnIndex={columnIndex}
-                    tableColumn={tableColumn}
-                    key={'col-' + columnIndex}
-                    contentClassName="font-size scroll-hidden"
-                  >
-                    <Tooltip text={tableItem.field}>
-                      <span>{tableItem.field}</span>
-                    </Tooltip>
-                  </SimpleTableCell>
-                )
-              },
-              {
-                id: 'operator',
-                name: 'Operator',
-                width: -100,
-                renderCell: (
-                  rowIndex: number,
-                  columnIndex: number,
-                  tableColumn: ITableColumn<FilterItem>,
-                  tableItem: FilterItem
-                ) => (
-                  <SimpleTableCell
-                    columnIndex={columnIndex}
-                    tableColumn={tableColumn}
-                    key={'col-' + columnIndex}
-                    contentClassName="font-size scroll-hidden"
-                  >
-                    {filterOperations.find(x => x.referenceName === tableItem.operator)?.name}
-                  </SimpleTableCell>
-                )
-              },
-              {
-                id: 'value',
-                name: 'Value',
-                width: -100,
-                renderCell: (
-                  rowIndex: number,
-                  columnIndex: number,
-                  tableColumn: ITableColumn<FilterItem>,
-                  tableItem: FilterItem
-                ) => (
-                  <SimpleTableCell
-                    columnIndex={columnIndex}
-                    tableColumn={tableColumn}
-                    key={'col-' + columnIndex}
-                    contentClassName="font-weight-semibold font-size scroll-hidden"
-                  >
-                    <ConditionalChildren
-                      renderChildren={tableItem.type === FilterFieldType.Identity}
-                    >
-                      <PersonaDisplay approver={tableItem.value as IInternalIdentity} />
-                    </ConditionalChildren>
-                    <ConditionalChildren renderChildren={tableItem.field === 'System.Tags'}>
-                      <WorkItemTagDisplay tags={tableItem.value as string} />
-                    </ConditionalChildren>
-                    <ConditionalChildren
-                      renderChildren={
-                        tableItem.type !== FilterFieldType.Identity &&
-                        tableItem.field !== 'System.Tags'
-                      }
-                    >
-                      {tableItem.value}
-                    </ConditionalChildren>
-                  </SimpleTableCell>
-                )
-              },
-              new ColumnMore((item: FilterItem) => {
-                return {
-                  id: 'sub-menu',
-                  items: [
-                    {
-                      id: 'delete',
-                      text: 'Delete',
-                      iconProps: { iconName: 'Delete' },
-                      onActivate: () => remove(item)
-                    }
-                  ]
-                };
-              })
-            ]}
+        <ConditionalChildren
+          renderChildren={selectedTabId === 'work-item' && workItemProvider.length === 0}
+        >
+          <ZeroData
+            imageAltText={''}
+            iconProps={{ iconName: 'WorkItem' }}
+            primaryText="No filters added"
+          />
+        </ConditionalChildren>
+
+        <ConditionalChildren
+          renderChildren={selectedTabId === 'parent' && parentProvider.length !== 0}
+        >
+          <WorkItemFilterTable
+            remove={(target, item) => remove(target, item)}
             itemProvider={parentProvider}
+            disabled={disabled}
+          />
+        </ConditionalChildren>
+        <ConditionalChildren
+          renderChildren={selectedTabId === 'parent' && parentProvider.length === 0}
+        >
+          <ZeroData
+            imageAltText={''}
+            iconProps={{ iconName: 'WorkItem' }}
+            primaryText="No filters added"
           />
         </ConditionalChildren>
       </div>
