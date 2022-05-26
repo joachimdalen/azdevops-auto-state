@@ -348,7 +348,7 @@ const ModalContent = (): React.ReactElement => {
         </ConditionalChildren>
         <ConditionalChildren renderChildren={tabId === 'options'}>
           <div className="">
-            <SettingRowDropdown
+            <SettingRow
               settings={{
                 title: 'Children lookup',
                 description: (
@@ -366,15 +366,7 @@ const ModalContent = (): React.ReactElement => {
                 checked: childrenLookup,
                 toggleProps: {
                   disabled: isDisabled
-                },
-                options: [
-                  {
-                    id: 'selection',
-                    selected: '1',
-                    title: 'Match mode',
-                    items: [{ id: '1', text: 'Abort' }]
-                  }
-                ]
+                }
               }}
               toggle={async (k, v) => {
                 setChildrenLookup(v);
