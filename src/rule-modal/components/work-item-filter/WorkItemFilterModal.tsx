@@ -25,6 +25,7 @@ import * as yup from 'yup';
 
 import { FilterGroup } from '../../../common/models/FilterGroup';
 import FilterItem, { FilterFieldType } from '../../../common/models/FilterItem';
+import useDropdownSelection from '../../../shared-ui/hooks/useDropdownSelection';
 import {
   excludedReferenceNames,
   FilterOperation,
@@ -94,7 +95,7 @@ const WorkItemFilterModal = ({
         return items;
       });
 
-    return new ArrayItemProvider(filtered);
+    return filtered;
   }, [field]);
   const sortItems = (a: WorkItemTypeFieldInstance, b: WorkItemTypeFieldInstance) => {
     if (a.name < b.name) {
@@ -106,12 +107,12 @@ const WorkItemFilterModal = ({
     return 0;
   };
 
-  const itemFields = useMemo(() => {
+  const itemFields: IListBoxItem<any>[] = useMemo(() => {
     const selectedFields =
       selectedItem === 'workItem'
         ? group?.workItemFilters?.map(x => x.field)
         : group?.parentFilters?.map(x => x.field);
-    const item = ((selectedItem === 'workItem' ? workItem?.fields : parent?.fields) || [])
+    return ((selectedItem === 'workItem' ? workItem?.fields : parent?.fields) || [])
       .filter(x => {
         const type = fields.find(y => y.referenceName === x.referenceName);
         return type === undefined
@@ -128,9 +129,9 @@ const WorkItemFilterModal = ({
         };
         return items;
       });
-
-    return new ArrayItemProvider(item);
   }, [selectedItem]);
+
+  const operatorSelection = useDropdownSelection(dropdownOperations, dropdownOperations[0].id);
 
   const getFieldValueControl = () => {
     const selectedField = fields.find(x => x.referenceName === field);
@@ -162,7 +163,8 @@ const WorkItemFilterModal = ({
         );
       }
       case FieldType.String:
-      case FieldType.PlainText: {
+      case FieldType.PlainText:
+      case FieldType.TreePath: {
         return <TextField onChange={(e, v) => setValue(v)} value={value as string} />;
       }
       default:
@@ -187,6 +189,7 @@ const WorkItemFilterModal = ({
     } catch (error) {
       if (error instanceof yup.ValidationError) {
         const data = parseValidationError(error);
+        console.log(data);
         setValidationErrors(data);
       } else {
         console.error(error);
@@ -260,6 +263,7 @@ const WorkItemFilterModal = ({
             <Dropdown
               className="flex-one"
               items={dropdownOperations}
+              selection={operatorSelection}
               onSelect={(_, item) => {
                 if (item?.data?.op !== undefined) setOperator(item.data.op);
               }}

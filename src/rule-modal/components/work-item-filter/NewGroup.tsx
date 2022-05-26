@@ -70,7 +70,7 @@ const NewGroup = ({ onAddGroup, existingNames, disabled = false }: NewGroupProps
           error={hasError(validationErrors, 'name')}
           message={
             hasError(validationErrors, 'name')
-              ? getCombined(validationErrors, 'name', 'Group')
+              ? getCombined(validationErrors, 'name', 'Group name')
               : 'The group name should be unique for this rule'
           }
         >

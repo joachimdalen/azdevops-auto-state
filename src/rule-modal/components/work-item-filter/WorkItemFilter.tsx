@@ -11,7 +11,7 @@ import { WorkItemFilterInternalProps } from './types';
 import WorkItemFilterCard from './WorkItemFilterCard';
 import WorkItemFilterModal from './WorkItemFilterModal';
 
-interface WorkItemFilterNewProps {
+interface WorkItemFilterProps {
   parentType: string;
   workItemType: string;
   types: WorkItemType[];
@@ -21,7 +21,7 @@ interface WorkItemFilterNewProps {
   onChange: (filters: FilterGroup[]) => void;
 }
 
-const WorkItemFilterNew = ({
+const WorkItemFilter = ({
   parentType,
   workItemType,
   types,
@@ -29,7 +29,7 @@ const WorkItemFilterNew = ({
   disabled,
   filters,
   onChange
-}: WorkItemFilterNewProps): JSX.Element => {
+}: WorkItemFilterProps): JSX.Element => {
   const [addToGroup, setAddToGroup] = useState<string | undefined>();
 
   const intProps: WorkItemFilterInternalProps = useMemo(() => {
@@ -134,4 +134,4 @@ const WorkItemFilterNew = ({
   );
 };
 
-export default WorkItemFilterNew;
+export default WorkItemFilter;

@@ -33,7 +33,7 @@ import WorkItemTypeDropdown from '../shared-ui/component/WorkItemTypeDropdown';
 import showRootComponent from '../shared-ui/showRootComponent';
 import SettingRow from './components/settings-list/SettingRow';
 import SettingRowDropdown from './components/settings-list/SettingRowDropdown';
-import WorkItemFilterNew from './components/work-item-filter/WorkItemFilterNew';
+import WorkItemFilter from './components/work-item-filter/WorkItemFilter';
 import { validationSchema } from './types';
 
 initializeIcons();
@@ -257,7 +257,7 @@ const ModalContent = (): React.ReactElement => {
                 message={
                   hasError(validationErrors, 'transitionState')
                     ? getCombined(validationErrors, 'transitionState', 'Transition state')
-                    : 'The transitioned state for the rule to trigger on (When work item type changes to this)'
+                    : 'The transitioned state for the rule to trigger on (When work item state changes to this)'
                 }
               >
                 <WorkItemStateDropdown
@@ -335,7 +335,7 @@ const ModalContent = (): React.ReactElement => {
         </ConditionalChildren>
         <ConditionalChildren renderChildren={tabId === 'filters'}>
           <div className="flex-column rhythm-vertical-16">
-            <WorkItemFilterNew
+            <WorkItemFilter
               disabled={isDisabled || workItemType === '' || parentType === ''}
               workItemType={workItemType}
               parentType={parentType}
