@@ -131,7 +131,10 @@ const WorkItemFilterModal = ({
       });
   }, [selectedItem]);
 
-  const operatorSelection = useDropdownSelection(dropdownOperations, dropdownOperations[0].id);
+  const operatorSelection = useDropdownSelection(
+    dropdownOperations,
+    dropdownOperations.length > 0 ? dropdownOperations[0].id : undefined
+  );
 
   const getFieldValueControl = () => {
     const selectedField = fields.find(x => x.referenceName === field);

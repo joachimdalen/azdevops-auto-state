@@ -2,6 +2,7 @@ import './index.scss';
 
 import { createTheme, initializeIcons, loadTheme } from '@fluentui/react';
 import { PanelWrapper } from '@joachimdalen/azdevops-ext-core/PanelWrapper';
+import { ErrorBoundary } from '@joachimdalen/azdevops-ext-core/ErrorBoundary';
 import {
   getCombined,
   hasError,
@@ -335,15 +336,17 @@ const ModalContent = (): React.ReactElement => {
         </ConditionalChildren>
         <ConditionalChildren renderChildren={tabId === 'filters'}>
           <div className="flex-column rhythm-vertical-16">
-            <WorkItemFilter
-              disabled={isDisabled || workItemType === '' || parentType === ''}
-              workItemType={workItemType}
-              parentType={parentType}
-              fields={fields}
-              types={types}
-              filters={filterGroups}
-              onChange={(filters: FilterGroup[]) => setFilterGroups(filters)}
-            />
+            <ErrorBoundary>
+              <WorkItemFilter
+                disabled={isDisabled || workItemType === '' || parentType === ''}
+                workItemType={workItemType}
+                parentType={parentType}
+                fields={fields}
+                types={types}
+                filters={filterGroups}
+                onChange={(filters: FilterGroup[]) => setFilterGroups(filters)}
+              />
+            </ErrorBoundary>
           </div>
         </ConditionalChildren>
         <ConditionalChildren renderChildren={tabId === 'options'}>
