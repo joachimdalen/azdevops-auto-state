@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, prettyDOM, render, screen } from '@testing-library/react';
 import { WorkItemType } from 'azure-devops-extension-api/WorkItemTracking';
 
 import FilterItem, { FilterFieldType } from '../../../../common/models/FilterItem';
@@ -120,10 +120,10 @@ describe('WorkItemFilterCard', () => {
     const moreOptionsButton = screen.getByRole('button', { name: 'More options' });
     fireEvent.click(moreOptionsButton);
 
-    await screen.findAllByText(/Delete/);
+    await screen.findAllByText(/Delete Condition/);
 
-    const deleteButton = screen.getAllByRole('menuitem', { name: 'Delete' });
-    fireEvent.click(deleteButton[1]);
+    const deleteButton = screen.getByRole('menuitem', { name: 'Delete Condition' });
+    fireEvent.click(deleteButton);
 
     expect(removeMock).toHaveBeenCalledWith('workItem', item);
   });

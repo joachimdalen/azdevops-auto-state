@@ -103,7 +103,7 @@ const WorkItemFilterTable = ({
             items: [
               {
                 id: 'delete',
-                text: 'Delete',
+                text: 'Delete Condition',
                 disabled: disabled,
                 iconProps: { iconName: 'Delete' },
                 onActivate: () => remove('workItem', item)

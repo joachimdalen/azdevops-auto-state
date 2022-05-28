@@ -53,7 +53,7 @@ const WorkItemFilterCard = ({
           ? []
           : [
               {
-                id: 'add-filter',
+                id: `add-filter-${group.name}`,
                 text: 'Add filter',
                 iconProps: { iconName: 'Add' },
                 isPrimary: true,
@@ -61,8 +61,8 @@ const WorkItemFilterCard = ({
                 onActivate: () => addFilter()
               },
               {
-                id: 'delete-filter',
-                ariaLabel: 'Delete',
+                id: `delete-filter-${group.name}`,
+                ariaLabel: 'Delete Group',
                 disabled: disabled,
                 iconProps: { iconName: 'Delete' },
                 onActivate: () => removeGroup()
