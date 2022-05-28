@@ -89,6 +89,28 @@ export enum FieldType {
    */
   PicklistDouble = 13
 }
+export enum FieldUsage {
+  /**
+   * Empty usage.
+   */
+  None = 0,
+  /**
+   * Work item field usage.
+   */
+  WorkItem = 1,
+  /**
+   * Work item link field usage.
+   */
+  WorkItemLink = 2,
+  /**
+   * Treenode field usage.
+   */
+  Tree = 3,
+  /**
+   * Work Item Type Extension usage.
+   */
+  WorkItemTypeExtension = 4
+}
 export const mockGetWorkItem = jest.fn().mockRejectedValue(new Error('Not implemented'));
 export const mockGetWorkItems = jest.fn().mockRejectedValue(new Error('Not implemented'));
 export const mockUpdateWorkItem = jest.fn().mockRejectedValue(new Error('Not implemented'));

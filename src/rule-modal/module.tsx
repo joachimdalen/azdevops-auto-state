@@ -138,7 +138,6 @@ const ModalContent = (): React.ReactElement => {
           disabled: !enabled
         };
 
-        console.log(ac);
         await validationSchema.validate(ac, {
           abortEarly: false
         });

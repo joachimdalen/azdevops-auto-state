@@ -1,6 +1,6 @@
 import { DevOpsService } from '@joachimdalen/azdevops-ext-core/DevOpsService';
 import { ExtendedWorkItemTrackingRestClient } from '@joachimdalen/azdevops-ext-core/ExtendedWorkItemTrackingRestClient';
-import { getClient } from 'azure-devops-extension-api';
+import { getClient } from 'azure-devops-extension-api/Common';
 import { WorkItemTagDefinition } from 'azure-devops-extension-api/WorkItemTracking';
 import { useObservableArray } from 'azure-devops-ui/Core/Observable';
 import { ISuggestionItemProps } from 'azure-devops-ui/SuggestionsList';

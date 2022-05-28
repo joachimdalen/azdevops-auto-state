@@ -192,7 +192,6 @@ const WorkItemFilterModal = ({
     } catch (error) {
       if (error instanceof yup.ValidationError) {
         const data = parseValidationError(error);
-        console.log(data);
         setValidationErrors(data);
       } else {
         console.error(error);

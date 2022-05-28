@@ -1,5 +1,8 @@
 import {
+  FieldType,
+  FieldUsage,
   WorkItem,
+  WorkItemField,
   WorkItemRelation,
   WorkItemType
 } from 'azure-devops-extension-api/WorkItemTracking';
@@ -100,9 +103,53 @@ const getWorkItemType = (
         name: 'Closed',
         color: 'FFF'
       }
+    ],
+    fields: [
+      {
+        name: 'Area Path',
+        referenceName: 'System.AreaPath',
+        allowedValues: [],
+        dependentFields: [],
+        alwaysRequired: false,
+        defaultValue: '',
+        url: '',
+        helpText: ''
+      }
     ]
   };
   return p as WorkItemType;
+};
+
+export const getWorkItemFields = (): WorkItemField[] => {
+  return [
+    {
+      name: 'Area Path',
+      referenceName: 'System.AreaPath',
+      description: 'The area of the product with which this bug is associated',
+      type: FieldType.TreePath,
+      usage: FieldUsage.WorkItem,
+      readOnly: false,
+      canSortBy: true,
+      isQueryable: true,
+      supportedOperations: [
+        { referenceName: 'SupportedOperations.Under', name: 'Under' },
+        {
+          referenceName: 'SupportedOperations.NotUnder',
+          name: 'Not Under'
+        },
+        { referenceName: 'SupportedOperations.Equals', name: '=' },
+        { referenceName: 'SupportedOperations.NotEquals', name: '<>' },
+        { referenceName: 'SupportedOperations.In', name: 'In' }
+      ],
+      isIdentity: false,
+      isPicklist: false,
+      isPicklistSuggested: false,
+      url: '',
+      isDeleted: false,
+      _links: {},
+      picklistId: ''
+    }
+  ];
 };
 
 enum WorkItemReferenceNames {
