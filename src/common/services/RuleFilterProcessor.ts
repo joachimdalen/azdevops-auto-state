@@ -100,12 +100,12 @@ export class RuleFilterProcessor {
   }
 
   private isIntegerMatch(operation: FilterOperation, filterValue: number, workItemValue: number) {
-    if (operation === FilterOperation.Equals) return filterValue === workItemValue;
-    if (operation === FilterOperation.NotEquals) return filterValue !== workItemValue;
-    if (operation === FilterOperation.GreaterThan) return filterValue > workItemValue;
-    if (operation === FilterOperation.GreaterThanEquals) return filterValue >= workItemValue;
-    if (operation === FilterOperation.LessThan) return filterValue < workItemValue;
-    if (operation === FilterOperation.LessThanEquals) return filterValue <= workItemValue;
+    if (operation === FilterOperation.Equals) return workItemValue === filterValue;
+    if (operation === FilterOperation.NotEquals) return workItemValue !== filterValue;
+    if (operation === FilterOperation.GreaterThan) return workItemValue > filterValue;
+    if (operation === FilterOperation.GreaterThanEquals) return workItemValue >= filterValue;
+    if (operation === FilterOperation.LessThan) return workItemValue < filterValue;
+    if (operation === FilterOperation.LessThanEquals) return workItemValue <= filterValue;
     return false;
   }
 }

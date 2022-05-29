@@ -250,13 +250,13 @@ describe('RuleFilterProcessor', () => {
           },
           {
             operator: FilterOperation.GreaterThan,
-            expected: false,
+            expected: true,
             value: 8
           },
           {
             operator: FilterOperation.GreaterThanEquals,
             expected: false,
-            value: 9
+            value: 12
           },
           {
             operator: FilterOperation.GreaterThanEquals,
@@ -265,12 +265,12 @@ describe('RuleFilterProcessor', () => {
           },
           {
             operator: FilterOperation.LessThan,
-            expected: true,
+            expected: false,
             value: 9
           },
           {
             operator: FilterOperation.LessThan,
-            expected: false,
+            expected: true,
             value: 11
           },
           {
@@ -280,7 +280,7 @@ describe('RuleFilterProcessor', () => {
           },
           {
             operator: FilterOperation.LessThanEquals,
-            expected: false,
+            expected: true,
             value: 11
           }
         ],
