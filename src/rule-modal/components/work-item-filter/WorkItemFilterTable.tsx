@@ -92,7 +92,9 @@ const WorkItemFilterTable = ({
                   tableItem.type !== FilterFieldType.Identity && tableItem.field !== 'System.Tags'
                 }
               >
-                {tableItem.value}
+                <Tooltip overflowOnly={true}>
+                  <div className="primary-text">{tableItem.value}</div>
+                </Tooltip>
               </ConditionalChildren>
             </SimpleTableCell>
           )

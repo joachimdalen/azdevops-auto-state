@@ -221,7 +221,17 @@ const WorkItemFilterModal = ({
         <FormItem label="Where should this filter be applied?">
           <ChoiceGroup
             defaultSelectedKey={selectedItem}
-            onChange={(_, option) => option && setSelectedItem(option.key as SelectionItem)}
+            onChange={(_, option) => {
+              if (option) {
+                setSelectedItem(option.key as SelectionItem);
+                setField('');
+
+                if (dropdownOperations.length > 0 && dropdownOperations[0].data?.op) {
+                  operatorSelection.select(0);
+                  setOperator(dropdownOperations[0].data?.op);
+                }
+              }
+            }}
             options={[
               {
                 key: 'workItem',
@@ -253,7 +263,10 @@ const WorkItemFilterModal = ({
             items={itemFields}
             containerClassName="flex-grow"
             className="flex-grow"
-            onSelect={(_, item) => setField(item.id)}
+            onSelect={(_, item) => {
+              setField(item.id);
+              operatorSelection.select(0);
+            }}
           />
         </FormItem>
         <ConditionalChildren renderChildren={field !== ''}>
