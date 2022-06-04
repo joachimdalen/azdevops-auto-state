@@ -1,10 +1,12 @@
-import { getCombined, hasError } from '@joachimdalen/azdevops-ext-core/ValidationUtils';
+import { DevOpsService } from '@joachimdalen/azdevops-ext-core/DevOpsService';
+import { getCombined } from '@joachimdalen/azdevops-ext-core/ValidationUtils';
 import { WorkItemField, WorkItemType } from 'azure-devops-extension-api/WorkItemTracking';
 import { ConditionalChildren } from 'azure-devops-ui/ConditionalChildren';
 import { Surface, SurfaceBackground } from 'azure-devops-ui/Surface';
 import { ZeroData, ZeroDataActionType } from 'azure-devops-ui/ZeroData';
 import { useMemo, useState } from 'react';
 
+import { DOCS_URL_FILTERS } from '../../../common/documentationUrls';
 import { FilterGroup } from '../../../common/models/FilterGroup';
 import FilterItem from '../../../common/models/FilterItem';
 import NewGroup from './NewGroup';
@@ -34,7 +36,7 @@ const WorkItemFilter = ({
   onChange
 }: WorkItemFilterProps): JSX.Element => {
   const [addToGroup, setAddToGroup] = useState<string | undefined>();
-
+  const devOpsService = useMemo(() => new DevOpsService(), []);
   const intProps: WorkItemFilterInternalProps = useMemo(() => {
     const wiType = types.find(x => x.referenceName === workItemType);
     const pType = types.find(x => x.referenceName === parentType);
@@ -82,7 +84,7 @@ const WorkItemFilter = ({
             imageAltText=""
             primaryText="No Filter Groups"
             secondaryText="Groups allows you to filter down on fields. Each filter group will work as a seperate filter for this rule. Only a single filter group needs to match for the rule to trigger"
-            actionHref="#"
+            onActionClick={() => devOpsService.openLink(DOCS_URL_FILTERS)}
             actionText="Read more in documentation"
             actionType={ZeroDataActionType.ctaButton}
           />
