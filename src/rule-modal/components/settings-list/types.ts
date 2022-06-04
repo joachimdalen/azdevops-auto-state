@@ -1,4 +1,3 @@
-import { IListBoxItem } from 'azure-devops-ui/ListBox';
 import { IToggleProps } from 'azure-devops-ui/Toggle';
 
 export interface SettingRowBase {
@@ -8,11 +7,6 @@ export interface SettingRowBase {
 
 export interface SettingRowToggle extends SettingRowBase {
   checked: boolean;
-}
-
-export interface SettingRowDropdown extends SettingRowBase {
-  selected: string;
-  items: IListBoxItem[];
 }
 
 export interface SettingRow<T> {
