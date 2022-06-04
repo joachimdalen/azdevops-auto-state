@@ -60,6 +60,7 @@ const ModalContent = (): React.ReactElement => {
   const [transitionState, setTransitionState] = useState('');
   const [childrenLookup, setChildrenLookup] = useState(false);
   const [processParent, setProcessParent] = useState(false);
+  const [keepAssigneeState, setKeepAssigneeState] = useState(false);
   const [enabled, setEnabled] = useState(true);
   const [loading, setLoading] = useState(true);
 
@@ -95,6 +96,7 @@ const ModalContent = (): React.ReactElement => {
               setChildrenLookup(rle.childrenLookup);
               setProcessParent(rle.processParent);
               setFilterGroups(rle.filterGroups || []);
+              setKeepAssigneeState(rle.keepAssigneeState || false);
               const disabled = rle.disabled === undefined ? false : rle.disabled;
               setEnabled(disabled === false);
               setLoading(false);
@@ -136,6 +138,7 @@ const ModalContent = (): React.ReactElement => {
           parentTargetState: parentTargetState,
           childrenLookup: childrenLookup,
           processParent: processParent,
+          keepAssigneeState: keepAssigneeState,
           filterGroups: filterGroups.length > 0 ? filterGroups : undefined,
           disabled: !enabled
         };
@@ -438,6 +441,20 @@ const ModalContent = (): React.ReactElement => {
               }}
               toggle={async (k, v) => {
                 setProcessParent(v);
+              }}
+            />
+            <SettingRow
+              settings={{
+                title: 'Keep original assignee',
+                description:
+                  'By default in DevOps the user that activates a work item will be assigned to that work item. Enabled this option to keep the original assignee (if assigned) or keep it unassigned.',
+                checked: keepAssigneeState,
+                toggleProps: {
+                  disabled: isDisabled
+                }
+              }}
+              toggle={async (k, v) => {
+                setKeepAssigneeState(v);
               }}
             />
           </div>

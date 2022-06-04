@@ -1,3 +1,4 @@
+import { IdentityRef } from 'azure-devops-extension-api/WebApi';
 import { WorkItem, WorkItemType } from 'azure-devops-extension-api/WorkItemTracking';
 
 import ProcessedItem from './models/ProcessedItem';
@@ -7,6 +8,7 @@ const titleField = 'System.Title';
 const parentField = 'System.LinkTypes.Hierarchy-Reverse';
 const childField = 'System.LinkTypes.Hierarchy-Forward';
 const workItemType = 'System.WorkItemType';
+const assignedToField = 'System.AssignedTo';
 
 export const getState = (workItem: WorkItem): string => {
   return workItem.fields[stateField];
@@ -81,4 +83,10 @@ export const getChildIds = (workItem: WorkItem): number[] | undefined => {
 
 export const getTagsAsList = (tags: string): string[] => {
   return tags.split(';').map(x => x.trim());
+};
+
+export const getAssignedTo = (workItem: WorkItem): IdentityRef | undefined => {
+  const fieldValue = workItem.fields[assignedToField];
+  if (fieldValue === undefined) return undefined;
+  return fieldValue as IdentityRef;
 };
