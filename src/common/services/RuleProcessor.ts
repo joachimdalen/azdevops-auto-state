@@ -227,15 +227,6 @@ class RuleProcessor implements IRuleProcessor {
     );
     if (children === undefined) return true;
 
-    if (children.every(wi => getWorkItemType(wi, this._workItemTypes) === childType)) {
-      const match = children?.every(wi =>
-        dryRun
-          ? isInDryRunState(wi, [rule.transitionState], processedItems)
-          : isInState(wi, [rule.transitionState])
-      );
-      return match;
-    }
-
     const groupedTypes = groupBy(children, wi => getWorkItemTypeField(wi));
     const results: boolean[] = [];
 
@@ -259,7 +250,7 @@ class RuleProcessor implements IRuleProcessor {
         }
       }
     }
-
+    console.log(results);
     if (results.length === 0) return false;
     return results.every(x => x === true);
   }

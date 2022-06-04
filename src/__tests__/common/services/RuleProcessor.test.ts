@@ -14,10 +14,12 @@ import {
   WorkItemNames,
   WorkItemReferenceNames
 } from '../../../__test-utils__/WorkItemTestUtils';
+import { FilterFieldType } from '../../../common/models/FilterItem';
 import Rule from '../../../common/models/Rule';
 import RuleProcessor from '../../../common/services/RuleProcessor';
 import { StorageService } from '../../../common/services/StorageService';
 import WorkItemService from '../../../common/services/WorkItemService';
+import { FilterOperation } from '../../../rule-modal/types';
 
 jest.mock('azure-devops-extension-api');
 jest.mock('../../../common/webLogger');
@@ -38,18 +40,6 @@ describe('RuleProcessor', () => {
       mockUpdateWorkItem.mockClear();
     });
     it('returns true when only child', async () => {
-      jest.spyOn(StorageService.prototype, 'getRuleDocuments').mockResolvedValue([]);
-      jest
-        .spyOn(WorkItemService.prototype, 'getWorkItemTypes')
-        .mockResolvedValue(getWorkItemTypes());
-      const parentWorkItem = getWorkItem(9, WorkItemNames.UserStory, 'Active', [
-        { id: 11, type: 'children' }
-      ]);
-      const workItem = getWorkItem(11, WorkItemNames.Task, 'Closed', [{ id: 9, type: 'parent' }]);
-
-      mockGetWorkItem.mockResolvedValueOnce(parentWorkItem);
-      mockGetWorkItems.mockResolvedValueOnce([workItem]);
-
       const rule: Rule = {
         id: '1',
         childrenLookup: true,
@@ -61,12 +51,70 @@ describe('RuleProcessor', () => {
         processParent: false,
         disabled: false
       };
+      jest.spyOn(StorageService.prototype, 'getRuleDocuments').mockResolvedValue([
+        {
+          id: WorkItemReferenceNames.Task,
+          rules: [rule]
+        }
+      ]);
+      jest
+        .spyOn(WorkItemService.prototype, 'getWorkItemTypes')
+        .mockResolvedValue(getWorkItemTypes());
+      const parentWorkItem = getWorkItem(9, WorkItemNames.UserStory, 'Active', [
+        { id: 11, type: 'children' }
+      ]);
+      const workItem = getWorkItem(11, WorkItemNames.Task, 'Closed', [{ id: 9, type: 'parent' }]);
+
+      mockGetWorkItem.mockResolvedValueOnce(parentWorkItem);
+      mockGetWorkItems.mockResolvedValueOnce([workItem]);
       const ruleProcessor = new RuleProcessor();
       await ruleProcessor.init();
       const res = await ruleProcessor.isRuleMatch(rule, workItem, parentWorkItem, true, false, []);
       expect(res).toBeTruthy();
     });
     it('returns true when only children of same type', async () => {
+      const rule: Rule = {
+        id: '1',
+        childrenLookup: true,
+        transitionState: 'Closed',
+        parentExcludedStates: ['Resolved', 'Closed'],
+        parentTargetState: 'Resolved',
+        parentType: WorkItemReferenceNames.UserStory,
+        workItemType: WorkItemReferenceNames.Task,
+        processParent: false,
+        disabled: false
+      };
+      jest.spyOn(StorageService.prototype, 'getRuleDocuments').mockResolvedValue([
+        {
+          id: WorkItemReferenceNames.Task,
+          rules: [rule]
+        }
+      ]);
+
+      jest
+        .spyOn(WorkItemService.prototype, 'getWorkItemTypes')
+        .mockResolvedValue(getWorkItemTypes());
+
+      const parentWorkItem = getWorkItem(9, WorkItemNames.UserStory, 'Active', [
+        { id: 11, type: 'children' },
+        { id: 113, type: 'children' },
+        { id: 222, type: 'children' }
+      ]);
+      const workItem = getWorkItem(11, WorkItemNames.Task, 'Closed', [{ id: 9, type: 'parent' }]);
+      const taskItem = getWorkItem(113, WorkItemNames.Task, 'Closed', [{ id: 9, type: 'parent' }]);
+      const taskItemTwo = getWorkItem(222, WorkItemNames.Task, 'Closed', [
+        { id: 9, type: 'parent' }
+      ]);
+      mockGetWorkItem.mockResolvedValueOnce(parentWorkItem);
+      mockGetWorkItems.mockResolvedValueOnce([workItem, taskItem, taskItemTwo]);
+
+      const ruleProcessor = new RuleProcessor();
+      await ruleProcessor.init();
+      const res = await ruleProcessor.isRuleMatch(rule, workItem, parentWorkItem, true, false, []);
+
+      expect(res).toBeTruthy();
+    });
+    it('returns false when only children of same type and filters do not match', async () => {
       jest.spyOn(StorageService.prototype, 'getRuleDocuments').mockResolvedValue([]);
       jest
         .spyOn(WorkItemService.prototype, 'getWorkItemTypes')
@@ -94,14 +142,27 @@ describe('RuleProcessor', () => {
         parentType: WorkItemReferenceNames.UserStory,
         workItemType: WorkItemReferenceNames.Task,
         processParent: false,
-        disabled: false
+        disabled: false,
+        filterGroups: [
+          {
+            name: 'group-1',
+            workItemFilters: [
+              {
+                field: 'System.Tags',
+                operator: FilterOperation.Equals,
+                type: FilterFieldType.String,
+                value: 'auto-update'
+              }
+            ]
+          }
+        ]
       };
 
       const ruleProcessor = new RuleProcessor();
       await ruleProcessor.init();
       const res = await ruleProcessor.isRuleMatch(rule, workItem, parentWorkItem, true, false, []);
 
-      expect(res).toBeTruthy();
+      expect(res).toBeFalsy();
     });
     it('returns false when children of different types and missing rules', async () => {
       const rule: Rule = {
@@ -139,6 +200,109 @@ describe('RuleProcessor', () => {
       const documentationItemOne = getWorkItem(2232, WorkItemNames.Documentation, 'Active', [
         { id: 9, type: 'parent' }
       ]);
+      mockGetWorkItem.mockResolvedValueOnce(parentWorkItem);
+      mockGetWorkItems.mockResolvedValueOnce([
+        workItem,
+        taskItem,
+        taskItemTwo,
+        documentationItemOne
+      ]);
+
+      const ruleProcessor = new RuleProcessor();
+      await ruleProcessor.init();
+      const res = await ruleProcessor.isRuleMatch(rule, workItem, parentWorkItem, true, false, []);
+
+      expect(res).toBeFalsy();
+    });
+    it('returns false when children of different types and not matching filters', async () => {
+      const rule: Rule = {
+        id: uuidV4(),
+        childrenLookup: true,
+        transitionState: 'Closed',
+        parentExcludedStates: ['Resolved', 'Closed'],
+        parentTargetState: 'Resolved',
+        parentType: WorkItemReferenceNames.UserStory,
+        workItemType: WorkItemReferenceNames.Task,
+        processParent: false,
+        disabled: false,
+        filterGroups: [
+          {
+            name: 'group-1',
+            workItemFilters: [
+              {
+                field: 'System.AreaID',
+                operator: FilterOperation.Equals,
+                type: FilterFieldType.Integer,
+                value: 1
+              }
+            ]
+          }
+        ]
+      };
+      const docRule: Rule = {
+        id: uuidV4(),
+        childrenLookup: true,
+        transitionState: 'Closed',
+        parentExcludedStates: ['Resolved', 'Closed'],
+        parentTargetState: 'Resolved',
+        parentType: WorkItemReferenceNames.UserStory,
+        workItemType: WorkItemReferenceNames.Documentation,
+        processParent: false,
+        disabled: false,
+        filterGroups: [
+          {
+            name: 'group-1',
+            workItemFilters: [
+              {
+                field: 'System.AreaID',
+                operator: FilterOperation.Equals,
+                type: FilterFieldType.Integer,
+                value: 33
+              }
+            ]
+          }
+        ]
+      };
+      jest.spyOn(StorageService.prototype, 'getRuleDocuments').mockResolvedValue([
+        {
+          id: WorkItemReferenceNames.Task,
+          rules: [rule]
+        },
+        {
+          id: WorkItemReferenceNames.Documentation,
+          rules: [docRule]
+        }
+      ]);
+      jest
+        .spyOn(WorkItemService.prototype, 'getWorkItemTypes')
+        .mockResolvedValue(getWorkItemTypes());
+
+      const parentWorkItem = getWorkItem(9, WorkItemNames.UserStory, 'Active', [
+        { id: 11, type: 'children' },
+        { id: 113, type: 'children' },
+        { id: 222, type: 'children' },
+        { id: 2232, type: 'children' }
+      ]);
+      const workItem = getWorkItem(11, WorkItemNames.Task, 'Closed', [{ id: 9, type: 'parent' }], {
+        'System.AreaID': 1
+      });
+      const taskItem = getWorkItem(113, WorkItemNames.Task, 'Closed', [{ id: 9, type: 'parent' }], {
+        'System.AreaID': 1
+      });
+      const taskItemTwo = getWorkItem(
+        222,
+        WorkItemNames.Task,
+        'Closed',
+        [{ id: 9, type: 'parent' }],
+        { 'System.AreaID': 1 }
+      );
+      const documentationItemOne = getWorkItem(
+        2232,
+        WorkItemNames.Documentation,
+        'Active',
+        [{ id: 9, type: 'parent' }],
+        { 'System.AreaID': 1 }
+      );
       mockGetWorkItem.mockResolvedValueOnce(parentWorkItem);
       mockGetWorkItems.mockResolvedValueOnce([
         workItem,
@@ -252,6 +416,214 @@ describe('RuleProcessor', () => {
       const res = await ruleProcessor.isRuleMatch(rule, workItem, parentWorkItem, true, false, []);
 
       expect(res).toBeTruthy();
+    });
+    it('returns true when children of different types and matching rules with filters', async () => {
+      const rule: Rule = {
+        id: uuidV4(),
+        childrenLookup: true,
+        transitionState: 'Closed',
+        parentExcludedStates: ['Resolved', 'Closed'],
+        parentTargetState: 'Resolved',
+        parentType: WorkItemReferenceNames.UserStory,
+        workItemType: WorkItemReferenceNames.Task,
+        processParent: false,
+        disabled: false,
+        filterGroups: [
+          {
+            name: 'group-1',
+            workItemFilters: [
+              {
+                field: 'System.AreaPath',
+                operator: FilterOperation.Equals,
+                type: FilterFieldType.String,
+                value: 'Area1/Team One'
+              }
+            ],
+            parentFilters: [
+              {
+                field: 'System.AreaPath',
+                operator: FilterOperation.Equals,
+                type: FilterFieldType.String,
+                value: 'Area1/Team One'
+              }
+            ]
+          }
+        ]
+      };
+      const ruleTwo: Rule = {
+        id: uuidV4(),
+        childrenLookup: true,
+        transitionState: 'Closed',
+        parentExcludedStates: ['Resolved', 'Closed'],
+        parentTargetState: 'Resolved',
+        parentType: WorkItemReferenceNames.UserStory,
+        workItemType: WorkItemReferenceNames.Documentation,
+        processParent: false,
+        disabled: false
+      };
+      jest.spyOn(StorageService.prototype, 'getRuleDocuments').mockResolvedValue([
+        {
+          id: WorkItemReferenceNames.Task,
+          rules: [rule]
+        },
+        {
+          id: WorkItemReferenceNames.Documentation,
+          rules: [ruleTwo]
+        }
+      ]);
+      jest
+        .spyOn(WorkItemService.prototype, 'getWorkItemTypes')
+        .mockResolvedValue(getWorkItemTypes());
+
+      const parentWorkItem = getWorkItem(
+        9,
+        WorkItemNames.UserStory,
+        'Active',
+        [
+          { id: 11, type: 'children' },
+          { id: 113, type: 'children' },
+          { id: 222, type: 'children' },
+          { id: 2232, type: 'children' }
+        ],
+        {
+          'System.AreaPath': 'Area1/Team One'
+        }
+      );
+      const workItem = getWorkItem(11, WorkItemNames.Task, 'Closed', [{ id: 9, type: 'parent' }], {
+        'System.AreaPath': 'Area1/Team One'
+      });
+      const taskItem = getWorkItem(113, WorkItemNames.Task, 'Closed', [{ id: 9, type: 'parent' }], {
+        'System.AreaPath': 'Area1/Team One'
+      });
+      const taskItemTwo = getWorkItem(
+        222,
+        WorkItemNames.Task,
+        'Closed',
+        [{ id: 9, type: 'parent' }],
+        {
+          'System.AreaPath': 'Area1/Team One'
+        }
+      );
+      const documentationItemOne = getWorkItem(2232, WorkItemNames.Documentation, 'Closed', [
+        { id: 9, type: 'parent' }
+      ]);
+      mockGetWorkItem.mockResolvedValueOnce(parentWorkItem);
+      mockGetWorkItems.mockResolvedValueOnce([
+        workItem,
+        taskItem,
+        taskItemTwo,
+        documentationItemOne
+      ]);
+
+      const ruleProcessor = new RuleProcessor();
+      await ruleProcessor.init();
+      const res = await ruleProcessor.isRuleMatch(rule, workItem, parentWorkItem, true, false, []);
+
+      expect(res).toBeTruthy();
+    });
+    it('returns false when children of different types and matching rules with non matching filters', async () => {
+      const rule: Rule = {
+        id: uuidV4(),
+        childrenLookup: true,
+        transitionState: 'Closed',
+        parentExcludedStates: ['Resolved', 'Closed'],
+        parentTargetState: 'Resolved',
+        parentType: WorkItemReferenceNames.UserStory,
+        workItemType: WorkItemReferenceNames.Task,
+        processParent: false,
+        disabled: false,
+        filterGroups: [
+          {
+            name: 'group-1',
+            workItemFilters: [
+              {
+                field: 'System.AreaPath',
+                operator: FilterOperation.Equals,
+                type: FilterFieldType.String,
+                value: 'Area1/Team One'
+              }
+            ],
+            parentFilters: [
+              {
+                field: 'System.AreaPath',
+                operator: FilterOperation.Equals,
+                type: FilterFieldType.String,
+                value: 'Area1/Team One'
+              }
+            ]
+          }
+        ]
+      };
+      const ruleTwo: Rule = {
+        id: uuidV4(),
+        childrenLookup: true,
+        transitionState: 'Closed',
+        parentExcludedStates: ['Resolved', 'Closed'],
+        parentTargetState: 'Resolved',
+        parentType: WorkItemReferenceNames.UserStory,
+        workItemType: WorkItemReferenceNames.Documentation,
+        processParent: false,
+        disabled: false
+      };
+      jest.spyOn(StorageService.prototype, 'getRuleDocuments').mockResolvedValue([
+        {
+          id: WorkItemReferenceNames.Task,
+          rules: [rule]
+        },
+        {
+          id: WorkItemReferenceNames.Documentation,
+          rules: [ruleTwo]
+        }
+      ]);
+      jest
+        .spyOn(WorkItemService.prototype, 'getWorkItemTypes')
+        .mockResolvedValue(getWorkItemTypes());
+
+      const parentWorkItem = getWorkItem(
+        9,
+        WorkItemNames.UserStory,
+        'Active',
+        [
+          { id: 11, type: 'children' },
+          { id: 113, type: 'children' },
+          { id: 222, type: 'children' },
+          { id: 2232, type: 'children' }
+        ],
+        {
+          'System.AreaPath': 'Area1/Team Two'
+        }
+      );
+      const workItem = getWorkItem(11, WorkItemNames.Task, 'Closed', [{ id: 9, type: 'parent' }], {
+        'System.AreaPath': 'Area1/Team Two'
+      });
+      const taskItem = getWorkItem(113, WorkItemNames.Task, 'Closed', [{ id: 9, type: 'parent' }], {
+        'System.AreaPath': 'Area1/Team Two'
+      });
+      const taskItemTwo = getWorkItem(
+        222,
+        WorkItemNames.Task,
+        'Closed',
+        [{ id: 9, type: 'parent' }],
+        {
+          'System.AreaPath': 'Area1/Team Two'
+        }
+      );
+      const documentationItemOne = getWorkItem(2232, WorkItemNames.Documentation, 'Closed', [
+        { id: 9, type: 'parent' }
+      ]);
+      mockGetWorkItem.mockResolvedValueOnce(parentWorkItem);
+      mockGetWorkItems.mockResolvedValueOnce([
+        workItem,
+        taskItem,
+        taskItemTwo,
+        documentationItemOne
+      ]);
+
+      const ruleProcessor = new RuleProcessor();
+      await ruleProcessor.init();
+      const res = await ruleProcessor.isRuleMatch(rule, workItem, parentWorkItem, true, false, []);
+
+      expect(res).toBeFalsy();
     });
     it('returns false when only children of same but rule does not match', async () => {
       jest.spyOn(StorageService.prototype, 'getRuleDocuments').mockResolvedValue([]);
