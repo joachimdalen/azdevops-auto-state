@@ -1,5 +1,6 @@
 import { FieldType } from 'azure-devops-extension-api/WorkItemTracking';
 import * as yup from 'yup';
+import { FilterGroup } from '../common/models/FilterGroup';
 
 export enum FilterOperation {
   Equals = 'SupportedOperations.Equals',
@@ -81,7 +82,29 @@ export const validationSchema = yup.object().shape({
   parentTargetState: yup.string().trim().required(),
   childrenLookup: yup.bool(),
   processParent: yup.bool(),
-  groups: yup.array().of(yup.string().trim()).min(1, 'At least one rule group must be specified')
+  filterGroups: yup
+    .array<FilterGroup>()
+    .of(
+      yup
+        .object()
+        .test(
+          'required',
+          'At least one filter condition is required in filter groups',
+          (value: any, context) => {
+            console.log(value);
+
+            if (value.workItemFilters === undefined && value.parentFilters === undefined)
+              return false;
+
+            if (value.workItemFilters?.length === 0 && value.parentFilters?.length === 0) {
+              return false;
+            }
+
+            return true;
+          }
+        )
+    )
+    .min(1, 'At least one rule group must be specified')
 });
 export const filterValidationSchema = yup.object().shape({
   field: yup.string().trim().required(),

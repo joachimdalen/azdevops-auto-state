@@ -1,8 +1,8 @@
 import './index.scss';
 
 import { createTheme, initializeIcons, loadTheme } from '@fluentui/react';
-import { PanelWrapper } from '@joachimdalen/azdevops-ext-core/PanelWrapper';
 import { ErrorBoundary } from '@joachimdalen/azdevops-ext-core/ErrorBoundary';
+import { PanelWrapper } from '@joachimdalen/azdevops-ext-core/PanelWrapper';
 import {
   getCombined,
   hasError,
@@ -33,7 +33,6 @@ import WorkItemStateDropdown from '../shared-ui/component/WorkItemStateDropdown'
 import WorkItemTypeDropdown from '../shared-ui/component/WorkItemTypeDropdown';
 import showRootComponent from '../shared-ui/showRootComponent';
 import SettingRow from './components/settings-list/SettingRow';
-import SettingRowDropdown from './components/settings-list/SettingRowDropdown';
 import WorkItemFilter from './components/work-item-filter/WorkItemFilter';
 import { validationSchema } from './types';
 
@@ -61,7 +60,7 @@ const ModalContent = (): React.ReactElement => {
   const [enabled, setEnabled] = useState(true);
   const [loading, setLoading] = useState(true);
 
-  const [tabId, setTabId] = useState('filters');
+  const [tabId, setTabId] = useState('details');
   const isDisabled = !enabled && rule !== undefined;
 
   useEffect(() => {
@@ -160,6 +159,7 @@ const ModalContent = (): React.ReactElement => {
       if (error instanceof yup.ValidationError) {
         const data = parseValidationError(error);
         setValidationErrors(data);
+        console.log(data);
       } else {
         console.error(error);
       }
@@ -343,6 +343,7 @@ const ModalContent = (): React.ReactElement => {
                 fields={fields}
                 types={types}
                 filters={filterGroups}
+                errors={validationErrors}
                 onChange={(filters: FilterGroup[]) => setFilterGroups(filters)}
               />
             </ErrorBoundary>

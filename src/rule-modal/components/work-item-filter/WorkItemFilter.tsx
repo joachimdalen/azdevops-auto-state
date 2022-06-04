@@ -1,3 +1,4 @@
+import { getCombined, hasError } from '@joachimdalen/azdevops-ext-core/ValidationUtils';
 import { WorkItemField, WorkItemType } from 'azure-devops-extension-api/WorkItemTracking';
 import { ConditionalChildren } from 'azure-devops-ui/ConditionalChildren';
 import { Surface, SurfaceBackground } from 'azure-devops-ui/Surface';
@@ -18,6 +19,7 @@ interface WorkItemFilterProps {
   fields: WorkItemField[];
   disabled: boolean;
   filters: FilterGroup[];
+  errors?: { [key: string]: string[] };
   onChange: (filters: FilterGroup[]) => void;
 }
 
@@ -28,6 +30,7 @@ const WorkItemFilter = ({
   fields,
   disabled,
   filters,
+  errors,
   onChange
 }: WorkItemFilterProps): JSX.Element => {
   const [addToGroup, setAddToGroup] = useState<string | undefined>();
@@ -86,8 +89,9 @@ const WorkItemFilter = ({
         </ConditionalChildren>
         <ConditionalChildren renderChildren={filters.length > 0}>
           <Surface background={SurfaceBackground.callout}>
-            {filters.map(filter => (
+            {filters.map((filter, index) => (
               <WorkItemFilterCard
+                error={getCombined(errors, `filterGroups[${index}]`)}
                 disabled={disabled}
                 key={filter.name}
                 workItem={intProps.workItem}

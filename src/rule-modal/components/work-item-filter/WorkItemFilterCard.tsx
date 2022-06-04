@@ -1,23 +1,25 @@
 import { Card } from 'azure-devops-ui/Card';
 import { ConditionalChildren } from 'azure-devops-ui/ConditionalChildren';
 import { TitleSize } from 'azure-devops-ui/Header';
+import { MessageCard, MessageCardSeverity } from 'azure-devops-ui/MessageCard';
 import { Surface, SurfaceBackground } from 'azure-devops-ui/Surface';
 import { Tab, TabBar, TabSize } from 'azure-devops-ui/Tabs';
 import { ArrayItemProvider } from 'azure-devops-ui/Utilities/Provider';
 import { ZeroData } from 'azure-devops-ui/ZeroData';
+import cx from 'classnames';
 import { useMemo, useState } from 'react';
 
 import { FilterGroup } from '../../../common/models/FilterGroup';
 import FilterItem from '../../../common/models/FilterItem';
 import { WorkItemFilterInternalProps } from './types';
 import WorkItemFilterTable from './WorkItemFilterTable';
-
 interface WorkItemFilterCardProps extends WorkItemFilterInternalProps {
   remove: (target: 'workItem' | 'parent', item: FilterItem) => void;
   removeGroup: () => void;
   addFilter: () => void;
   group: FilterGroup;
   disabled?: boolean;
+  error?: string;
 }
 
 const WorkItemFilterCard = ({
@@ -27,6 +29,7 @@ const WorkItemFilterCard = ({
   group,
   parent,
   workItem,
+  error,
   disabled = false
 }: WorkItemFilterCardProps): JSX.Element => {
   const [selectedTabId, setSelectedTabId] = useState<string>('work-item');
@@ -41,7 +44,7 @@ const WorkItemFilterCard = ({
 
   return (
     <Card
-      className="filter-card"
+      className={cx('filter-card', { 'filter-card-error': error !== undefined })}
       collapsible
       collapsed={collapsed}
       onCollapseClick={() => setCollapsed(prev => !prev)}
@@ -72,6 +75,7 @@ const WorkItemFilterCard = ({
     >
       <div className="flex-column  flex-grow">
         <Surface background={SurfaceBackground.neutral}>
+          {error && <MessageCard severity={MessageCardSeverity.Error}>{error}</MessageCard>}
           <TabBar
             tabSize={TabSize.Compact}
             onSelectedTabChanged={t => setSelectedTabId(t)}
