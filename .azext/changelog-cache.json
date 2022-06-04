@@ -1,6 +1,13 @@
 {
   "issues": [
     {
+      "id": 1254761269,
+      "number": 50,
+      "submitter": "kameelyan",
+      "title": "Do not set \"assigned to\" value after changing state.",
+      "url": "https://github.com/joachimdalen/azdevops-auto-state/issues/50"
+    },
+    {
       "id": 1251798454,
       "number": 49,
       "submitter": "joachimdalen",
@@ -86,6 +93,13 @@
     }
   ],
   "pullRequests": [
+    {
+      "id": 958249886,
+      "number": 52,
+      "submitter": "joachimdalen",
+      "title": "Add option to keep original assignee when auto updating",
+      "url": "https://github.com/joachimdalen/azdevops-auto-state/pull/52"
+    },
     {
       "id": 958189786,
       "number": 51,
