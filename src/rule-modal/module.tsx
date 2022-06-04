@@ -14,12 +14,14 @@ import { ConditionalChildren } from 'azure-devops-ui/ConditionalChildren';
 import { FormItem } from 'azure-devops-ui/FormItem';
 import { Link } from 'azure-devops-ui/Link';
 import { MessageCard, MessageCardSeverity } from 'azure-devops-ui/MessageCard';
+import { Pill, PillSize } from 'azure-devops-ui/Pill';
 import { Surface, SurfaceBackground } from 'azure-devops-ui/Surface';
 import { Tab, TabBar, TabSize } from 'azure-devops-ui/Tabs';
 import { Toggle } from 'azure-devops-ui/Toggle';
 import { useEffect, useMemo, useState } from 'react';
 import * as yup from 'yup';
 
+import { getValidationCount, getValidationCountByPattern } from '../common/helpers';
 import { ActionResult } from '../common/models/ActionResult';
 import AddRuleResult from '../common/models/AddRuleResult';
 import { FilterGroup } from '../common/models/FilterGroup';
@@ -210,9 +212,52 @@ const ModalContent = (): React.ReactElement => {
             selectedTabId={tabId}
             className="margin-bottom-16"
           >
-            <Tab id="details" name="Details" iconProps={{ iconName: 'Page' }} />
+            <Tab
+              id="details"
+              name="Details"
+              iconProps={{ iconName: 'Page' }}
+              renderBadge={() => {
+                const count = getValidationCount(validationErrors, [
+                  'workItemType',
+                  'parentType',
+                  'transitionState',
+                  'parentExcludedStates',
+                  'parentTargetState'
+                ]);
+                if (count === undefined) return undefined;
+                return (
+                  <Pill
+                    className="bolt-tab-badge"
+                    size={PillSize.compact}
+                    color={{ red: 184, green: 35, blue: 57 }}
+                  >
+                    {count}
+                  </Pill>
+                );
+              }}
+            />
             <Tab id="options" name="Options" iconProps={{ iconName: 'Settings' }} />
-            <Tab id="filters" name="Filters" iconProps={{ iconName: 'Filter' }} />
+            <Tab
+              id="filters"
+              name="Filters"
+              iconProps={{ iconName: 'Filter' }}
+              renderBadge={() => {
+                const count = getValidationCountByPattern(
+                  validationErrors,
+                  /^filterGroups\[\d{1,}\]$/
+                );
+                if (count === undefined) return undefined;
+                return (
+                  <Pill
+                    className="bolt-tab-badge"
+                    size={PillSize.compact}
+                    color={{ red: 184, green: 35, blue: 57 }}
+                  >
+                    {count}
+                  </Pill>
+                );
+              }}
+            />
           </TabBar>
         </Surface>
 
