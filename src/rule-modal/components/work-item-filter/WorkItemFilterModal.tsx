@@ -19,7 +19,6 @@ import { FormItem } from 'azure-devops-ui/FormItem';
 import { IListBoxItem } from 'azure-devops-ui/ListBox';
 import { TextField } from 'azure-devops-ui/TextField';
 import { Toggle } from 'azure-devops-ui/Toggle';
-import { ArrayItemProvider } from 'azure-devops-ui/Utilities/Provider';
 import React, { useMemo, useState } from 'react';
 import * as yup from 'yup';
 

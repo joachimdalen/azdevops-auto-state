@@ -250,7 +250,6 @@ class RuleProcessor implements IRuleProcessor {
         }
       }
     }
-    console.log(results);
     if (results.length === 0) return false;
     return results.every(x => x === true);
   }
