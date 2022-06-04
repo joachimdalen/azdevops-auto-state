@@ -8,10 +8,7 @@ import {
   WorkItemTrackingRestClient,
   WorkItemType
 } from 'azure-devops-extension-api/WorkItemTracking';
-import {
-  GetWorkItemTypeExpand,
-  WorkItemTrackingProcessRestClient
-} from 'azure-devops-extension-api/WorkItemTrackingProcess';
+import { WorkItemTrackingProcessRestClient } from 'azure-devops-extension-api/WorkItemTrackingProcess';
 
 import { getChildIds, getParentId } from '../workItemUtils';
 import DevOpsService, { IDevOpsService } from './DevOpsService';
