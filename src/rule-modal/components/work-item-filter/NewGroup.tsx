@@ -34,6 +34,8 @@ const NewGroup = ({ onAddGroup, existingNames, disabled = false }: NewGroupProps
               if (value === undefined) return false;
               return !existingNames.includes(value);
             })
+            .matches(/^[a-zA-Z0-9-]+$/, '${path} can only contain letters, number and dashes')
+            .max(25, 'Group name has a max length of 10 characters')
         })
         .validate(
           { name },
