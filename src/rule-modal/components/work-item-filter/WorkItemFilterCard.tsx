@@ -114,7 +114,7 @@ const WorkItemFilterCard = ({
           renderChildren={selectedTabId === 'work-item' && workItemProvider.length !== 0}
         >
           <WorkItemFilterTable
-            remove={(target, item) => remove(target, item)}
+            remove={item => remove('workItem', item)}
             itemProvider={workItemProvider}
             disabled={disabled}
           />
@@ -133,7 +133,7 @@ const WorkItemFilterCard = ({
           renderChildren={selectedTabId === 'parent' && parentProvider.length !== 0}
         >
           <WorkItemFilterTable
-            remove={(target, item) => remove(target, item)}
+            remove={item => remove('parent', item)}
             itemProvider={parentProvider}
             disabled={disabled}
           />

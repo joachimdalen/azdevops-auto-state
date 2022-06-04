@@ -12,7 +12,7 @@ import WorkItemTagDisplay from '../WorkItemTagDisplay';
 
 interface WorkItemFilterTableProps {
   itemProvider: IItemProvider<FilterItem | IReadonlyObservableValue<FilterItem | undefined>>;
-  remove: (target: 'workItem' | 'parent', item: FilterItem) => void;
+  remove: (item: FilterItem) => void;
   disabled?: boolean;
 }
 const WorkItemFilterTable = ({
@@ -108,7 +108,7 @@ const WorkItemFilterTable = ({
                 text: 'Delete Condition',
                 disabled: disabled,
                 iconProps: { iconName: 'Delete' },
-                onActivate: () => remove('workItem', item)
+                onActivate: () => remove(item)
               }
             ]
           };
