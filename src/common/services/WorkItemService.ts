@@ -1,7 +1,6 @@
 import { getClient } from 'azure-devops-extension-api/Common';
 import { CoreRestClient, ProjectProperty } from 'azure-devops-extension-api/Core';
 import {
-  GetFieldsExpand,
   WorkItem,
   WorkItemExpand,
   WorkItemField,
@@ -121,7 +120,7 @@ class WorkItemService implements IWorkItemService {
     const project = await this._devOpsService.getProject();
     if (project) {
       const client = getClient(WorkItemTrackingRestClient);
-      const fields = await client.getFields(project.name, GetFieldsExpand.IncludeDeleted);
+      const fields = await client.getFields(project.name);
       return fields;
     }
     return [];
