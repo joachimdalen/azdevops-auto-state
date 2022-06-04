@@ -1,3 +1,5 @@
+import { FilterGroup } from './FilterGroup';
+
 export default interface Rule {
   id?: string;
   disabled: boolean;
@@ -8,4 +10,5 @@ export default interface Rule {
   parentTargetState: string;
   childrenLookup: boolean;
   processParent: boolean;
+  filterGroups?: FilterGroup[];
 }

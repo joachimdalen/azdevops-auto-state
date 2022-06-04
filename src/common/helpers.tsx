@@ -21,3 +21,25 @@ export function groupBy<T>(list: T[], keyGetter: (value: T) => string): Map<stri
   });
   return map;
 }
+
+export const getValidationCountByPattern = (
+  errors: { [key: string]: string[] } | undefined,
+  match: RegExp
+): number | undefined => {
+  if (errors === undefined) return undefined;
+  const count = Object.keys(errors).filter(x => x.match(match)).length;
+
+  if (count > 0) return count;
+  return undefined;
+};
+
+export const getValidationCount = (
+  errors: { [key: string]: string[] } | undefined,
+  fields: string[]
+): number | undefined => {
+  if (errors === undefined) return undefined;
+  const count = Object.keys(errors).filter(x => fields.includes(x)).length;
+
+  if (count > 0) return count;
+  return undefined;
+};

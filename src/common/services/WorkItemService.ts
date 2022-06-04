@@ -3,6 +3,7 @@ import { CoreRestClient, ProjectProperty } from 'azure-devops-extension-api/Core
 import {
   WorkItem,
   WorkItemExpand,
+  WorkItemField,
   WorkItemTrackingRestClient,
   WorkItemType
 } from 'azure-devops-extension-api/WorkItemTracking';
@@ -111,6 +112,16 @@ class WorkItemService implements IWorkItemService {
       } else {
         return types.sort(this.sortWorkItemTypes);
       }
+    }
+    return [];
+  }
+
+  public async getWorkItemFields(): Promise<WorkItemField[]> {
+    const project = await this._devOpsService.getProject();
+    if (project) {
+      const client = getClient(WorkItemTrackingRestClient);
+      const fields = await client.getFields(project.name);
+      return fields;
     }
     return [];
   }

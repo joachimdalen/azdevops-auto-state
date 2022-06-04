@@ -24,7 +24,7 @@ const WorkItemStateSection = ({
     <div className="flex-row">
       <FormItem
         label="Transition state"
-        message="The transitioned state for the rule to trigger on (When work item type changes to this)"
+        message="The transitioned state for the rule to trigger on (When work item state changes to this)"
         className="flex-grow"
       >
         <WorkItemStateDropdown

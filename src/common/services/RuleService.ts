@@ -1,7 +1,10 @@
+import { IInternalIdentity } from '@joachimdalen/azdevops-ext-core/CommonTypes';
 import { v4 as uuidV4 } from 'uuid';
 
 import { ActionResult } from '../models/ActionResult';
 import AddRuleResult from '../models/AddRuleResult';
+import { FilterGroup } from '../models/FilterGroup';
+import FilterItem, { FilterFieldType } from '../models/FilterItem';
 import Rule from '../models/Rule';
 import RuleDocument from '../models/WorkItemRules';
 import DevOpsService, { IDevOpsService, PanelIds } from './DevOpsService';
@@ -185,7 +188,7 @@ class RuleService {
     if (rootDoc.rules.some(r => this.isRuleSame(r, rule))) {
       return {
         success: false,
-        message: 'Duplicate rule'
+        message: 'A rule already exists that matches the current configuration'
       };
     }
 
@@ -194,7 +197,7 @@ class RuleService {
     };
   }
 
-  private isRuleSame(ruleOne: Rule, ruleTwo: Rule) {
+  public isRuleSame(ruleOne: Rule, ruleTwo: Rule): boolean {
     if (ruleOne.id && ruleTwo.id) {
       if (ruleOne.id === ruleTwo.id) return false;
     }
@@ -207,6 +210,24 @@ class RuleService {
     return true;
   }
 
+  public isFilterSame(filtersOne: FilterItem, filtersTwo: FilterItem): boolean {
+    if (filtersOne.field !== filtersTwo.field) return false;
+    if (filtersOne.operator !== filtersTwo.operator) return false;
+    if (filtersOne.type !== filtersTwo.type) return false;
+
+    if (filtersOne.type === FilterFieldType.Identity) {
+      if (
+        (filtersOne.value as IInternalIdentity)?.descriptor !==
+        (filtersTwo.value as IInternalIdentity)?.descriptor
+      )
+        return false;
+    } else {
+      if (filtersOne.value !== filtersTwo.value) return false;
+    }
+
+    return true;
+  }
+
   public async showEdit(
     handleDialogResult: (result: AddRuleResult | undefined) => void,
     isValid: (result: AddRuleResult | undefined) => ActionResult<boolean>,
@@ -215,7 +236,8 @@ class RuleService {
     this._devOpsService.showPanel(PanelIds.RulePanel, {
       title: rule === undefined ? 'Add rule' : 'Edit rule',
       onClose: handleDialogResult,
-      configuration: { rule: rule, validate: isValid }
+      configuration: { rule: rule, validate: isValid },
+      size: 2
     });
   }
 }

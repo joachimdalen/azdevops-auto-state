@@ -121,6 +121,7 @@ const RuleTester = (): React.ReactElement => {
                 onTest={async (targetState: string) => {
                   try {
                     if (workItemId) {
+                      setProcessedItems([]);
                       setIsTesting(true);
                       const result = await ruleProcessor.process(workItemId, true, targetState);
                       setProcessedItems(result);

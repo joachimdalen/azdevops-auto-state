@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.2.3 (2022-05-XX)
+## 1.3.0 (2022-06-XX)
 
 **💡 Known issues**
 
@@ -13,6 +13,35 @@ This extension does not properly work when having the `New boards hub` feature e
 - Fix ci pipeline setting the wrong extension version
   - Scheduled in [GH#34 - Build sets the wrong extension version in scripts when setting the version manually](https://github.com/joachimdalen/azdevops-auto-state/issues/34)
   - Changed in [PR#47 - Build sets the wrong extension version in scripts when setting the version manually](https://github.com/joachimdalen/azdevops-auto-state/pull/47)
+
+## 📦 Module changes
+
+### 🚀 Features (2)
+
+#### `rule-modal@1.3.0`
+
+- Add work item filters
+  - Suggested in [GH#44 - Add work item options](https://github.com/joachimdalen/azdevops-auto-state/issues/44)
+  - Added in [PR#45 - Add work item filters](https://github.com/joachimdalen/azdevops-auto-state/pull/45)
+
+#### `admin-hub@1.3.0`
+
+- Add work item filters
+  - Suggested in [GH#44 - Add work item options](https://github.com/joachimdalen/azdevops-auto-state/issues/44)
+  - Added in [PR#45 - Add work item filters](https://github.com/joachimdalen/azdevops-auto-state/pull/45)
+
+### 🐛 Fixes (1)
+
+#### `rule-tester@1.2.0`
+
+- Fix state not resetting between checks
+  - Fixed in [PR#45 - Add work item filters](https://github.com/joachimdalen/azdevops-auto-state/pull/45)
+
+## 🌟 Contributors
+
+Thank you to the following for contributing to the latest release
+
+- [@MPDFO](https://github.com/MPDFO)
 
 ---
 
@@ -167,12 +196,6 @@ This extension does not properly work when having the `New boards hub` feature e
 
 ## 1.0.1 (2021-12-25)
 
-### 📝 Documentation (1)
-
-#### `Core@1.0.1`
-
-- Update links in manifest
-
 ### 🐛 Fixes (1)
 
 #### `observer@1.0.1`
@@ -180,6 +203,12 @@ This extension does not properly work when having the `New boards hub` feature e
 - Fixed an issue where `Children lookup` did not work properly
   - Reported in [GH#13 - "Children lookup" does not work as intended](https://github.com/joachimdalen/azdevops-auto-state/issues/13)
   - Fixed in [PR#14 - Version 1.0.1](https://github.com/joachimdalen/azdevops-auto-state/pull/14)
+
+### 📝 Documentation (1)
+
+#### `Core@1.0.1`
+
+- Update links in manifest
 
 ---
 
