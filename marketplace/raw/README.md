@@ -8,12 +8,12 @@
   <p align="center">
     An extension to automatically update states between parents and children
     <br />
-    <a href="https://github.com/joachimdalen/azdevops-auto-state"><strong>Explore the docs »</strong></a>
+    <a href="https://devops-extensions.dev/docs/extensions/auto-state"><strong>Explore the docs »</strong></a>
     <br />
     <br />
     <a href="https://marketplace.visualstudio.com/items?itemName=joachimdalen.auto-state">View Extension</a>
     ·
-    <a href="https://marketplace.visualstudio.com/items?itemName=joachimdalen.auto-state/changelog">Changelog</a>
+    <a href="https://marketplace.visualstudio.com/items/joachimdalen.auto-state/changelog">Changelog</a>
     ·
     <a href="https://github.com/joachimdalen/azdevops-auto-state/issues">Report Bug</a>
     ·
@@ -42,7 +42,7 @@ This issue is being tracked:
   - Ability to check that all child work items also matches rules
   - Ability to process rules from the current work item to the top of the tree
 - Rule tester to see how rules work and what work items will be updated
-- Get started easily by using preset rules. See [preset rules](https://github.com/joachimdalen/azdevops-auto-state/blob/master/docs/PRESETS.md)
+- Get started easily by using preset rules. See [preset rules](https://devops-extensions.dev/docs/extensions/auto-state/getting-started/presets)
 
 ## Where does this work?
 

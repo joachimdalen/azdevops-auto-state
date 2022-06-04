@@ -16,6 +16,12 @@
         "description": "Fix ci pipeline setting the wrong extension version",
         "issue": 34,
         "pullRequest": 47
+      },
+      {
+        "type": "docs",
+        "description": "Update documentation urls",
+        "issue": 49,
+        "pullRequest": 51
       }
     ],
     "modules": [

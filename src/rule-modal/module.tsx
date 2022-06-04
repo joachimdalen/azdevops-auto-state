@@ -21,6 +21,7 @@ import { Toggle } from 'azure-devops-ui/Toggle';
 import { useEffect, useMemo, useState } from 'react';
 import * as yup from 'yup';
 
+import { DOCS_URL_CHILD_LOOKUP, DOCS_URL_PROCESS_PARENT } from '../common/documentationUrls';
 import { getValidationCount, getValidationCountByPattern } from '../common/helpers';
 import { ActionResult } from '../common/models/ActionResult';
 import AddRuleResult from '../common/models/AddRuleResult';
@@ -402,10 +403,7 @@ const ModalContent = (): React.ReactElement => {
                 description: (
                   <p>
                     Take child work items into consideration when processing the rule. See{' '}
-                    <Link
-                      target="_blank"
-                      href="https://github.com/joachimdalen/azdevops-auto-state/blob/master/docs/RULES.md#children-lookup"
-                    >
+                    <Link href={DOCS_URL_CHILD_LOOKUP} rel="noopener noreferrer" target="_blank">
                       documentation
                     </Link>{' '}
                     for more information.
@@ -423,7 +421,16 @@ const ModalContent = (): React.ReactElement => {
             <SettingRow
               settings={{
                 title: 'Process parent',
-                description: 'Process rules for parent when prosessing this rule',
+                description: (
+                  <p>
+                    Process rules for parent when prosessing this rule See{' '}
+                    <Link href={DOCS_URL_PROCESS_PARENT} rel="noopener noreferrer" target="_blank">
+                      documentation
+                    </Link>{' '}
+                    for more information.
+                  </p>
+                ),
+
                 checked: processParent,
                 toggleProps: {
                   disabled: isDisabled

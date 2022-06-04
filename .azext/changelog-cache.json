@@ -1,6 +1,13 @@
 {
   "issues": [
     {
+      "id": 1251798454,
+      "number": 49,
+      "submitter": "joachimdalen",
+      "title": "Update extension manifest metadata",
+      "url": "https://github.com/joachimdalen/azdevops-auto-state/issues/49"
+    },
+    {
       "id": 1111282397,
       "number": 34,
       "submitter": "joachimdalen",
@@ -79,6 +86,13 @@
     }
   ],
   "pullRequests": [
+    {
+      "id": 958189786,
+      "number": 51,
+      "submitter": "joachimdalen",
+      "title": "Update documentation urls and metadata",
+      "url": "https://github.com/joachimdalen/azdevops-auto-state/pull/51"
+    },
     {
       "id": 938308260,
       "number": 47,

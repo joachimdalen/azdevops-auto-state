@@ -15,6 +15,7 @@ import { MenuItemType } from 'azure-devops-ui/Menu';
 import { Pill, PillVariant } from 'azure-devops-ui/Pill';
 import { PillGroup, PillGroupOverflow } from 'azure-devops-ui/PillGroup';
 import { IColor } from 'azure-devops-ui/Utilities/Color';
+import { DOCS_URL_EXTENSION } from '../common/documentationUrls';
 
 import { ActionResult } from '../common/models/ActionResult';
 import Rule from '../common/models/Rule';
@@ -322,7 +323,7 @@ export const getCommandBarItems = (
     iconProps: { iconName: 'Help' },
     important: false,
     onActivate: () => {
-      devOpsService.openLink('https://github.com/joachimdalen/azdevops-auto-state');
+      devOpsService.openLink(DOCS_URL_EXTENSION);
     }
   }
 ];

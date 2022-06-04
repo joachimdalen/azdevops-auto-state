@@ -11,7 +11,7 @@
   <p align="center">
     An extension to automatically update states between parents and children
     <br />
-    <a href="https://github.com/joachimdalen/azdevops-auto-state/blob/master/docs/index.md"><strong>Explore the docs »</strong></a>
+    <a href="https://devops-extensions.dev/docs/extensions/auto-state"><strong>Explore the docs »</strong></a>
     <br />
     <br />
     <a href="https://marketplace.visualstudio.com/items?itemName=joachimdalen.auto-state">View Extension</a>

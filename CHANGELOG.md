@@ -14,6 +14,12 @@ This extension does not properly work when having the `New boards hub` feature e
   - Scheduled in [GH#34 - Build sets the wrong extension version in scripts when setting the version manually](https://github.com/joachimdalen/azdevops-auto-state/issues/34)
   - Changed in [PR#47 - Build sets the wrong extension version in scripts when setting the version manually](https://github.com/joachimdalen/azdevops-auto-state/pull/47)
 
+### 📝 Documentation (1)
+
+- Update documentation urls
+  - Changed needed [GH#49 - Update extension manifest metadata](https://github.com/joachimdalen/azdevops-auto-state/issues/49)
+  - Changed in [PR#51 - Update documentation urls and metadata](https://github.com/joachimdalen/azdevops-auto-state/pull/51)
+
 ## 📦 Module changes
 
 ### 🚀 Features (2)
