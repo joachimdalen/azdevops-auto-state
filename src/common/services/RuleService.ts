@@ -3,6 +3,7 @@ import { v4 as uuidV4 } from 'uuid';
 
 import { ActionResult } from '../models/ActionResult';
 import AddRuleResult from '../models/AddRuleResult';
+import { FilterGroup } from '../models/FilterGroup';
 import FilterItem, { FilterFieldType } from '../models/FilterItem';
 import Rule from '../models/Rule';
 import RuleDocument from '../models/WorkItemRules';
@@ -190,13 +191,6 @@ class RuleService {
         message: 'A rule already exists that matches the current configuration'
       };
     }
-    if (rootDoc.rules.some(r => this.isRuleSame(r, rule))) {
-      return {
-        success: false,
-        message:
-          'Each rule group needs to contain a unique set of filters (Duplicate groups detected)'
-      };
-    }
 
     return {
       success: true
@@ -213,18 +207,6 @@ class RuleService {
     if (ruleOne.transitionState !== ruleTwo.transitionState) return false;
     if (!ruleOne.parentExcludedStates.every(x => ruleTwo.parentExcludedStates.includes(x)))
       return false;
-
-    // const filterMatch = (ruleOne.filters || []).filter(c =>
-    //   (ruleTwo.filters || []).some(y => this.isFilterSame(c, y))
-    // );
-    // const parentFilterMatch = (ruleOne.parentFilters || []).filter(c =>
-    //   (ruleTwo.parentFilters || []).some(y => this.isFilterSame(c, y))
-    // );
-
-    // if (filterMatch.length > 0 || parentFilterMatch.length > 0) {
-    //   return true;
-    // }
-
     return true;
   }
 
