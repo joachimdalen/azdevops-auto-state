@@ -36,6 +36,7 @@ const getState = (
 const colorGreen: IColor = { red: 15, green: 71, blue: 30 };
 const colorPurple: IColor = { red: 153, green: 67, blue: 196 };
 const colorBlue: IColor = { red: 67, green: 127, blue: 196 };
+const colorTeal: IColor = { red: 66, green: 168, blue: 124 };
 const isGroup = (item: IGroup | undefined): item is IGroup => {
   return !!item;
 };
@@ -160,6 +161,15 @@ export const getListColumns = (
                 iconProps={{ iconName: 'ChevronUp' }}
               >
                 Process Parent
+              </Pill>
+            )}
+            {item.keepAssigneeState && (
+              <Pill
+                variant={PillVariant.colored}
+                color={colorTeal}
+                iconProps={{ iconName: 'Contact' }}
+              >
+                Keep Assignee
               </Pill>
             )}
             {hasFilters && (

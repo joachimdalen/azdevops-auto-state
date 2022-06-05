@@ -1,7 +1,7 @@
 [
   {
     "version": "1.3.0",
-    "publishDate": "2022-06-XX",
+    "publishDate": "2022-06-05",
     "sections": {
       "knownIssues": [
         {
@@ -34,6 +34,12 @@
             "issue": 44,
             "pullRequest": 45,
             "description": "Add work item filters"
+          },
+          {
+            "type": "feature",
+            "issue": 50,
+            "pullRequest": 52,
+            "description": "Add option to keep original assignee when auto updating"
           }
         ]
       },
@@ -46,6 +52,12 @@
             "issue": 44,
             "pullRequest": 45,
             "description": "Add work item filters"
+          },
+          {
+            "type": "feature",
+            "issue": 50,
+            "pullRequest": 52,
+            "description": "Add option to keep original assignee when auto updating"
           }
         ]
       },

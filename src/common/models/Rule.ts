@@ -10,5 +10,6 @@ export default interface Rule {
   parentTargetState: string;
   childrenLookup: boolean;
   processParent: boolean;
+  keepAssigneeState?: boolean;
   filterGroups?: FilterGroup[];
 }

@@ -7,7 +7,7 @@
   "name": "Auto State - DEV",
   "publisher": "JoachimDalen",
   "version": "1.0.2",
-  "description": "An extension to automatically update states between parents and children",
+  "description": "Auto State is an extension to automate state changes of parent work items.",
   "categories": ["Azure Boards"],
   "demands": ["api-version/5.1"],
   "tags": ["work items", "state", "auto update"],

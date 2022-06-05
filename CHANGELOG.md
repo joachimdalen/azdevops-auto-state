@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.3.0 (2022-06-XX)
+## 1.3.0 (2022-06-05)
 
 **💡 Known issues**
 
@@ -22,19 +22,29 @@ This extension does not properly work when having the `New boards hub` feature e
 
 ## 📦 Module changes
 
-### 🚀 Features (2)
+### 🚀 Features (4)
 
 #### `rule-modal@1.3.0`
 
 - Add work item filters
+
   - Suggested in [GH#44 - Add work item options](https://github.com/joachimdalen/azdevops-auto-state/issues/44)
   - Added in [PR#45 - Add work item filters](https://github.com/joachimdalen/azdevops-auto-state/pull/45)
+
+- Add option to keep original assignee when auto updating
+  - Suggested in [GH#50 - Do not set "assigned to" value after changing state.](https://github.com/joachimdalen/azdevops-auto-state/issues/50)
+  - Added in [PR#52 - Add option to keep original assignee when auto updating](https://github.com/joachimdalen/azdevops-auto-state/pull/52)
 
 #### `admin-hub@1.3.0`
 
 - Add work item filters
+
   - Suggested in [GH#44 - Add work item options](https://github.com/joachimdalen/azdevops-auto-state/issues/44)
   - Added in [PR#45 - Add work item filters](https://github.com/joachimdalen/azdevops-auto-state/pull/45)
+
+- Add option to keep original assignee when auto updating
+  - Suggested in [GH#50 - Do not set "assigned to" value after changing state.](https://github.com/joachimdalen/azdevops-auto-state/issues/50)
+  - Added in [PR#52 - Add option to keep original assignee when auto updating](https://github.com/joachimdalen/azdevops-auto-state/pull/52)
 
 ### 🐛 Fixes (1)
 
@@ -47,6 +57,7 @@ This extension does not properly work when having the `New boards hub` feature e
 
 Thank you to the following for contributing to the latest release
 
+- [@kameelyan](https://github.com/kameelyan)
 - [@MPDFO](https://github.com/MPDFO)
 
 ---

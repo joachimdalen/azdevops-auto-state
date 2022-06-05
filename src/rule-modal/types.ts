@@ -72,6 +72,7 @@ export const excludedReferenceNames: string[] = [
 
 export const validationSchema = yup.object().shape({
   disabled: yup.bool(),
+  keepAssigneeState: yup.bool(),
   workItemType: yup.string().trim().required(),
   parentType: yup.string().trim().required(),
   transitionState: yup.string().trim().required(),

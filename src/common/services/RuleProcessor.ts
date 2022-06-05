@@ -7,6 +7,7 @@ import RuleDocument from '../models/WorkItemRules';
 import WorkItemRules from '../models/WorkItemRules';
 import webLogger from '../webLogger';
 import {
+  getAssignedTo,
   getDryRunState,
   getState,
   getWorkItemTitle,
@@ -156,9 +157,12 @@ class RuleProcessor implements IRuleProcessor {
           updatedState: rule.parentTargetState
         });
       } else {
+        const assignee = rule.keepAssigneeState === true ? getAssignedTo(parentWi) : undefined;
         const updated = await this._workItemService.setWorkItemState(
           parentWi.id,
-          rule.parentTargetState
+          rule.parentTargetState,
+          rule.keepAssigneeState,
+          assignee
         );
         webLogger.information('Updated ' + parentWi.id + ' to ' + updated.fields['System.State']);
       }

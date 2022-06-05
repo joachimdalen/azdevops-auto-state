@@ -1,5 +1,6 @@
 import '@testing-library/jest-dom/extend-expect';
 
+import { IdentityRef } from 'azure-devops-extension-api/WebApi';
 import { WorkItem } from 'azure-devops-extension-api/WorkItemTracking';
 import { v4 as uuidV4 } from 'uuid';
 
@@ -998,6 +999,153 @@ describe('RuleProcessor', () => {
 
       expect(mockUpdateWorkItem).toHaveBeenCalledWith(
         [{ op: 'add', path: '/fields/System.State', value: 'Active' }],
+        122,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined
+      );
+      expect(mockUpdateWorkItem).toHaveBeenCalledTimes(1);
+    });
+
+    it('should keep original assignee if set', async () => {
+      const identity: IdentityRef = {
+        descriptor: '123',
+        directoryAlias: '',
+        id: 'user-id-one',
+        imageUrl: '',
+        inactive: false,
+        isAadIdentity: false,
+        isContainer: false,
+        isDeletedInOrigin: false,
+        profileUrl: '',
+        uniqueName: '',
+        _links: undefined,
+        displayName: '',
+        url: ''
+      };
+
+      const parentWorkItem = getWorkItem(
+        122,
+        WorkItemNames.UserStory,
+        'New',
+        [{ id: 123, type: 'children' }],
+        { 'System.AssignedTo': identity }
+      );
+      const workItem = getWorkItem(
+        123,
+        WorkItemNames.Task,
+        'Active',
+        [{ id: 122, type: 'parent' }],
+        { 'System.AssignedTo': identity }
+      );
+      getRuleDocumentsSpy.mockResolvedValue([
+        {
+          id: WorkItemReferenceNames.Task,
+          rules: [
+            {
+              id: '1',
+              parentType: WorkItemReferenceNames.UserStory,
+              workItemType: WorkItemReferenceNames.Task,
+              transitionState: 'Active',
+              parentExcludedStates: ['Active', 'Resolved', 'Closed'],
+              parentTargetState: 'Active',
+              childrenLookup: false,
+              processParent: false,
+              disabled: false,
+              keepAssigneeState: true
+            }
+          ]
+        }
+      ]);
+      mockUpdateWorkItem.mockImplementation((document, id) => {
+        const newWi = { ...workItem };
+        newWi.fields['System.State'] = document[0].value;
+        return Promise.resolve(newWi);
+      });
+
+      mockGetWorkItem.mockImplementation(id => {
+        switch (id) {
+          case 123:
+            return Promise.resolve(workItem);
+          case 122:
+            return Promise.resolve(parentWorkItem);
+          default:
+            return Promise.reject('No such item');
+        }
+      });
+
+      const ruleProcessor = new RuleProcessor();
+      await ruleProcessor.init();
+      await ruleProcessor.process(workItem.id, false);
+
+      expect(mockUpdateWorkItem).toHaveBeenCalledWith(
+        [
+          { op: 'add', path: '/fields/System.State', value: 'Active' },
+          { op: 'add', path: '/fields/System.AssignedTo', value: identity }
+        ],
+        122,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined
+      );
+      expect(mockUpdateWorkItem).toHaveBeenCalledTimes(1);
+    });
+    it('should keep unassigned', async () => {
+      const parentWorkItem = getWorkItem(122, WorkItemNames.UserStory, 'New', [
+        { id: 123, type: 'children' }
+      ]);
+      const workItem = getWorkItem(123, WorkItemNames.Task, 'Active', [
+        { id: 122, type: 'parent' }
+      ]);
+      getRuleDocumentsSpy.mockResolvedValue([
+        {
+          id: WorkItemReferenceNames.Task,
+          rules: [
+            {
+              id: '1',
+              parentType: WorkItemReferenceNames.UserStory,
+              workItemType: WorkItemReferenceNames.Task,
+              transitionState: 'Active',
+              parentExcludedStates: ['Active', 'Resolved', 'Closed'],
+              parentTargetState: 'Active',
+              childrenLookup: false,
+              processParent: false,
+              disabled: false,
+              keepAssigneeState: true
+            }
+          ]
+        }
+      ]);
+      mockUpdateWorkItem.mockImplementation((document, id) => {
+        const newWi = { ...workItem };
+        newWi.fields['System.State'] = document[0].value;
+        return Promise.resolve(newWi);
+      });
+
+      mockGetWorkItem.mockImplementation(id => {
+        switch (id) {
+          case 123:
+            return Promise.resolve(workItem);
+          case 122:
+            return Promise.resolve(parentWorkItem);
+          default:
+            return Promise.reject('No such item');
+        }
+      });
+
+      const ruleProcessor = new RuleProcessor();
+      await ruleProcessor.init();
+      await ruleProcessor.process(workItem.id, false);
+
+      expect(mockUpdateWorkItem).toHaveBeenCalledWith(
+        [
+          { op: 'add', path: '/fields/System.State', value: 'Active' },
+          { op: 'add', path: '/fields/System.AssignedTo', value: '' }
+        ],
         122,
         undefined,
         undefined,

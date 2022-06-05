@@ -1,5 +1,6 @@
 import { getClient } from 'azure-devops-extension-api/Common';
 import { CoreRestClient, ProjectProperty } from 'azure-devops-extension-api/Core';
+import { IdentityRef } from 'azure-devops-extension-api/WebApi';
 import {
   WorkItem,
   WorkItemExpand,
@@ -18,7 +19,12 @@ export interface IWorkItemService {
   getWorkItemTypes(fromProcess?: boolean): Promise<WorkItemType[]>;
   getWorkItem(id: number): Promise<WorkItem>;
   getWorkItems(ids: number[]): Promise<WorkItem[]>;
-  setWorkItemState(id: number, state: string): Promise<WorkItem>;
+  setWorkItemState(
+    id: number,
+    state: string,
+    setAssigneeValue?: boolean,
+    assignee?: IdentityRef | undefined
+  ): Promise<WorkItem>;
   getProcessTemplateName(): Promise<string | undefined>;
 }
 
@@ -150,18 +156,35 @@ class WorkItemService implements IWorkItemService {
     return wit;
   }
 
-  public async setWorkItemState(id: number, state: string): Promise<WorkItem> {
+  public async setWorkItemState(
+    id: number,
+    state: string,
+    setAssigneeValue?: boolean,
+    assignee?: IdentityRef | undefined
+  ): Promise<WorkItem> {
     const client = getClient(WorkItemTrackingRestClient);
-    const updated = await client.updateWorkItem(
-      [
-        {
-          op: 'add',
-          path: '/fields/System.State',
-          value: state
-        }
-      ],
-      id
-    );
+
+    const stateData = [
+      {
+        op: 'add',
+        path: '/fields/System.State',
+        value: state
+      }
+    ];
+
+    const payload =
+      setAssigneeValue === true
+        ? [
+            ...stateData,
+            {
+              op: 'add',
+              path: '/fields/System.AssignedTo',
+              value: assignee === undefined ? '' : assignee
+            }
+          ]
+        : stateData;
+
+    const updated = await client.updateWorkItem(payload, id);
     return updated;
   }
 }
