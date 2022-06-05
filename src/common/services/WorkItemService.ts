@@ -184,7 +184,6 @@ class WorkItemService implements IWorkItemService {
           ]
         : stateData;
 
-    console.log(id, state, payload);
     const updated = await client.updateWorkItem(payload, id);
     return updated;
   }
