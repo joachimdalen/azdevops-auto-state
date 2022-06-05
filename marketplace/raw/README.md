@@ -6,7 +6,7 @@
 <h3 align="center">Auto State</h3>
 
   <p align="center">
-    An extension to automatically update states between parents and children
+    Auto State is an extension to automate state changes of parent work items.
     <br />
     <a href="https://devops-extensions.dev/docs/extensions/auto-state"><strong>Explore the docs »</strong></a>
     <br />
