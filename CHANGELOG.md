@@ -1,12 +1,24 @@
 # Changelog
 
-## 1.3.0 (2022-06-05)
+## 1.3.1 (2022-06-XX)
 
 **💡 Known issues**
 
 This extension does not properly work when having the `New boards hub` feature enabled. This is being tracked in: [Observer does not work with 'New boards hub'](https://github.com/joachimdalen/azdevops-auto-state/issues/17)
 
 ---
+
+### 📣 Enhancements (1)
+
+#### `rule-modal@1.3.1`
+
+- Add better help text about the behaviour of 'Parent target state'
+  - Suggested in [GH#55 - Better documentation of the behavior of "target state"](https://github.com/joachimdalen/azdevops-auto-state/issues/55)
+  - Improved in [PR#56 - Improve help text with behavior of "target state"](https://github.com/joachimdalen/azdevops-auto-state/pull/56)
+
+---
+
+## 1.3.0 (2022-06-05)
 
 ### 🛠️ Maintenance (1)
 
