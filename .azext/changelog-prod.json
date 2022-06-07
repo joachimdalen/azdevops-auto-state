@@ -19,7 +19,7 @@
             "type": "enhancement",
             "issue": 55,
             "pullRequest": 56,
-            "description": "Add better help text about the behaviour of 'Target state'"
+            "description": "Add better help text about the behaviour of 'Parent target state'"
           }
         ]
       }

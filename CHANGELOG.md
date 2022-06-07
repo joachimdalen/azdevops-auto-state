@@ -12,7 +12,7 @@ This extension does not properly work when having the `New boards hub` feature e
 
 #### `rule-modal@1.3.1`
 
-- Add better help text about the behaviour of 'Target state'
+- Add better help text about the behaviour of 'Parent target state'
   - Suggested in [GH#55 - Better documentation of the behavior of "target state"](https://github.com/joachimdalen/azdevops-auto-state/issues/55)
   - Improved in [PR#56 - Improve help text with behavior of "target state"](https://github.com/joachimdalen/azdevops-auto-state/pull/56)
 
