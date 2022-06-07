@@ -1,6 +1,13 @@
 {
   "issues": [
     {
+      "id": 1263383380,
+      "number": 55,
+      "submitter": "joachimdalen",
+      "title": "Better documentation of the behavior of \"target state\"",
+      "url": "https://github.com/joachimdalen/azdevops-auto-state/issues/55"
+    },
+    {
       "id": 1254761269,
       "number": 50,
       "submitter": "kameelyan",
@@ -93,6 +100,13 @@
     }
   ],
   "pullRequests": [
+    {
+      "id": 960489752,
+      "number": 56,
+      "submitter": "joachimdalen",
+      "title": "Improve help text with behavior of \"target state\"",
+      "url": "https://github.com/joachimdalen/azdevops-auto-state/pull/56"
+    },
     {
       "id": 958249886,
       "number": 52,
