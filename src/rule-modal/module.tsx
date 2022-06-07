@@ -165,7 +165,6 @@ const ModalContent = (): React.ReactElement => {
       if (error instanceof yup.ValidationError) {
         const data = parseValidationError(error);
         setValidationErrors(data);
-        console.log(data);
       } else {
         console.error(error);
       }
@@ -366,7 +365,7 @@ const ModalContent = (): React.ReactElement => {
               message={
                 hasError(validationErrors, 'parentTargetState')
                   ? getCombined(validationErrors, 'parentTargetState', 'Parent target state')
-                  : 'This is the state that the parent work item should transition to'
+                  : 'This is the state that the parent work item should transition to. Values are the selected options from "Parent not in state".'
               }
             >
               <WorkItemStateDropdown

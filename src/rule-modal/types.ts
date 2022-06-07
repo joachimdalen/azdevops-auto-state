@@ -92,8 +92,6 @@ export const validationSchema = yup.object().shape({
           'required',
           'At least one filter condition is required in filter groups',
           (value: any, context) => {
-            console.log(value);
-
             if (value.workItemFilters === undefined && value.parentFilters === undefined)
               return false;
 
