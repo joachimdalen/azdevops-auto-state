@@ -63,7 +63,7 @@ For this extension to work properly there are a few steps that needs to be taken
 
 ### Activation
 
-Activation is done through the Preview Feature "Auto State". This needs to be enabled for each Project this extension should be used in. This feature flag is scoped to individual projects, that means you need to be inside a project for the feature flag to appear. The url should look something like `https://dev.azure.com/ORGANIZATION/PROJECT`
+Activation is done through the Preview Feature "Auto State". This needs to be enabled for each Project this extension should be used in from the [Preview Features](https://docs.microsoft.com/en-us/azure/devops/project/navigation/preview-features?view=azure-devops&tabs=new-account-enabled#enable-features-for-your-use) menu. This feature flag is scoped to individual projects, that means you need to be inside a project for the feature flag to appear. The url should look something like `https://dev.azure.com/ORGANIZATION/PROJECT`
 
 When you open the modal with all the feature flags the dropdown should have three options
 
