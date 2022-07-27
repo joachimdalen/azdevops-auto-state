@@ -10,6 +10,14 @@
         }
       ]
     },
+    "changes": [
+      {
+        "type": "docs",
+        "description": "Add link to feature menu docs",
+        "issue": 57,
+        "pullRequest": 65
+      }
+    ],
     "modules": [
       {
         "name": "rule-modal",

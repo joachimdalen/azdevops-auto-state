@@ -1,6 +1,13 @@
 {
   "issues": [
     {
+      "id": 1270925483,
+      "number": 57,
+      "submitter": "ruksarjk",
+      "title": "It's not clear how to activate the extension",
+      "url": "https://github.com/joachimdalen/azdevops-auto-state/issues/57"
+    },
+    {
       "id": 1263383380,
       "number": 55,
       "submitter": "joachimdalen",
@@ -100,6 +107,13 @@
     }
   ],
   "pullRequests": [
+    {
+      "id": 1009312364,
+      "number": 65,
+      "submitter": "joachimdalen",
+      "title": "docs: Add activation docs",
+      "url": "https://github.com/joachimdalen/azdevops-auto-state/pull/65"
+    },
     {
       "id": 960489752,
       "number": 56,
