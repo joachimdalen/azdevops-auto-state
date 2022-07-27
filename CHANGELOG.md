@@ -8,6 +8,14 @@ This extension does not properly work when having the `New boards hub` feature e
 
 ---
 
+### 📝 Documentation (1)
+
+- Add link to feature menu docs
+  - Changed needed [GH#57 - It's not clear how to activate the extension](https://github.com/joachimdalen/azdevops-auto-state/issues/57)
+  - Changed in [PR#65 - docs: Add activation docs](https://github.com/joachimdalen/azdevops-auto-state/pull/65)
+
+## 📦 Module changes
+
 ### 📣 Enhancements (1)
 
 #### `rule-modal@1.3.1`
@@ -16,21 +24,27 @@ This extension does not properly work when having the `New boards hub` feature e
   - Suggested in [GH#55 - Better documentation of the behavior of "target state"](https://github.com/joachimdalen/azdevops-auto-state/issues/55)
   - Improved in [PR#56 - Improve help text with behavior of "target state"](https://github.com/joachimdalen/azdevops-auto-state/pull/56)
 
+## 🌟 Contributors
+
+Thank you to the following for contributing to the latest release
+
+- [@ruksarjk](https://github.com/ruksarjk)
+
 ---
 
 ## 1.3.0 (2022-06-05)
-
-### 🛠️ Maintenance (1)
-
-- Fix ci pipeline setting the wrong extension version
-  - Scheduled in [GH#34 - Build sets the wrong extension version in scripts when setting the version manually](https://github.com/joachimdalen/azdevops-auto-state/issues/34)
-  - Changed in [PR#47 - Build sets the wrong extension version in scripts when setting the version manually](https://github.com/joachimdalen/azdevops-auto-state/pull/47)
 
 ### 📝 Documentation (1)
 
 - Update documentation urls
   - Changed needed [GH#49 - Update extension manifest metadata](https://github.com/joachimdalen/azdevops-auto-state/issues/49)
   - Changed in [PR#51 - Update documentation urls and metadata](https://github.com/joachimdalen/azdevops-auto-state/pull/51)
+
+### 🛠️ Maintenance (1)
+
+- Fix ci pipeline setting the wrong extension version
+  - Scheduled in [GH#34 - Build sets the wrong extension version in scripts when setting the version manually](https://github.com/joachimdalen/azdevops-auto-state/issues/34)
+  - Changed in [PR#47 - Build sets the wrong extension version in scripts when setting the version manually](https://github.com/joachimdalen/azdevops-auto-state/pull/47)
 
 ## 📦 Module changes
 
@@ -104,16 +118,16 @@ Thank you to the following for contributing to the latest release
 
 ## 1.2.1 (2022-02-16)
 
-### 🛠️ Maintenance (1)
-
-- Update dependencies to fix [CVE-2022-0536](https://github.com/advisories/GHSA-pw2r-vq6v-hr8c)
-  - Changed in [PR#37 - Update dependencies](https://github.com/joachimdalen/azdevops-auto-state/pull/37)
-
 ### 📝 Documentation (1)
 
 - Clarified activation of AutoState from feature flag
   - Changed needed [GH#35 - Auto state entry doesn't appear under the preview features](https://github.com/joachimdalen/azdevops-auto-state/issues/35)
   - Changed in [PR#36 - docs: Clarify where to find feature toggle](https://github.com/joachimdalen/azdevops-auto-state/pull/36)
+
+### 🛠️ Maintenance (1)
+
+- Update dependencies to fix [CVE-2022-0536](https://github.com/advisories/GHSA-pw2r-vq6v-hr8c)
+  - Changed in [PR#37 - Update dependencies](https://github.com/joachimdalen/azdevops-auto-state/pull/37)
 
 ## 🌟 Contributors
 
@@ -157,6 +171,13 @@ This extension does not properly work when having the `New boards hub` feature e
 
 ## 📦 Module changes
 
+### 📣 Enhancements (1)
+
+#### `rule-modal@1.2.0`
+
+- Added labels to toggle states to indicate the current state
+  - Improved in [PR#27 - Add settings module](https://github.com/joachimdalen/azdevops-auto-state/pull/27)
+
 ### 🐛 Fixes (2)
 
 #### `rule-modal@1.2.0`
@@ -166,13 +187,6 @@ This extension does not properly work when having the `New boards hub` feature e
 - Fix work item type dropdown not being disabled in edit view. Changing work item type is not supported
   - Reported in [GH#30 - Disable work item type after rule creation](https://github.com/joachimdalen/azdevops-auto-state/issues/30)
   - Fixed in [PR#31 - Disable work item type in edit](https://github.com/joachimdalen/azdevops-auto-state/pull/31)
-
-### 📣 Enhancements (1)
-
-#### `rule-modal@1.2.0`
-
-- Added labels to toggle states to indicate the current state
-  - Improved in [PR#27 - Add settings module](https://github.com/joachimdalen/azdevops-auto-state/pull/27)
 
 ---
 
@@ -225,6 +239,12 @@ This extension does not properly work when having the `New boards hub` feature e
 
 ## 1.0.1 (2021-12-25)
 
+### 📝 Documentation (1)
+
+#### `Core@1.0.1`
+
+- Update links in manifest
+
 ### 🐛 Fixes (1)
 
 #### `observer@1.0.1`
@@ -232,12 +252,6 @@ This extension does not properly work when having the `New boards hub` feature e
 - Fixed an issue where `Children lookup` did not work properly
   - Reported in [GH#13 - "Children lookup" does not work as intended](https://github.com/joachimdalen/azdevops-auto-state/issues/13)
   - Fixed in [PR#14 - Version 1.0.1](https://github.com/joachimdalen/azdevops-auto-state/pull/14)
-
-### 📝 Documentation (1)
-
-#### `Core@1.0.1`
-
-- Update links in manifest
 
 ---
 
