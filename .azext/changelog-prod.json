@@ -30,6 +30,16 @@
             "description": "Add better help text about the behaviour of 'Parent target state'"
           }
         ]
+      },
+      {
+        "name": "rule-tester",
+        "version": "1.2.1",
+        "changes": [
+          {
+            "type": "fix",
+            "description": "Fix search button not activating correctly"
+          }
+        ]
       }
     ]
   },
