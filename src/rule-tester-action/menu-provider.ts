@@ -1,4 +1,6 @@
-import DevOpsService, { PanelIds } from '../common/services/DevOpsService';
+import { DevOpsService } from '@joachimdalen/azdevops-ext-core/DevOpsService';
+
+import { PanelIds } from '../common/common';
 
 interface WorkItemActionContext {
   workItemId: number;

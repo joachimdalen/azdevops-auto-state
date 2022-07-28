@@ -9,3 +9,14 @@ export interface IConfirmationConfig {
   messageBar?: IMessageBarProps;
   messageBarContent?: string;
 }
+
+export enum PanelIds {
+  RulePanel = 'rule-modal',
+  RuleTesterPanel = 'rule-tester',
+  Settings = 'settings-panel',
+  PresetsPanel = 'presets-panel'
+}
+
+export enum DialogIds {
+  ConfirmationDialog = 'confirmation-dialog'
+}
