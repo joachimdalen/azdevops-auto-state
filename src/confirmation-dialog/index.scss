@@ -1,0 +1,4 @@
+@import 'azure-devops-ui/Core/override.css';
+@import 'azure-devops-ui/Core/_platformCommon.scss';
+@import '@joachimdalen/azdevops-ext-core/styles/mixins.scss';
+@include extension-container('confirmation-dialog-container');

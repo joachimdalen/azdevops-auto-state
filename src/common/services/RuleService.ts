@@ -1,13 +1,13 @@
 import { IInternalIdentity } from '@joachimdalen/azdevops-ext-core/CommonTypes';
+import { DevOpsService, IDevOpsService } from '@joachimdalen/azdevops-ext-core/DevOpsService';
 import { v4 as uuidV4 } from 'uuid';
 
+import { PanelIds } from '../common';
 import { ActionResult } from '../models/ActionResult';
 import AddRuleResult from '../models/AddRuleResult';
-import { FilterGroup } from '../models/FilterGroup';
 import FilterItem, { FilterFieldType } from '../models/FilterItem';
 import Rule from '../models/Rule';
 import RuleDocument from '../models/WorkItemRules';
-import DevOpsService, { IDevOpsService, PanelIds } from './DevOpsService';
 import { IStorageService, StorageService } from './StorageService';
 
 class RuleService {

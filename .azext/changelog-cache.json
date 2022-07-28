@@ -1,6 +1,13 @@
 {
   "issues": [
     {
+      "id": 1305675685,
+      "number": 60,
+      "submitter": "joachimdalen",
+      "title": "Add confirmation dialog to destructive actions",
+      "url": "https://github.com/joachimdalen/azdevops-auto-state/issues/60"
+    },
+    {
       "id": 1270925483,
       "number": 57,
       "submitter": "ruksarjk",
@@ -107,6 +114,13 @@
     }
   ],
   "pullRequests": [
+    {
+      "id": 1010367912,
+      "number": 67,
+      "submitter": "joachimdalen",
+      "title": "Add confirmation to delete",
+      "url": "https://github.com/joachimdalen/azdevops-auto-state/pull/67"
+    },
     {
       "id": 1009312364,
       "number": 65,

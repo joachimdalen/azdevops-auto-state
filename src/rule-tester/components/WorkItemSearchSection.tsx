@@ -40,7 +40,7 @@ const WorkItemSearchSection = ({
         </FormItem>
         <div className="flex-row flex-end margin-left-8">
           <Button
-            disabled={workItemId === undefined}
+            disabled={workItemId === undefined || isNaN(workItemId)}
             primary
             text="Load"
             iconProps={{

@@ -43,6 +43,12 @@ const modules = [
     entry: './src/presets-panel/module',
     root: 'presets-panel-container',
     generate: true
+  },
+  {
+    name: 'confirmation-dialog',
+    entry: './src/confirmation-dialog/module',
+    root: 'confirmation-dialog-container',
+    generate: true
   }
 ];
 

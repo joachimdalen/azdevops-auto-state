@@ -1,3 +1,4 @@
+import { DevOpsService } from '@joachimdalen/azdevops-ext-core/DevOpsService';
 import { IPanelOptions, IProjectInfo, IToast } from 'azure-devops-extension-api';
 
 import {
@@ -6,7 +7,7 @@ import {
   mockOpenNewWindow,
   mockOpenPanel
 } from '../../../__mocks__/azure-devops-extension-sdk';
-import DevOpsService, { PanelIds } from '../../../common/services/DevOpsService';
+import { PanelIds } from '../../../common/common';
 
 describe('DevOpsService', () => {
   describe('getProject', () => {
@@ -65,18 +66,6 @@ describe('DevOpsService', () => {
     });
   });
 
-  describe('getPanelId', () => {
-    afterEach(() => {
-      jest.clearAllMocks();
-    });
-    it('should return correct', async () => {
-      const devOpsService = new DevOpsService();
-
-      expect(devOpsService.getPanelId(PanelIds.RulePanel)).toEqual('rule-modal');
-      expect(devOpsService.getPanelId(PanelIds.RuleTesterPanel)).toEqual('rule-tester');
-      expect(devOpsService.getPanelId(PanelIds.Settings)).toEqual('settings-panel');
-    });
-  });
   describe('openLink', () => {
     afterEach(() => {
       jest.clearAllMocks();

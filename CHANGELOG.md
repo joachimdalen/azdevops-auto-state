@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.3.1 (2022-06-XX)
+## 1.4.0 (2022-08-XX)
 
 **💡 Known issues**
 
@@ -14,7 +14,26 @@ This extension does not properly work when having the `New boards hub` feature e
   - Changed needed [GH#57 - It's not clear how to activate the extension](https://github.com/joachimdalen/azdevops-auto-state/issues/57)
   - Changed in [PR#65 - docs: Add activation docs](https://github.com/joachimdalen/azdevops-auto-state/pull/65)
 
+### 🛠️ Maintenance (1)
+
+- Update dependencies
+  - Changed in [PR#67 - Add confirmation to delete](https://github.com/joachimdalen/azdevops-auto-state/pull/67)
+
 ## 📦 Module changes
+
+### 🚀 Features (2)
+
+#### `admin-hub@1.4.0`
+
+- Added confirmation dialog to destructive actions
+  - Suggested in [GH#60 - Add confirmation dialog to destructive actions](https://github.com/joachimdalen/azdevops-auto-state/issues/60)
+  - Added in [PR#67 - Add confirmation to delete](https://github.com/joachimdalen/azdevops-auto-state/pull/67)
+
+#### `confirmation-dialog@1.0.0`
+
+- Added module
+  - Suggested in [GH#55 - Better documentation of the behavior of "target state"](https://github.com/joachimdalen/azdevops-auto-state/issues/55)
+  - Added in [PR#67 - Add confirmation to delete](https://github.com/joachimdalen/azdevops-auto-state/pull/67)
 
 ### 📣 Enhancements (1)
 
@@ -23,6 +42,13 @@ This extension does not properly work when having the `New boards hub` feature e
 - Add better help text about the behaviour of 'Parent target state'
   - Suggested in [GH#55 - Better documentation of the behavior of "target state"](https://github.com/joachimdalen/azdevops-auto-state/issues/55)
   - Improved in [PR#56 - Improve help text with behavior of "target state"](https://github.com/joachimdalen/azdevops-auto-state/pull/56)
+
+### 🐛 Fixes (1)
+
+#### `rule-tester@1.2.1`
+
+- Fix search button not activating correctly
+  - Fixed in [PR#67 - Add confirmation to delete](https://github.com/joachimdalen/azdevops-auto-state/pull/67)
 
 ## 🌟 Contributors
 

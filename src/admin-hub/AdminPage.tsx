@@ -7,6 +7,8 @@ import {
   IDetailsGroupDividerProps,
   IGroup
 } from '@fluentui/react';
+import { ActionResult } from '@joachimdalen/azdevops-ext-core/CommonTypes';
+import { DevOpsService } from '@joachimdalen/azdevops-ext-core/DevOpsService';
 import { WorkItemType } from 'azure-devops-extension-api/WorkItemTracking';
 import { Button } from 'azure-devops-ui/Button';
 import { ButtonGroup } from 'azure-devops-ui/ButtonGroup';
@@ -18,11 +20,11 @@ import { Page } from 'azure-devops-ui/Page';
 import { Surface, SurfaceBackground } from 'azure-devops-ui/Surface';
 import React, { useEffect, useMemo, useState } from 'react';
 
+import { DialogIds, IConfirmationConfig, PanelIds } from '../common/common';
 import { groupBy } from '../common/helpers';
 import AddRuleResult from '../common/models/AddRuleResult';
 import Rule from '../common/models/Rule';
 import RuleDocument from '../common/models/WorkItemRules';
-import DevOpsService, { PanelIds } from '../common/services/DevOpsService';
 import RuleService from '../common/services/RuleService';
 import WorkItemService from '../common/services/WorkItemService';
 import webLogger from '../common/webLogger';
@@ -70,10 +72,31 @@ const AdminPage = (): React.ReactElement => {
   const handleDeleteRule = async (workItemType: string, ruleId: string): Promise<boolean> => {
     if (!configuration) return false;
 
-    const updateResult = await ruleService.deleteRule(workItemType, ruleId);
-    if (updateResult.success) {
-      setConfiguration(updateResult.data);
-    }
+    const config: IConfirmationConfig = {
+      cancelButton: {
+        text: 'Cancel'
+      },
+      confirmButton: {
+        text: 'Delete',
+        danger: true,
+        iconProps: {
+          iconName: 'Delete'
+        }
+      },
+      content: ['Are you sure you want to delete the rule?', 'This can not be undone.']
+    };
+    await devOpsService.showDialog<ActionResult<boolean>, DialogIds>(DialogIds.ConfirmationDialog, {
+      title: 'Delete rule?',
+      onClose: async result => {
+        if (result?.success) {
+          const updateResult = await ruleService.deleteRule(workItemType, ruleId);
+          if (updateResult.success) {
+            setConfiguration(updateResult.data);
+          }
+        }
+      },
+      configuration: config
+    });
 
     return true;
   };

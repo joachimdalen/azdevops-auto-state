@@ -48,7 +48,7 @@ describe('WorkItemSearchSection', () => {
     );
 
     const button = screen.getByRole('button');
-    expect(button).toHaveAttribute('aria-disabled', 'false');
+    expect(button).not.toHaveAttribute('aria-disabled', 'false');
   });
   it('should set work item id when changed', () => {
     render(

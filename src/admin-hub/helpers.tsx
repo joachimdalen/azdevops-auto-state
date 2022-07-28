@@ -8,6 +8,7 @@ import {
   IGroup,
   mergeStyles
 } from '@fluentui/react';
+import { IDevOpsService } from '@joachimdalen/azdevops-ext-core/DevOpsService';
 import { IPanelOptions } from 'azure-devops-extension-api';
 import { WorkItemStateColor, WorkItemType } from 'azure-devops-extension-api/WorkItemTracking';
 import { IHeaderCommandBarItem } from 'azure-devops-ui/HeaderCommandBar';
@@ -15,11 +16,11 @@ import { MenuItemType } from 'azure-devops-ui/Menu';
 import { Pill, PillVariant } from 'azure-devops-ui/Pill';
 import { PillGroup, PillGroupOverflow } from 'azure-devops-ui/PillGroup';
 import { IColor } from 'azure-devops-ui/Utilities/Color';
-import { DOCS_URL_EXTENSION } from '../common/documentationUrls';
 
+import { PanelIds } from '../common/common';
+import { DOCS_URL_EXTENSION } from '../common/documentationUrls';
 import { ActionResult } from '../common/models/ActionResult';
 import Rule from '../common/models/Rule';
-import { IDevOpsService, PanelIds } from '../common/services/DevOpsService';
 import webLogger from '../common/webLogger';
 import StateTag from '../shared-ui/component/StateTag';
 import WorkItemTypeTag from '../shared-ui/component/WorkItemTypeTag';
