@@ -72,7 +72,7 @@ const ConfirmationDialog = (): JSX.Element => {
   ];
 
   return (
-    <div className="flex-column">
+    <div className="flex-column flex-grow">
       {config.messageBar && config.messageBarContent && (
         <MessageBar {...config.messageBar}>{config.messageBarContent}</MessageBar>
       )}

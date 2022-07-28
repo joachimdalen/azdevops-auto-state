@@ -7,6 +7,7 @@ import {
   IDetailsGroupDividerProps,
   IGroup
 } from '@fluentui/react';
+import { ActionResult } from '@joachimdalen/azdevops-ext-core/CommonTypes';
 import { DevOpsService } from '@joachimdalen/azdevops-ext-core/DevOpsService';
 import { WorkItemType } from 'azure-devops-extension-api/WorkItemTracking';
 import { Button } from 'azure-devops-ui/Button';
@@ -82,12 +83,12 @@ const AdminPage = (): React.ReactElement => {
           iconName: 'Delete'
         }
       },
-      content: `Are you sure you want to delete the rule. This can not be undone.`
+      content: ['Are you sure you want to delete the rule?', 'This can not be undone.']
     };
-    await devOpsService.showDialog<boolean, DialogIds>(DialogIds.ConfirmationDialog, {
+    await devOpsService.showDialog<ActionResult<boolean>, DialogIds>(DialogIds.ConfirmationDialog, {
       title: 'Delete rule?',
       onClose: async result => {
-        if (result) {
+        if (result?.success) {
           const updateResult = await ruleService.deleteRule(workItemType, ruleId);
           if (updateResult.success) {
             setConfiguration(updateResult.data);
