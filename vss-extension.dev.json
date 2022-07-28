@@ -207,7 +207,7 @@
       "type": "ms.vss-web.external-content",
       "targets": [],
       "properties": {
-        "uri": "dist/confirmation-dialog.html"
+        "uri": "confirmation-dialog.html"
       },
       "constraints": [
         {

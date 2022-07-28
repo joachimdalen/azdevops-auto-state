@@ -71,28 +71,6 @@ const AdminPage = (): React.ReactElement => {
   const handleDeleteRule = async (workItemType: string, ruleId: string): Promise<boolean> => {
     if (!configuration) return false;
 
-    const updateResult = await ruleService.deleteRule(workItemType, ruleId);
-    if (updateResult.success) {
-      setConfiguration(updateResult.data);
-    }
-
-    return true;
-  };
-
-  const showEditRule = async (rule?: Rule) =>
-    ruleService.showEdit(handleDialogResult, result => ruleService.isValid(result?.rule), rule);
-  const refreshData = async (force = false): Promise<void> => {
-    const loadResult = await ruleService.load(force);
-    if (loadResult.success) {
-      setConfiguration(loadResult.data || []);
-
-      if (force) {
-        await devOpsService.showToast('Refreshed rules');
-      }
-    }
-  };
-
-  const deleteItem = async (id: string) => {
     const config: IConfirmationConfig = {
       cancelButton: {
         text: 'Cancel'
@@ -110,11 +88,29 @@ const AdminPage = (): React.ReactElement => {
       title: 'Delete rule?',
       onClose: async result => {
         if (result) {
-          console.log('OK');
+          const updateResult = await ruleService.deleteRule(workItemType, ruleId);
+          if (updateResult.success) {
+            setConfiguration(updateResult.data);
+          }
         }
       },
       configuration: config
     });
+
+    return true;
+  };
+
+  const showEditRule = async (rule?: Rule) =>
+    ruleService.showEdit(handleDialogResult, result => ruleService.isValid(result?.rule), rule);
+  const refreshData = async (force = false): Promise<void> => {
+    const loadResult = await ruleService.load(force);
+    if (loadResult.success) {
+      setConfiguration(loadResult.data || []);
+
+      if (force) {
+        await devOpsService.showToast('Refreshed rules');
+      }
+    }
   };
 
   const commandBarItems: IHeaderCommandBarItem[] = useMemo(
