@@ -1,7 +1,7 @@
 [
   {
-    "version": "1.3.1",
-    "publishDate": "2022-06-XX",
+    "version": "1.4.0",
+    "publishDate": "2022-08-XX",
     "sections": {
       "knownIssues": [
         {
@@ -16,9 +16,26 @@
         "description": "Add link to feature menu docs",
         "issue": 57,
         "pullRequest": 65
+      },
+      {
+        "type": "maint",
+        "description": "Update dependencies",
+        "pullRequest": 67
       }
     ],
     "modules": [
+      {
+        "name": "admin-hub",
+        "version": "1.4.0",
+        "changes": [
+          {
+            "type": "feature",
+            "issue": 60,
+            "pullRequest": 67,
+            "description": "Added confirmation dialog to destructive actions"
+          }
+        ]
+      },
       {
         "name": "rule-modal",
         "version": "1.3.1",
@@ -32,11 +49,24 @@
         ]
       },
       {
+        "name": "confirmation-dialog",
+        "version": "1.0.0",
+        "changes": [
+          {
+            "type": "feature",
+            "issue": 55,
+            "pullRequest": 67,
+            "description": "Added module"
+          }
+        ]
+      },
+      {
         "name": "rule-tester",
         "version": "1.2.1",
         "changes": [
           {
             "type": "fix",
+            "pullRequest": 67,
             "description": "Fix search button not activating correctly"
           }
         ]
