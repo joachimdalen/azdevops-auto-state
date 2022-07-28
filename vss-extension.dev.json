@@ -201,6 +201,22 @@
           }
         }
       }
+    },
+    {
+      "id": "confirmation-dialog",
+      "type": "ms.vss-web.external-content",
+      "targets": [],
+      "properties": {
+        "uri": "dist/confirmation-dialog.html"
+      },
+      "constraints": [
+        {
+          "name": "Feature",
+          "properties": {
+            "featureId": "joachimdalen.auto-state-dev.auto-state-enabled"
+          }
+        }
+      ]
     }
   ]
 }
