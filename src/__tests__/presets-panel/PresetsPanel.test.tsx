@@ -115,7 +115,7 @@ describe('PresetsPanel', () => {
     });
 
     expect(button).toHaveTextContent('Create (1)');
-    expect(button).toHaveAttribute('aria-disabled', 'false');
+    expect(button).not.toHaveAttribute('aria-disabled', 'true');
   });
 
   it('should enable and disabled button', async () => {
@@ -133,7 +133,7 @@ describe('PresetsPanel', () => {
     });
 
     expect(button).toHaveTextContent('Create (1)');
-    expect(button).toHaveAttribute('aria-disabled', 'false');
+    expect(button).not.toHaveAttribute('aria-disabled', 'true');
 
     fireEvent.click(toggle);
     expect(button).toHaveTextContent('Create');
