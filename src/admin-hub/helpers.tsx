@@ -44,7 +44,8 @@ const isGroup = (item: IGroup | undefined): item is IGroup => {
 export const getListColumns = (
   types: WorkItemType[],
   handleDeleteRule: (workItemType: string, ruleId: string) => Promise<boolean>,
-  showEditRule: (rule: Rule) => Promise<void>
+  showEditRule: (rule: Rule) => Promise<void>,
+  toggleActive: (rule: Rule) => Promise<void>
 ): IColumn[] => {
   const columns: IColumn[] = [
     {
@@ -195,7 +196,12 @@ export const getListColumns = (
         return (
           <IconButton
             splitButtonMenuProps={{}}
-            menuProps={getListRowContextMenuItem(item, handleDeleteRule, showEditRule)}
+            menuProps={getListRowContextMenuItem(
+              item,
+              handleDeleteRule,
+              showEditRule,
+              toggleActive
+            )}
             iconProps={{ iconName: 'MoreVertical' }}
           />
         );
@@ -208,7 +214,8 @@ export const getListColumns = (
 const getListRowContextMenuItem = (
   rule: Rule,
   handleDeleteRule: (workItemType: string, ruleId: string) => Promise<boolean>,
-  showEditRule: (rule: Rule) => Promise<void>
+  showEditRule: (rule: Rule) => Promise<void>,
+  toggleActive: (rule: Rule) => Promise<void>
 ): IContextualMenuProps => {
   return {
     shouldFocusOnMount: true,
@@ -229,6 +236,22 @@ const getListRowContextMenuItem = (
           item?: IContextualMenuItem
         ) => {
           showEditRule(rule).then(r => {
+            return r;
+          });
+        }
+      },
+      {
+        key: 'toggleActive',
+        text: rule.disabled ? 'Enable rule' : 'Disable rule',
+        iconProps: {
+          iconName: rule.disabled ? 'CheckMark' : 'Cancel',
+          style: { color: rule.disabled ? 'green' : 'salmon' }
+        },
+        onClick: (
+          ev?: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>,
+          item?: IContextualMenuItem
+        ) => {
+          toggleActive(rule).then(r => {
             return r;
           });
         }
