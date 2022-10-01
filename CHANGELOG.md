@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.3.1 (2022-06-XX)
+## 1.3.1 (2022-10-01)
 
 ### 📝 Documentation (2)
 
@@ -12,6 +12,10 @@
 - Remove warning about New Boards Hub
   - Changed needed [GH#17 - Observer does not work with 'New boards hub'](https://github.com/joachimdalen/azdevops-auto-state/issues/17)
   - Changed in [PR#70 - Remove warning about new boards hub](https://github.com/joachimdalen/azdevops-auto-state/pull/70)
+
+### 🛠️ Maintenance (1)
+
+- Update dependencies
 
 ## 📦 Module changes
 
