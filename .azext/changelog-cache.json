@@ -115,6 +115,13 @@
   ],
   "pullRequests": [
     {
+      "id": 1073415873,
+      "number": 71,
+      "submitter": "joachimdalen",
+      "title": "Update dependencies",
+      "url": "https://github.com/joachimdalen/azdevops-auto-state/pull/71"
+    },
+    {
       "id": 1073407016,
       "number": 70,
       "submitter": "joachimdalen",
