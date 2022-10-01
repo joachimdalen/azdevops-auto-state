@@ -2,20 +2,18 @@
   {
     "version": "1.3.1",
     "publishDate": "2022-06-XX",
-    "sections": {
-      "knownIssues": [
-        {
-          "type": "text",
-          "content": "This extension does not properly work when having the `New boards hub` feature enabled. This is being tracked in: [Observer does not work with 'New boards hub'](https://github.com/joachimdalen/azdevops-auto-state/issues/17)"
-        }
-      ]
-    },
     "changes": [
       {
         "type": "docs",
         "description": "Add link to feature menu docs",
         "issue": 57,
         "pullRequest": 65
+      },
+      {
+        "type": "docs",
+        "description": "Remove warning about New Boards Hub",
+        "issue": 17,
+        "pullRequest": 70
       }
     ],
     "modules": [

@@ -1,6 +1,13 @@
 {
   "issues": [
     {
+      "id": 1091255390,
+      "number": 17,
+      "submitter": "joachimdalen",
+      "title": "Observer does not work with 'New boards hub'",
+      "url": "https://github.com/joachimdalen/azdevops-auto-state/issues/17"
+    },
+    {
       "id": 1270925483,
       "number": 57,
       "submitter": "ruksarjk",
@@ -107,6 +114,13 @@
     }
   ],
   "pullRequests": [
+    {
+      "id": 1073407016,
+      "number": 70,
+      "submitter": "joachimdalen",
+      "title": "Remove warning about new boards hub",
+      "url": "https://github.com/joachimdalen/azdevops-auto-state/pull/70"
+    },
     {
       "id": 1009312364,
       "number": 65,
