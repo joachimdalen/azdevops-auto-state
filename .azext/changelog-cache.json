@@ -1,6 +1,13 @@
 {
   "issues": [
     {
+      "id": 1091255390,
+      "number": 17,
+      "submitter": "joachimdalen",
+      "title": "Observer does not work with 'New boards hub'",
+      "url": "https://github.com/joachimdalen/azdevops-auto-state/issues/17"
+    },
+    {
       "id": 1270925483,
       "number": 57,
       "submitter": "ruksarjk",

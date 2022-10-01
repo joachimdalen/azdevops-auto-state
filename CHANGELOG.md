@@ -2,17 +2,15 @@
 
 ## 1.3.1 (2022-06-XX)
 
-**💡 Known issues**
-
-This extension does not properly work when having the `New boards hub` feature enabled. This is being tracked in: [Observer does not work with 'New boards hub'](https://github.com/joachimdalen/azdevops-auto-state/issues/17)
-
----
-
-### 📝 Documentation (1)
+### 📝 Documentation (2)
 
 - Add link to feature menu docs
+
   - Changed needed [GH#57 - It's not clear how to activate the extension](https://github.com/joachimdalen/azdevops-auto-state/issues/57)
   - Changed in [PR#65 - docs: Add activation docs](https://github.com/joachimdalen/azdevops-auto-state/pull/65)
+
+- Remove warning about New Boards Hub
+  - Changed needed [GH#17 - Observer does not work with 'New boards hub'](https://github.com/joachimdalen/azdevops-auto-state/issues/17)
 
 ## 📦 Module changes
 
