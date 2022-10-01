@@ -17,7 +17,8 @@
       },
       {
         "type": "maint",
-        "description": "Update dependencies"
+        "description": "Update dependencies",
+        "pullRequest": 71
       }
     ],
     "modules": [

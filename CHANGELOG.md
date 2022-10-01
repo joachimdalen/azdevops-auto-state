@@ -16,6 +16,7 @@
 ### 🛠️ Maintenance (1)
 
 - Update dependencies
+  - Changed in [PR#71 - Update dependencies](https://github.com/joachimdalen/azdevops-auto-state/pull/71)
 
 ## 📦 Module changes
 
