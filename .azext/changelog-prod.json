@@ -12,7 +12,8 @@
       {
         "type": "docs",
         "description": "Remove warning about New Boards Hub",
-        "issue": 17
+        "issue": 17,
+        "pullRequest": 70
       }
     ],
     "modules": [

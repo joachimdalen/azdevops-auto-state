@@ -115,6 +115,13 @@
   ],
   "pullRequests": [
     {
+      "id": 1073407016,
+      "number": 70,
+      "submitter": "joachimdalen",
+      "title": "Remove warning about new boards hub",
+      "url": "https://github.com/joachimdalen/azdevops-auto-state/pull/70"
+    },
+    {
       "id": 1009312364,
       "number": 65,
       "submitter": "joachimdalen",
