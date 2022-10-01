@@ -1,6 +1,13 @@
 {
   "issues": [
     {
+      "id": 1305675083,
+      "number": 59,
+      "submitter": "joachimdalen",
+      "title": "Add option to disable/enable rule in dropdown",
+      "url": "https://github.com/joachimdalen/azdevops-auto-state/issues/59"
+    },
+    {
       "id": 1091255390,
       "number": 17,
       "submitter": "joachimdalen",
@@ -114,6 +121,13 @@
     }
   ],
   "pullRequests": [
+    {
+      "id": 1073455672,
+      "number": 72,
+      "submitter": "joachimdalen",
+      "title": "Add context menu action to disable a rule",
+      "url": "https://github.com/joachimdalen/azdevops-auto-state/pull/72"
+    },
     {
       "id": 1073415873,
       "number": 71,
