@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.4.0 (2022-10-XX)
+
+### 🚀 Features (1)
+
+#### `admin-hub@1.4.0`
+
+- Add a quick option to disable/enable rule without having to open the full edit modal
+  - Suggested in [GH#59 - Add option to disable/enable rule in dropdown](https://github.com/joachimdalen/azdevops-auto-state/issues/59)
+  - Added in [PR#72 - Add context menu action to disable a rule](https://github.com/joachimdalen/azdevops-auto-state/pull/72)
+
+---
+
 ## 1.3.1 (2022-10-01)
 
 ### 📝 Documentation (2)
@@ -149,14 +161,6 @@ This extension does not properly work when having the `New boards hub` feature e
 
 ---
 
-### 🛠️ Maintenance (2)
-
-- Update azext and implement new changes
-
-  - Changed in [PR#21 - Update azext](https://github.com/joachimdalen/azdevops-auto-state/pull/21)
-
-- Update dependencies
-
 ### 🚀 Features (3)
 
 - Added preset rules
@@ -172,6 +176,14 @@ This extension does not properly work when having the `New boards hub` feature e
 - Add setting to be able to scope work item types to current process
   - Suggested in [GH#23 - Add setting to be able to limit work item types to current process](https://github.com/joachimdalen/azdevops-auto-state/issues/23)
   - Added in [PR#27 - Add settings module](https://github.com/joachimdalen/azdevops-auto-state/pull/27)
+
+### 🛠️ Maintenance (2)
+
+- Update azext and implement new changes
+
+  - Changed in [PR#21 - Update azext](https://github.com/joachimdalen/azdevops-auto-state/pull/21)
+
+- Update dependencies
 
 ## 📦 Module changes
 
@@ -196,15 +208,6 @@ This extension does not properly work when having the `New boards hub` feature e
 
 ## 1.1.0 (2022-01-05)
 
-### 🛠️ Maintenance (2)
-
-- Refactor build setup to reduce file sizes
-
-  - Changed in [PR#19 - Add recursive updating and rule improvements](https://github.com/joachimdalen/azdevops-auto-state/pull/19)
-
-- Updated dependencies
-  - Changed in [PR#19 - Add recursive updating and rule improvements](https://github.com/joachimdalen/azdevops-auto-state/pull/19)
-
 ### 🚀 Features (2)
 
 - Added support for recursive updating of parents
@@ -215,6 +218,15 @@ This extension does not properly work when having the `New boards hub` feature e
 - Added `Rule tester` to perform a dry run of rules. See [rule tester docs](https://github.com/joachimdalen/azdevops-auto-state/blob/master/docs/index.md#testing-rules) for more information on usage.
   - Suggested in [GH#18 - Add the ability to run 'What if' tests on rules](https://github.com/joachimdalen/azdevops-auto-state/issues/18)
   - Added in [PR#20 - Add rule tester to perform dry run of rules](https://github.com/joachimdalen/azdevops-auto-state/pull/20)
+
+### 🛠️ Maintenance (2)
+
+- Refactor build setup to reduce file sizes
+
+  - Changed in [PR#19 - Add recursive updating and rule improvements](https://github.com/joachimdalen/azdevops-auto-state/pull/19)
+
+- Updated dependencies
+  - Changed in [PR#19 - Add recursive updating and rule improvements](https://github.com/joachimdalen/azdevops-auto-state/pull/19)
 
 ## 📦 Module changes
 

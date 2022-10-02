@@ -91,12 +91,20 @@ const AdminPage = (): React.ReactElement => {
     }
   };
 
+  const toggleActive = async (rule: Rule) => {
+    if (rule) {
+      rule.disabled = !rule.disabled;
+      await ruleService.updateRule(rule.workItemType, rule);
+      await refreshData();
+    }
+  };
+
   const commandBarItems: IHeaderCommandBarItem[] = useMemo(
     () => getCommandBarItems(devOpsService, showEditRule, refreshData),
     [showEditRule, refreshData]
   );
   const columns: IColumn[] = useMemo(
-    () => getListColumns(types, handleDeleteRule, showEditRule),
+    () => getListColumns(types, handleDeleteRule, showEditRule, toggleActive),
     [types, configuration]
   );
 
