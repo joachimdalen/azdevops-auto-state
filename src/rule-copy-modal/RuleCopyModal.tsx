@@ -1,8 +1,10 @@
 import './index.scss';
 
+import { DevOpsService } from '@joachimdalen/azdevops-ext-core/DevOpsService';
 import { PanelWrapper } from '@joachimdalen/azdevops-ext-core/PanelWrapper';
-import { ProcessInfo } from 'azure-devops-extension-api/WorkItemTrackingProcess';
+import { ProjectReference } from 'azure-devops-extension-api/WorkItemTrackingProcess';
 import * as DevOps from 'azure-devops-extension-sdk';
+import { ConditionalChildren } from 'azure-devops-ui/ConditionalChildren';
 import { Dropdown } from 'azure-devops-ui/Dropdown';
 import { FormItem } from 'azure-devops-ui/FormItem';
 import { IListBoxItem } from 'azure-devops-ui/ListBox';
@@ -11,29 +13,28 @@ import React, { useEffect, useMemo, useState } from 'react';
 
 import WorkItemService from '../common/services/WorkItemService';
 import webLogger from '../common/webLogger';
-import RuleCopyService from './services/RuleCopyService';
-import { ConditionalChildren } from 'azure-devops-ui/ConditionalChildren';
 import LoadingSection from '../shared-ui/component/LoadingSection';
+import RuleCopyService from './services/RuleCopyService';
 import { RuleCopyResult } from './types';
 
 const RuleCopyModal = (): React.ReactElement => {
-  const [workItemService, ruleCopyService] = useMemo(
-    () => [new WorkItemService(), new RuleCopyService()],
+  const [workItemService, ruleCopyService, devOpsService] = useMemo(
+    () => [new WorkItemService(), new RuleCopyService(), new DevOpsService()],
     []
   );
-  const [processInfo, setProcessInfo] = useState<ProcessInfo>();
+  const [projects, setProjects] = useState<ProjectReference[]>();
   const [targetProject, setTargetProject] = useState<string | undefined>();
-
   const [loading, setLoading] = useState(true);
+
   const projectOptions: IListBoxItem[] = useMemo(() => {
-    return (processInfo?.projects || []).map(x => {
+    return (projects || []).map(x => {
       const item: IListBoxItem = {
         id: x.id,
         text: x.name
       };
       return item;
     });
-  }, [processInfo]);
+  }, [projects]);
 
   useEffect(() => {
     DevOps.resize();
@@ -49,9 +50,11 @@ const RuleCopyModal = (): React.ReactElement => {
         webLogger.information('Loading rule presets panel...');
         await DevOps.ready();
 
+        const currentProject = await devOpsService.getProject();
         const wiProcess = await workItemService.getProcessInfo(true, false);
-        console.log(wiProcess);
-        setProcessInfo(wiProcess);
+        const projects = wiProcess?.projects?.filter(x => x.id !== currentProject?.id);
+
+        setProjects(projects);
 
         await DevOps.notifyLoadSucceeded();
       } catch (error) {
