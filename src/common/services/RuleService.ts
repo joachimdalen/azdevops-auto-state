@@ -3,7 +3,6 @@ import { v4 as uuidV4 } from 'uuid';
 
 import { ActionResult } from '../models/ActionResult';
 import AddRuleResult from '../models/AddRuleResult';
-import { FilterGroup } from '../models/FilterGroup';
 import FilterItem, { FilterFieldType } from '../models/FilterItem';
 import Rule from '../models/Rule';
 import RuleDocument from '../models/WorkItemRules';

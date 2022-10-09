@@ -15,8 +15,8 @@ import { MenuItemType } from 'azure-devops-ui/Menu';
 import { Pill, PillVariant } from 'azure-devops-ui/Pill';
 import { PillGroup, PillGroupOverflow } from 'azure-devops-ui/PillGroup';
 import { IColor } from 'azure-devops-ui/Utilities/Color';
-import { DOCS_URL_EXTENSION } from '../common/documentationUrls';
 
+import { DOCS_URL_EXTENSION } from '../common/documentationUrls';
 import { ActionResult } from '../common/models/ActionResult';
 import Rule from '../common/models/Rule';
 import { IDevOpsService, PanelIds } from '../common/services/DevOpsService';
@@ -45,7 +45,8 @@ export const getListColumns = (
   types: WorkItemType[],
   handleDeleteRule: (workItemType: string, ruleId: string) => Promise<boolean>,
   showEditRule: (rule: Rule) => Promise<void>,
-  toggleActive: (rule: Rule) => Promise<void>
+  toggleActive: (rule: Rule) => Promise<void>,
+  copyRule: (rule: Rule) => Promise<void>,
 ): IColumn[] => {
   const columns: IColumn[] = [
     {
@@ -200,7 +201,8 @@ export const getListColumns = (
               item,
               handleDeleteRule,
               showEditRule,
-              toggleActive
+              toggleActive,
+              copyRule
             )}
             iconProps={{ iconName: 'MoreVertical' }}
           />
@@ -215,7 +217,8 @@ const getListRowContextMenuItem = (
   rule: Rule,
   handleDeleteRule: (workItemType: string, ruleId: string) => Promise<boolean>,
   showEditRule: (rule: Rule) => Promise<void>,
-  toggleActive: (rule: Rule) => Promise<void>
+  toggleActive: (rule: Rule) => Promise<void>,
+  copyRule: (rule: Rule) => Promise<void>,
 ): IContextualMenuProps => {
   return {
     shouldFocusOnMount: true,
@@ -261,6 +264,22 @@ const getListRowContextMenuItem = (
       //   text: 'Duplicate Rule',
       //   iconProps: { iconName: 'Copy', style: { color: 'green' } }
       // },
+      {
+        key: 'copyToProject',
+        iconProps: { iconName: 'Copy'},
+        text: 'Copy to a different project',
+        title: 'Copy to a different project',
+        onClick: (
+          ev?: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>,
+          item?: IContextualMenuItem
+        ) => {
+          if (rule.id) {
+            copyRule(rule).then(r => {
+              return r;
+            });
+          }
+        }
+      },
       {
         key: 'div1',
         itemType: ContextualMenuItemType.Divider
