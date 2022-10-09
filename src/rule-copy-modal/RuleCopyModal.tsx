@@ -4,18 +4,24 @@ import { DevOpsService } from '@joachimdalen/azdevops-ext-core/DevOpsService';
 import { PanelWrapper } from '@joachimdalen/azdevops-ext-core/PanelWrapper';
 import { ProjectReference } from 'azure-devops-extension-api/WorkItemTrackingProcess';
 import * as DevOps from 'azure-devops-extension-sdk';
+import { Button } from 'azure-devops-ui/Button';
 import { ConditionalChildren } from 'azure-devops-ui/ConditionalChildren';
 import { Dropdown } from 'azure-devops-ui/Dropdown';
 import { FormItem } from 'azure-devops-ui/FormItem';
 import { IListBoxItem } from 'azure-devops-ui/ListBox';
-import { MessageCard } from 'azure-devops-ui/MessageCard';
+import { MessageCard, MessageCardSeverity } from 'azure-devops-ui/MessageCard';
 import React, { useEffect, useMemo, useState } from 'react';
 
+import Rule from '../common/models/Rule';
 import WorkItemService from '../common/services/WorkItemService';
 import webLogger from '../common/webLogger';
 import LoadingSection from '../shared-ui/component/LoadingSection';
 import RuleCopyService from './services/RuleCopyService';
-import { RuleCopyResult } from './types';
+
+interface MessageProps {
+  message: string;
+  severity: MessageCardSeverity;
+}
 
 const RuleCopyModal = (): React.ReactElement => {
   const [workItemService, ruleCopyService, devOpsService] = useMemo(
@@ -24,7 +30,10 @@ const RuleCopyModal = (): React.ReactElement => {
   );
   const [projects, setProjects] = useState<ProjectReference[]>();
   const [targetProject, setTargetProject] = useState<string | undefined>();
+  const [message, setMessage] = useState<MessageProps | undefined>();
+  const [processing, setProcessing] = useState<boolean>(false);
   const [loading, setLoading] = useState(true);
+  const [rule, setRule] = useState<Rule | undefined>();
 
   const projectOptions: IListBoxItem[] = useMemo(() => {
     return (projects || []).map(x => {
@@ -54,6 +63,9 @@ const RuleCopyModal = (): React.ReactElement => {
         const wiProcess = await workItemService.getProcessInfo(true, false);
         const projects = wiProcess?.projects?.filter(x => x.id !== currentProject?.id);
 
+        const config = DevOps.getConfiguration();
+        setRule(config.rule);
+
         setProjects(projects);
 
         await DevOps.notifyLoadSucceeded();
@@ -71,22 +83,33 @@ const RuleCopyModal = (): React.ReactElement => {
   const dismiss = () => {
     const config = DevOps.getConfiguration();
     if (config.panel) {
-      const res = {
-        result: 'CANCEL'
-      };
-      config.panel.close(res);
+      config.panel.close();
     }
   };
 
-  const save = async () => {
-    try {
-      const config = DevOps.getConfiguration();
-      const res: RuleCopyResult = {
-        projectId: targetProject
-      };
-      config.panel.close(res);
-    } catch (error) {
-      console.error(error);
+  const copyRule = async () => {
+    setMessage(undefined);
+    if (rule && targetProject) {
+      setProcessing(true);
+      const result = await ruleCopyService.copyRule(targetProject, rule);
+      if (result.success) {
+        setProcessing(false);
+        setMessage({
+          severity: MessageCardSeverity.Info,
+          message: 'Rule was copied to selected project'
+        });
+      } else {
+        setMessage({
+          severity: MessageCardSeverity.Error,
+          message: result.message || 'Unknown error'
+        });
+        setProcessing(false);
+      }
+    } else {
+      setMessage({
+        severity: MessageCardSeverity.Warning,
+        message: 'Failed to copy rule. Please close the modal and try again'
+      });
     }
   };
 
@@ -95,12 +118,6 @@ const RuleCopyModal = (): React.ReactElement => {
       rootClassName="custom-scrollbar scroll-hidden"
       contentClassName="full-height h-scroll-hidden"
       cancelButton={{ text: 'Close', onClick: () => dismiss() }}
-      okButton={{
-        text: 'Copy',
-        primary: true,
-        onClick: () => save(),
-        iconProps: { iconName: 'Copy' }
-      }}
       showExtensionVersion={false}
       moduleVersion={process.env.RULE_COPY_MODAL_VERSION}
     >
@@ -109,10 +126,16 @@ const RuleCopyModal = (): React.ReactElement => {
       </ConditionalChildren>
       <ConditionalChildren renderChildren={!loading}>
         <div className="flex-grow rhythm-vertical-16">
-          <MessageCard>
+          <ConditionalChildren renderChildren={message !== undefined}>
+            <MessageCard className="margin-bottom-8" severity={message?.severity}>
+              {message?.message}
+            </MessageCard>
+          </ConditionalChildren>
+
+          <p>
             You can only copy rules between projects that are using the same work item process.
             Certain filters will be duplicated and might in some cases need to be updated manually
-          </MessageCard>
+          </p>
 
           <FormItem label="Select project to copy rule to">
             <Dropdown
@@ -121,6 +144,14 @@ const RuleCopyModal = (): React.ReactElement => {
               onSelect={(_, i) => setTargetProject(i.id)}
             />
           </FormItem>
+
+          <Button
+            onClick={copyRule}
+            iconProps={{ iconName: 'Copy' }}
+            disabled={rule === undefined || processing || targetProject === undefined}
+          >
+            Copy
+          </Button>
         </div>
       </ConditionalChildren>
     </PanelWrapper>

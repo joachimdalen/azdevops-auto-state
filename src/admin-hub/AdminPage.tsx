@@ -101,9 +101,7 @@ const AdminPage = (): React.ReactElement => {
   };
 
   const copyRule = async (rule: Rule) => {
-    if (rule) {
-      ruleCopyService.showCopyRule(rule);
-    }
+    await ruleCopyService.showCopyRule(rule);
   };
 
   const commandBarItems: IHeaderCommandBarItem[] = useMemo(

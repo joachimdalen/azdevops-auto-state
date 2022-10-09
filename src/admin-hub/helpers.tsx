@@ -46,7 +46,7 @@ export const getListColumns = (
   handleDeleteRule: (workItemType: string, ruleId: string) => Promise<boolean>,
   showEditRule: (rule: Rule) => Promise<void>,
   toggleActive: (rule: Rule) => Promise<void>,
-  copyRule: (rule: Rule) => Promise<void>,
+  copyRule: (rule: Rule) => Promise<void>
 ): IColumn[] => {
   const columns: IColumn[] = [
     {
@@ -218,7 +218,7 @@ const getListRowContextMenuItem = (
   handleDeleteRule: (workItemType: string, ruleId: string) => Promise<boolean>,
   showEditRule: (rule: Rule) => Promise<void>,
   toggleActive: (rule: Rule) => Promise<void>,
-  copyRule: (rule: Rule) => Promise<void>,
+  copyRule: (rule: Rule) => Promise<void>
 ): IContextualMenuProps => {
   return {
     shouldFocusOnMount: true,
@@ -259,14 +259,9 @@ const getListRowContextMenuItem = (
           });
         }
       },
-      // {
-      //   key: 'duplicate',
-      //   text: 'Duplicate Rule',
-      //   iconProps: { iconName: 'Copy', style: { color: 'green' } }
-      // },
       {
         key: 'copyToProject',
-        iconProps: { iconName: 'Copy'},
+        iconProps: { iconName: 'Copy' },
         text: 'Copy to a different project',
         title: 'Copy to a different project',
         onClick: (
