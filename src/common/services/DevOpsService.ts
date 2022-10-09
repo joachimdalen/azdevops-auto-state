@@ -12,7 +12,6 @@ export interface IDevOpsService {
   getProject(): Promise<IProjectInfo | undefined>;
   showToast(message: string): Promise<void>;
   showPanel<T>(id: PanelIds, options: IPanelOptions<T>): Promise<void>;
-  showModal<T>(id: PanelIds, options: IPanelOptions<T>): Promise<void>;
   openLink(url: string): Promise<void>;
 }
 
@@ -50,17 +49,6 @@ export default class DevOpsService implements IDevOpsService {
     if (panelId === undefined) return;
 
     dialogService.openPanel(`${DevOps.getExtensionContext().id}.${panelId}`, options);
-  }
-
-  public async showModal<T>(id: PanelIds, options: IPanelOptions<T>): Promise<void> {
-    const dialogService = await DevOps.getService<IHostPageLayoutService>(
-      'ms.vss-features.host-page-layout-service'
-    );
-    const panelId = this.getPanelId(id);
-
-    if (panelId === undefined) return;
-
-    dialogService.openCustomDialog(`${DevOps.getExtensionContext().id}.${panelId}`, options);
   }
 
   public getPanelId(id: PanelIds): string | undefined {

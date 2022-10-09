@@ -1,5 +1,6 @@
 import { ActionResult } from '@joachimdalen/azdevops-ext-core/CommonTypes';
 import { v4 as uuidV4 } from 'uuid';
+
 import Rule from '../../common/models/Rule';
 import RuleDocument from '../../common/models/WorkItemRules';
 import DevOpsService, { IDevOpsService, PanelIds } from '../../common/services/DevOpsService';
