@@ -97,6 +97,22 @@
       ]
     },
     {
+      "id": "rule-copy-modal",
+      "type": "ms.vss-web.external-content",
+      "targets": [],
+      "properties": {
+        "uri": "rule-copy-modal.html"
+      },
+      "constraints": [
+        {
+          "name": "Feature",
+          "properties": {
+            "featureId": "joachimdalen.auto-state-dev.auto-state-enabled"
+          }
+        }
+      ]
+    },
+    {
       "id": "settings-panel",
       "type": "ms.vss-web.external-content",
       "targets": [],
