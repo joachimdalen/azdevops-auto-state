@@ -12,6 +12,7 @@ import { StorageService } from '../../common/services/StorageService';
 import WorkItemService from '../../common/services/WorkItemService';
 import RuleCopyPanel from '../../rule-copy-panel/RuleCopyPanel';
 import userEvent from '@testing-library/user-event';
+import RuleCopyService from '../../rule-copy-panel/services/RuleCopyService';
 
 jest.mock('azure-devops-extension-api');
 //jest.mock('../../common/webLogger');
@@ -151,8 +152,102 @@ describe('RuleCopyModal', () => {
     const projectOption = screen.getByRole('option', { name: 'Project2' });
     await user.click(projectOption);
 
-
     const button = screen.getByRole('button', { name: 'Copy' });
     expect(button).not.toHaveAttribute('aria-disabled', 'true');
+  });
+  it('should show notification on copy', async () => {
+    const copySpy = jest.spyOn(RuleCopyService.prototype, 'copyRule');
+    copySpy.mockResolvedValue({ success: true, message: 'Ok', data: [] });
+
+    mockGetConfiguration.mockReturnValue({
+      rule: {}
+    });
+
+    const user = userEvent.setup();
+    const projectData: IProjectInfo = {
+      id: '42ced9cb-88cb-4b3b-9ee8-6f707978c375',
+      name: 'demoproject'
+    };
+
+    mockGetProject.mockResolvedValue(projectData);
+    mockGetProjectProperties.mockResolvedValue([
+      { name: 'System.ProcessTemplateType', value: '42ced9cb-88cb-4b3b-9ee8-6f707978c375' }
+    ]);
+
+    const processInfo: Partial<ProcessInfo> = {
+      name: 'MyProcess',
+      parentProcessTypeId: '00000000-0000-0000-0000-000000000000',
+      projects: [
+        { id: '42ced9cb-88cb-4b3b-9ee8-6f707978c375', name: 'Project1' },
+        { id: '42ced9cb-88cb-4b3b-9ee8-6f707978c309', name: 'Project2' }
+      ]
+    } as ProcessInfo;
+
+    mockGetProcessByItsId.mockResolvedValue(processInfo);
+
+    render(<RuleCopyPanel />);
+
+    await screen.findByText(/Select project to copy rule to/i);
+
+    const projectDropdown = screen.getByRole('button', { name: 'Select project to copy rule to' });
+    await user.click(projectDropdown);
+
+    await screen.findAllByText('Project2');
+
+    const projectOption = screen.getByRole('option', { name: 'Project2' });
+    await user.click(projectOption);
+
+    const button = screen.getByRole('button', { name: 'Copy' });
+    await user.click(button);
+
+    await screen.findByText(/Rule was copied to selected project/i);
+  });
+  
+  it('should show notification on failure to copy', async () => {
+    const copySpy = jest.spyOn(RuleCopyService.prototype, 'copyRule');
+    copySpy.mockResolvedValue({ success: false, message: 'Something bad happened', data: [] });
+
+    mockGetConfiguration.mockReturnValue({
+      rule: {}
+    });
+
+    const user = userEvent.setup();
+    const projectData: IProjectInfo = {
+      id: '42ced9cb-88cb-4b3b-9ee8-6f707978c375',
+      name: 'demoproject'
+    };
+
+    mockGetProject.mockResolvedValue(projectData);
+    mockGetProjectProperties.mockResolvedValue([
+      { name: 'System.ProcessTemplateType', value: '42ced9cb-88cb-4b3b-9ee8-6f707978c375' }
+    ]);
+
+    const processInfo: Partial<ProcessInfo> = {
+      name: 'MyProcess',
+      parentProcessTypeId: '00000000-0000-0000-0000-000000000000',
+      projects: [
+        { id: '42ced9cb-88cb-4b3b-9ee8-6f707978c375', name: 'Project1' },
+        { id: '42ced9cb-88cb-4b3b-9ee8-6f707978c309', name: 'Project2' }
+      ]
+    } as ProcessInfo;
+
+    mockGetProcessByItsId.mockResolvedValue(processInfo);
+
+    render(<RuleCopyPanel />);
+
+    await screen.findByText(/Select project to copy rule to/i);
+
+    const projectDropdown = screen.getByRole('button', { name: 'Select project to copy rule to' });
+    await user.click(projectDropdown);
+
+    await screen.findAllByText('Project2');
+
+    const projectOption = screen.getByRole('option', { name: 'Project2' });
+    await user.click(projectOption);
+
+    const button = screen.getByRole('button', { name: 'Copy' });
+    await user.click(button);
+
+    await screen.findByText(/Something bad happened/i);
   });
 });
