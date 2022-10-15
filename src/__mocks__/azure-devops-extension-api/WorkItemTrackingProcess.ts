@@ -1,6 +1,5 @@
 import { IVssRestClientOptions } from 'azure-devops-extension-api';
 import {
-  GetProcessExpandLevel,
   GetWorkItemTypeExpand,
   ProcessInfo,
   ProcessWorkItemType
@@ -11,7 +10,16 @@ export const mockGetProcessWorkItemTypes = jest
   .mockRejectedValue(new Error('Not implemented'));
 
 export const mockGetProcessByItsId = jest.fn().mockRejectedValue(new Error('Not implemented'));
-
+export enum GetProcessExpandLevel {
+  /**
+   * No expand level.
+   */
+  None = 0,
+  /**
+   * Projects expand level.
+   */
+  Projects = 1
+}
 export class WorkItemTrackingProcessRestClient {
   public TYPE = 'WorkItemTrackingProcessRestClient';
   constructor(options: IVssRestClientOptions) {}

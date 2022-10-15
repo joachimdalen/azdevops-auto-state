@@ -23,7 +23,7 @@ interface MessageProps {
   severity: MessageCardSeverity;
 }
 
-const RuleCopyModal = (): React.ReactElement => {
+const RuleCopyPanel = (): React.ReactElement => {
   const [workItemService, ruleCopyService, devOpsService] = useMemo(
     () => [new WorkItemService(), new RuleCopyService(), new DevOpsService()],
     []
@@ -56,11 +56,12 @@ const RuleCopyModal = (): React.ReactElement => {
           loaded: false,
           applyTheme: true
         });
-        webLogger.information('Loading rule presets panel...');
+        webLogger.information('Loading rule copy panel...');
         await DevOps.ready();
 
         const currentProject = await devOpsService.getProject();
         const wiProcess = await workItemService.getProcessInfo(true, false);
+
         const projects = wiProcess?.projects?.filter(x => x.id !== currentProject?.id);
 
         const config = DevOps.getConfiguration();
@@ -86,7 +87,7 @@ const RuleCopyModal = (): React.ReactElement => {
       config.panel.close();
     }
   };
-
+console.log(projectOptions)
   const copyRule = async () => {
     setMessage(undefined);
     if (rule && targetProject) {
@@ -164,4 +165,4 @@ const RuleCopyModal = (): React.ReactElement => {
   );
 };
 
-export default RuleCopyModal;
+export default RuleCopyPanel;

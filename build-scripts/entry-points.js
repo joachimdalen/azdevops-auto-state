@@ -18,9 +18,9 @@ const modules = [
     generate: true
   },
   {
-    name: 'rule-copy-modal',
-    entry: './src/rule-copy-modal/module',
-    root: 'copy-modal-container',
+    name: 'rule-copy-panel',
+    entry: './src/rule-copy-panel/module',
+    root: 'copy-panel-container',
     generate: true
   },
   {

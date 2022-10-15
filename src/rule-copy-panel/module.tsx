@@ -1,10 +1,11 @@
+/* istanbul ignore file */
 import './index.scss';
 
 import { initializeIcons } from '@fluentui/react';
 
 import showRootComponent from '../shared-ui/showRootComponent';
-import RuleCopyModal from './RuleCopyModal';
+import RuleCopyPanel from './RuleCopyPanel';
 
 initializeIcons();
 
-showRootComponent(<RuleCopyModal />, 'copy-modal-container');
+showRootComponent(<RuleCopyPanel />, 'copy-panel-container');

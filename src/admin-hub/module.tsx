@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import './index.scss';
 
 import { createTheme, initializeIcons, loadTheme } from '@fluentui/react';

@@ -89,7 +89,6 @@ class WorkItemService implements IWorkItemService {
       const processClient = getClient(WorkItemTrackingProcessRestClient);
       const processId = props.find(x => x.name === this._processTemplateTypeKey)?.value;
       if (processId) {
-        console.log(includeProject ? GetProcessExpandLevel.Projects : undefined);
         const process = await processClient.getProcessByItsId(
           processId,
           includeProject ? GetProcessExpandLevel.Projects : undefined

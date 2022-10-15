@@ -43,17 +43,16 @@ class StorageService implements IStorageService {
         'ms.vss-features.extension-data-service'
       );
     }
+    if (this._projectId === undefined) {
+      const project = await this._devOpsService.getProject();
 
-    if (this._collectionName === undefined) {
-      if (this._projectId === undefined) {
-        const project = await this._devOpsService.getProject();
-
-        if (project === undefined) {
-          throw new Error('Failed to find project');
-        }
-        this._projectId = project.id;
+      if (project === undefined) {
+        throw new Error('Failed to find project');
       }
-
+      this._projectId = project.id;
+    }
+    
+    if (this._collectionName === undefined) {
       this._collectionName = `${this._projectId}-${CollectionNames.WorkItemRules}`;
     }
 

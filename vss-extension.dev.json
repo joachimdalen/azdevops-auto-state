@@ -97,11 +97,11 @@
       ]
     },
     {
-      "id": "rule-copy-modal",
+      "id": "rule-copy-panel",
       "type": "ms.vss-web.external-content",
       "targets": [],
       "properties": {
-        "uri": "rule-copy-modal.html"
+        "uri": "rule-copy-panel.html"
       },
       "constraints": [
         {

@@ -26,7 +26,7 @@ import DevOpsService, { PanelIds } from '../common/services/DevOpsService';
 import RuleService from '../common/services/RuleService';
 import WorkItemService from '../common/services/WorkItemService';
 import webLogger from '../common/webLogger';
-import RuleCopyService from '../rule-copy-modal/services/RuleCopyService';
+import RuleCopyService from '../rule-copy-panel/services/RuleCopyService';
 import LoadingSection from '../shared-ui/component/LoadingSection';
 import VersionDisplay from '../shared-ui/component/VersionDisplay';
 import WorkItemTypeTag from '../shared-ui/component/WorkItemTypeTag';
