@@ -206,7 +206,7 @@
     },
     {
       "id": "admin-hub",
-      "type": "ms.vss-web.hub",
+      "type": "ms.vss-web.tab",
       "description": "Configuration hub for Auto State",
       "targets": [".auto-state-project-settings-tab-group"],
       "properties": {
