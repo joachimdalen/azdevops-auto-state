@@ -124,7 +124,13 @@ const RuleCopyModal = (): React.ReactElement => {
       <ConditionalChildren renderChildren={loading}>
         <LoadingSection isLoading={loading} text="Loading.." />
       </ConditionalChildren>
-      <ConditionalChildren renderChildren={!loading}>
+      <ConditionalChildren renderChildren={!loading && projectOptions.length === 0}>
+        <MessageCard className="margin-bottom-8" severity={MessageCardSeverity.Warning}>
+          No other projects using the current process. You can only copy rules between projects that
+          are using the same work item process.
+        </MessageCard>
+      </ConditionalChildren>
+      <ConditionalChildren renderChildren={!loading && projectOptions.length > 0}>
         <div className="flex-grow rhythm-vertical-16">
           <ConditionalChildren renderChildren={message !== undefined}>
             <MessageCard className="margin-bottom-8" severity={message?.severity}>
