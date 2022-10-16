@@ -2,13 +2,21 @@
 
 ## 1.4.0 (2022-10-XX)
 
-### 🚀 Features (1)
+### 🚀 Features (2)
 
 #### `admin-hub@1.4.0`
 
 - Add a quick option to disable/enable rule without having to open the full edit modal
   - Suggested in [GH#59 - Add option to disable/enable rule in dropdown](https://github.com/joachimdalen/azdevops-auto-state/issues/59)
   - Added in [PR#72 - Add context menu action to disable a rule](https://github.com/joachimdalen/azdevops-auto-state/pull/72)
+
+#### `rule-copy-panel@1.0.0`
+
+- Added new module to copy rules between projects
+  - Suggested in
+    - [GH#74 - Option to copy rules to other projects](https://github.com/joachimdalen/azdevops-auto-state/issues/74)
+    - [GH#25 - Ability to reuse rules or easily add them to new projects](https://github.com/joachimdalen/azdevops-auto-state/issues/25)
+  - Added in [PR#73 - Add ability to copy rule between projects of same work item process](https://github.com/joachimdalen/azdevops-auto-state/pull/73)
 
 ---
 
