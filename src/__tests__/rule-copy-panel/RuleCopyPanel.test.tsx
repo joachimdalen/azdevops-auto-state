@@ -17,7 +17,7 @@ import RuleCopyService from '../../rule-copy-panel/services/RuleCopyService';
 jest.mock('azure-devops-extension-api');
 //jest.mock('../../common/webLogger');
 
-describe('RuleCopyModal', () => {
+describe('RuleCopyPanel', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     jest.spyOn(WorkItemService.prototype, 'getWorkItemTypes').mockResolvedValue(getWorkItemTypes());

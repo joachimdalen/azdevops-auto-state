@@ -15,7 +15,7 @@ class RuleCopyService {
   }
 
   public async showCopyRule(rule: Rule): Promise<void> {
-    this._devOpsService.showPanel(PanelIds.RuleCopyModal, {
+    this._devOpsService.showPanel(PanelIds.RuleCopyPanel, {
       title: 'Copy rule to project',
       configuration: {
         rule
