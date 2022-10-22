@@ -1,7 +1,7 @@
 [
   {
     "version": "1.4.0",
-    "publishDate": "2022-10-XX",
+    "publishDate": "2022-10-22",
     "modules": [
       {
         "name": "admin-hub",
@@ -12,6 +12,18 @@
             "issue": 59,
             "pullRequest": 72,
             "description": "Add a quick option to disable/enable rule without having to open the full edit modal"
+          }
+        ]
+      },
+      {
+        "name": "rule-copy-panel",
+        "version": "1.0.0",
+        "changes": [
+          {
+            "type": "feature",
+            "issue": [74, 25],
+            "pullRequest": 73,
+            "description": "Added new module to copy rules between projects"
           }
         ]
       }

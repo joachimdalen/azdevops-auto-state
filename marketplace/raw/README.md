@@ -48,6 +48,8 @@ The reason for this is that Azure DevOps does not include contribution types tha
 
 ## Activating the extension
 
+Activation of this extension must be done by a Project or Collection administrator
+
 For this extension to work properly there are a few steps that needs to be taken after installing:
 
 ### Activation

@@ -8,7 +8,11 @@ import {
   WorkItemTrackingRestClient,
   WorkItemType
 } from 'azure-devops-extension-api/WorkItemTracking';
-import { WorkItemTrackingProcessRestClient } from 'azure-devops-extension-api/WorkItemTrackingProcess';
+import {
+  GetProcessExpandLevel,
+  ProcessInfo,
+  WorkItemTrackingProcessRestClient
+} from 'azure-devops-extension-api/WorkItemTrackingProcess';
 
 import { getChildIds, getParentId } from '../workItemUtils';
 import DevOpsService, { IDevOpsService } from './DevOpsService';
@@ -26,6 +30,7 @@ export interface IWorkItemService {
     assignee?: IdentityRef | undefined
   ): Promise<WorkItem>;
   getProcessTemplateName(): Promise<string | undefined>;
+  getProcessInfo(includeProject?: boolean): Promise<ProcessInfo | undefined>;
 }
 
 class WorkItemService implements IWorkItemService {
@@ -73,7 +78,10 @@ class WorkItemService implements IWorkItemService {
     return props;
   }
 
-  public async getProcessTemplateName(): Promise<string | undefined> {
+  public async getProcessInfo(
+    includeProject = false,
+    getParent = false
+  ): Promise<ProcessInfo | undefined> {
     const project = await this._devOpsService.getProject();
 
     if (project) {
@@ -81,20 +89,31 @@ class WorkItemService implements IWorkItemService {
       const processClient = getClient(WorkItemTrackingProcessRestClient);
       const processId = props.find(x => x.name === this._processTemplateTypeKey)?.value;
       if (processId) {
-        const process = await processClient.getProcessByItsId(processId);
+        const process = await processClient.getProcessByItsId(
+          processId,
+          includeProject ? GetProcessExpandLevel.Projects : undefined
+        );
         if (
           process.parentProcessTypeId !== undefined &&
-          process.parentProcessTypeId !== '00000000-0000-0000-0000-000000000000'
+          process.parentProcessTypeId !== '00000000-0000-0000-0000-000000000000' &&
+          getParent
         ) {
-          const parentProcess = await processClient.getProcessByItsId(process.parentProcessTypeId);
-          return parentProcess.name;
+          const parentProcess = await processClient.getProcessByItsId(
+            process.parentProcessTypeId,
+            includeProject ? GetProcessExpandLevel.Projects : undefined
+          );
+          return parentProcess;
         } else {
-          return process.name;
+          return process;
         }
       }
 
       return undefined;
     }
+  }
+  public async getProcessTemplateName(): Promise<string | undefined> {
+    const processInfo = await this.getProcessInfo(false, true);
+    return processInfo?.name;
   }
 
   public async getWorkItemTypes(fromProcess?: boolean): Promise<WorkItemType[]> {

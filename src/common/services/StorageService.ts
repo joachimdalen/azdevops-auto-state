@@ -31,9 +31,10 @@ class StorageService implements IStorageService {
   private _collectionName?: string;
   private _projectId?: string;
 
-  public constructor() {
+  public constructor(projectId?: string) {
     this._devOpsService = new DevOpsService();
     this.scopeType = ScopeType.Default;
+    this._projectId = projectId;
   }
 
   private async getDataService(): Promise<IExtensionDataService> {
@@ -42,16 +43,17 @@ class StorageService implements IStorageService {
         'ms.vss-features.extension-data-service'
       );
     }
-
-    if (this._collectionName === undefined) {
+    if (this._projectId === undefined) {
       const project = await this._devOpsService.getProject();
 
       if (project === undefined) {
         throw new Error('Failed to find project');
       }
-
-      this._collectionName = `${project.id}-${CollectionNames.WorkItemRules}`;
       this._projectId = project.id;
+    }
+    
+    if (this._collectionName === undefined) {
+      this._collectionName = `${this._projectId}-${CollectionNames.WorkItemRules}`;
     }
 
     return this.dataService;

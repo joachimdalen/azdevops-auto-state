@@ -26,6 +26,7 @@ import DevOpsService, { PanelIds } from '../common/services/DevOpsService';
 import RuleService from '../common/services/RuleService';
 import WorkItemService from '../common/services/WorkItemService';
 import webLogger from '../common/webLogger';
+import RuleCopyService from '../rule-copy-panel/services/RuleCopyService';
 import LoadingSection from '../shared-ui/component/LoadingSection';
 import VersionDisplay from '../shared-ui/component/VersionDisplay';
 import WorkItemTypeTag from '../shared-ui/component/WorkItemTypeTag';
@@ -34,8 +35,8 @@ import { getCommandBarItems, getListColumns, getPresetPanelProps, isGroup } from
 const AdminPage = (): React.ReactElement => {
   const [types, setTypes] = useState<WorkItemType[]>([]);
   const [configuration, setConfiguration] = useState<RuleDocument[] | undefined>(undefined);
-  const [workItemService, ruleService, devOpsService] = useMemo(
-    () => [new WorkItemService(), new RuleService(), new DevOpsService()],
+  const [workItemService, ruleService, ruleCopyService, devOpsService] = useMemo(
+    () => [new WorkItemService(), new RuleService(), new RuleCopyService(), new DevOpsService()],
     []
   );
 
@@ -99,12 +100,16 @@ const AdminPage = (): React.ReactElement => {
     }
   };
 
+  const copyRule = async (rule: Rule) => {
+    await ruleCopyService.showCopyRule(rule);
+  };
+
   const commandBarItems: IHeaderCommandBarItem[] = useMemo(
     () => getCommandBarItems(devOpsService, showEditRule, refreshData),
     [showEditRule, refreshData]
   );
   const columns: IColumn[] = useMemo(
-    () => getListColumns(types, handleDeleteRule, showEditRule, toggleActive),
+    () => getListColumns(types, handleDeleteRule, showEditRule, toggleActive, copyRule),
     [types, configuration]
   );
 

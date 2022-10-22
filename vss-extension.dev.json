@@ -97,6 +97,22 @@
       ]
     },
     {
+      "id": "rule-copy-panel",
+      "type": "ms.vss-web.external-content",
+      "targets": [],
+      "properties": {
+        "uri": "rule-copy-panel.html"
+      },
+      "constraints": [
+        {
+          "name": "Feature",
+          "properties": {
+            "featureId": "joachimdalen.auto-state-dev.auto-state-enabled"
+          }
+        }
+      ]
+    },
+    {
       "id": "settings-panel",
       "type": "ms.vss-web.external-content",
       "targets": [],
@@ -167,14 +183,40 @@
       ]
     },
     {
-      "id": "admin-hub",
-      "type": "ms.vss-web.hub",
-      "description": "Configuration hub for Auto State",
-      "targets": ["ms.vss-web.project-admin-hub-group"],
+      "id": "auto-state-project-settings-tab-group",
+      "type": "ms.vss-web.tab-group",
+      "targets": [
+        "ms.vss-admin-web.project-admin-hub-component",
+        "ms.vss-admin-web.project-admin-hub-component-icons",
+        "ms.vss-admin-web.project-admin-hub-component-collapsible",
+        "ms.vss-admin-web.project-admin-hub-component-icons-collapsible"
+      ],
       "properties": {
         "name": "Auto State (DEV)",
+        "order": 70
+      },
+      "constraints": [
+        {
+          "name": "Feature",
+          "properties": {
+            "featureId": "joachimdalen.auto-state-dev.auto-state-enabled"
+          }
+        }
+      ]
+    },
+    {
+      "id": "admin-hub",
+      "type": "ms.vss-web.tab",
+      "description": "Configuration hub for Auto State",
+      "targets": [".auto-state-project-settings-tab-group"],
+      "properties": {
+        "name": "Rules",
         "order": 1,
-        "uri": "admin-hub.html"
+        "uri": "admin-hub.html",
+        "iconProps": {
+          "iconName": "Configuration",
+          "className": "admin-tab-icon"
+        }
       },
       "constraints": [
         {

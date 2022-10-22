@@ -3,7 +3,6 @@ import { v4 as uuidV4 } from 'uuid';
 
 import { ActionResult } from '../models/ActionResult';
 import AddRuleResult from '../models/AddRuleResult';
-import { FilterGroup } from '../models/FilterGroup';
 import FilterItem, { FilterFieldType } from '../models/FilterItem';
 import Rule from '../models/Rule';
 import RuleDocument from '../models/WorkItemRules';
@@ -145,7 +144,7 @@ class RuleService {
       if (this.isRuleSame(oldRule, rule)) {
         return {
           success: false,
-          message: 'Duplicate rule'
+          message: 'A rule with the same configuration already exists'
         };
       }
       rootDoc.rules[ruleIndex] = rule;
@@ -153,7 +152,7 @@ class RuleService {
       if (rootDoc.rules.some(r => this.isRuleSame(r, rule))) {
         return {
           success: false,
-          message: 'Duplicate rule'
+          message: 'A rule with the same configuration already exists'
         };
       }
       rootDoc.rules = [...rootDoc.rules, { id: uuidV4(), ...rule }];

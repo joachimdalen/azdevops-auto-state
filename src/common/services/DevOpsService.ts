@@ -19,7 +19,8 @@ export enum PanelIds {
   RulePanel = 'rule-modal',
   RuleTesterPanel = 'rule-tester',
   Settings = 'settings-panel',
-  PresetsPanel = 'presets-panel'
+  PresetsPanel = 'presets-panel',
+  RuleCopyPanel = 'rule-copy-panel'
 }
 
 export default class DevOpsService implements IDevOpsService {
@@ -60,6 +61,8 @@ export default class DevOpsService implements IDevOpsService {
         return 'settings-panel';
       case PanelIds.PresetsPanel:
         return 'presets-panel';
+      case PanelIds.RuleCopyPanel:
+        return 'rule-copy-panel';
     }
   }
 

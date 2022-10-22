@@ -18,6 +18,12 @@ const modules = [
     generate: true
   },
   {
+    name: 'rule-copy-panel',
+    entry: './src/rule-copy-panel/module',
+    root: 'copy-panel-container',
+    generate: true
+  },
+  {
     name: 'rule-tester',
     entry: './src/rule-tester/module',
     root: 'rule-tester-container',

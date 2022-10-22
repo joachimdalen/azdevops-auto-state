@@ -1,6 +1,20 @@
 {
   "issues": [
     {
+      "id": 1103086612,
+      "number": 25,
+      "submitter": "joachimdalen",
+      "title": "Ability to reuse rules or easily add them to new projects",
+      "url": "https://github.com/joachimdalen/azdevops-auto-state/issues/25"
+    },
+    {
+      "id": 1410393685,
+      "number": 74,
+      "submitter": "joachimdalen",
+      "title": "Option to copy rules to other projects",
+      "url": "https://github.com/joachimdalen/azdevops-auto-state/issues/74"
+    },
+    {
       "id": 1305675083,
       "number": 59,
       "submitter": "joachimdalen",
@@ -121,6 +135,13 @@
     }
   ],
   "pullRequests": [
+    {
+      "id": 1081176701,
+      "number": 73,
+      "submitter": "joachimdalen",
+      "title": "Add ability to copy rule between projects of same work item process",
+      "url": "https://github.com/joachimdalen/azdevops-auto-state/pull/73"
+    },
     {
       "id": 1073455672,
       "number": 72,
