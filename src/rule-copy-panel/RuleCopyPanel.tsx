@@ -33,6 +33,7 @@ const RuleCopyPanel = (): React.ReactElement => {
   const [message, setMessage] = useState<MessageProps | undefined>();
   const [processing, setProcessing] = useState<boolean>(false);
   const [loading, setLoading] = useState(true);
+  const [isError, setIsError] = useState(false);
   const [rule, setRule] = useState<Rule | undefined>();
 
   const projectOptions: IListBoxItem[] = useMemo(() => {
@@ -66,12 +67,13 @@ const RuleCopyPanel = (): React.ReactElement => {
 
         const config = DevOps.getConfiguration();
         setRule(config.rule);
-
         setProjects(projects);
 
         await DevOps.notifyLoadSucceeded();
       } catch (error) {
+        setIsError(true);
         webLogger.error('Failed to get project configuration', error);
+        await DevOps.notifyLoadFailed((error as any)?.message || 'Failed to initialize');
       } finally {
         DevOps.resize();
         setLoading(false);
@@ -87,7 +89,7 @@ const RuleCopyPanel = (): React.ReactElement => {
       config.panel.close();
     }
   };
-console.log(projectOptions)
+  console.log(projectOptions);
   const copyRule = async () => {
     setMessage(undefined);
     if (rule && targetProject) {
@@ -120,12 +122,12 @@ console.log(projectOptions)
       contentClassName="full-height h-scroll-hidden"
       cancelButton={{ text: 'Close', onClick: () => dismiss() }}
       showExtensionVersion={false}
-      moduleVersion={process.env.RULE_COPY_MODAL_VERSION}
+      moduleVersion={process.env.RULE_COPY_PANEL_VERSION}
     >
       <ConditionalChildren renderChildren={loading}>
         <LoadingSection isLoading={loading} text="Loading.." />
       </ConditionalChildren>
-      <ConditionalChildren renderChildren={!loading && projectOptions.length === 0}>
+      <ConditionalChildren renderChildren={!loading && projectOptions.length === 0 && !isError}>
         <MessageCard className="margin-bottom-8" severity={MessageCardSeverity.Warning}>
           No other projects using the current process. You can only copy rules between projects that
           are using the same work item process.
